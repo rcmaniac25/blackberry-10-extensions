@@ -1,0 +1,49 @@
+--TODO:
+Do the todos in GestureField
+
+--NOTES:
+-Some previous projects I worked on use the same code as this project or has "contributed" code to this project. Changes in names are purely for the project, licenses should remain the same.
+
+The basic idea of this library is to allow for the use of some "high revision" code and general libraries that otherwise would require a higher OS version or extra 
+libraries to be included instead of just one, BlackBerry specific one.
+
+Only the classes that could be implemented are implemented.
+
+License is LGPL 2.1 (since GestureField already uses it)
+
+Desired additions:
+-networking/messaging API
+-kSoap
+-Authenticate ??
+-String formatting (built in formatting [Java], .Net, printf, scanf)
+-DeviceCapability API (in progress)
+-Camera Overlay
+-JSR184 (on top of OpenGL)
+-GestureField
+-"Slider fields" from OS 6.0
+-RegEx
+-Plugin system
+-Emoticon field
+-Bring over some of the utilities and classes from LCMS and PDFRender
+
+Long term, personal Todo: depreciate Rebuild and replace with this. Move over similar classes and redesign some components. The Plugin system is one of the most important
+systems because it will allow the base library to be included and extras like Graphics or GLUT to be included only when desired.
+
+Plugins:
+///
+//Pusdo code
+public static Plugin[] getPlugin(final String pluginPath)
+{
+Class clazz = Class.forName(pluginPath + ".rebuild.plugin.Master");
+rebuild.plugin.Master master = (rebuild.plugin.Master)clazz.newInstance();
+Plugin[] pluginComponents = master.getComponents();
+for(int i = 0; i < master.componentCount(); i++)
+{
+pluginComponents[i].initialize(**stuff**);
+}
+return pluginComponents;
+}
+///
+
+Apps will need to implement a register and use the BBX version of components to handle certain components. Must be designed so that only a simple package change is needed
+to switch to the new components.

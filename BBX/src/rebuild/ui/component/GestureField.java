@@ -40,6 +40,9 @@ import net.rim.device.api.util.MathUtilities;
 
 //Based off: http://dwilson.org/blog/2009/4/19/implementing-pinch-zoom-on-the-iphone/
 
+//TODO Update to support non-touchscreen interactions
+//TODO Update to support Pinch-Zoom Gesture (will require some work because it seems to be the cheap, scale-only type Pinch-zoom that all built-in smartphone systems do).
+
 /**
  * Gesture field, various gestures and system events will are processed and handled in this field.
  */
@@ -54,25 +57,46 @@ public abstract class GestureField extends Field
 		 * Click and pause at a specific point on the touch screen for more than 500 milliseconds. A new consecutive EVENT_CLICK_REPEAT event is generated every 500 
 		 * milliseconds until the user moves or removes touch from the touch screen.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int EVENT_CLICK_REPEAT = TouchGesture.CLICK_REPEAT;
+//#else
+		public static final int EVENT_CLICK_REPEAT = 0x3507;
+//#endif
 		/**
 		 * Two consecutive quick touch and release gesture on the touch screen. EVENT_DOUBLE_TAP events are independent of {@link Gesture#EVENT_TAP} event, i.e. 
 		 * applications will receive a EVENT_DOUBLE_TAP event after a {@link Gesture#EVENT_TAP}.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int EVENT_DOUBLE_TAP = TouchGesture.DOUBLE_TAP;
+//#else
+		public static final int EVENT_DOUBLE_TAP = 0x3;
+//#endif
 		/**
 		 * Touch and pause at a specific point on the touch screen for more than the user-defined number of milliseconds (configurable setting found in Screen/Keyboard 
 		 * Options). A new consecutive HOVER event is generated at this interval in milliseconds until the user moves or removes touch from the touch screen.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int EVENT_HOVER = TouchGesture.HOVER;
+//#else
+		public static final int EVENT_HOVER = 0x0;
+//#endif
 		/**
 		 * Quick motion gesture across the touch screen.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int EVENT_SWIPE = TouchGesture.SWIPE;
+//#else
+		public static final int EVENT_SWIPE = 0x3504;
+//#endif
 		/**
 		 * Quick touch and release gesture on the touch screen.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int EVENT_TAP = TouchGesture.TAP;
+//#else
+		public static final int EVENT_TAP = 0x2;
+//#endif
+
 		/**
 		 * A pinch event where two fingers are used to change the size, position, or rotation of something on screen.
 		 */
@@ -141,22 +165,39 @@ public abstract class GestureField extends Field
 		 * Gesture direction that is equivalent to 180 degrees +/- 45 degrees relative to the device's current upward direction. Can be bitwise ORed with other 
 		 * cardinal directions.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int SWIPE_EAST = TouchGesture.SWIPE_EAST;
+//#else
+		public static final int SWIPE_EAST = 0x4;
+//#endif
 		/**
 		 * Gesture direction that is equivalent to 90 degrees +/- 45 degrees relative to the device's current upward direction. Can be bitwise ORed with other 
 		 * cardinal directions.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int SWIPE_NORTH = TouchGesture.SWIPE_NORTH;
+//#else
+		public static final int SWIPE_NORTH = 0x1;
+//#endif
 		/**
 		 * Gesture direction that is equivalent to 270 degrees +/- 45 degrees relative to the device's current upward direction. Can be bitwise ORed with other 
 		 * cardinal directions.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int SWIPE_SOUTH = TouchGesture.SWIPE_SOUTH;
+//#else
+		public static final int SWIPE_SOUTH = 0x2;
+//#endif
 		/**
 		 * Gesture direction that is equivalent to 180 degrees +/- 45 degrees relative to the device's current upward direction. Can be bitwise ORed with other 
 		 * cardinal directions.
 		 */
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1
 		public static final int SWIPE_WEST = TouchGesture.SWIPE_WEST;
+//#else
+		public static final int SWIPE_WEST = 0x8;
+//#endif
+
 		
 		private int type, value1, value2, value3, value4, value5;
 		
