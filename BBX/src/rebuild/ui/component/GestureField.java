@@ -21,6 +21,24 @@
 //
 //---------------------------------------------------------------------------------
 //
+// Copyright (c) 2011-2012 Vincent Simonetti
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and 
+// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+// PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
+//---------------------------------------------------------------------------------
+//
 package rebuild.ui.component;
 
 import net.rim.device.api.math.Fixed32;
@@ -42,9 +60,13 @@ import net.rim.device.api.util.MathUtilities;
 
 //TODO Update to support non-touchscreen interactions
 //TODO Update to support Pinch-Zoom Gesture (will require some work because it seems to be the cheap, scale-only type Pinch-zoom that all built-in smartphone systems do).
+//TODO Rotation component help: http://www.euclideanspace.com/maths/geometry/affine/aroundPoint/index.htm
+//TODO Very weird bug: If you do pinch-zoom where one finger is stationary and the other moves, you get different performance results. If you move one corner, it runs smooth. But move the other corner, it lags.
+//TODO Update for 7.1
 
 /**
  * Gesture field, various gestures and system events will are processed and handled in this field.
+ * @since BBX 1.0.0
  */
 public abstract class GestureField extends Field
 {

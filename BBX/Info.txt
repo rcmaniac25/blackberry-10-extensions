@@ -1,5 +1,14 @@
 --TODO:
 Do the todos in GestureField
+Bring the following types from RebuildLib to BBX:
+-Version
+-Util (maybe rework a bit)
+-UIUtil (maybe rework a bit)
+-Some of the functions in MathUtil
+-All of "ref"
+-TIFFEncoder (and all the tags and other code from the "tiff" namespace)
+
+Update TODO and NOTES with stuff from RebuildLib for use in BBX
 
 --NOTES:
 -Some previous projects I worked on use the same code as this project or has "contributed" code to this project. Changes in names are purely for the project, licenses should remain the same.
@@ -8,8 +17,6 @@ The basic idea of this library is to allow for the use of some "high revision" c
 libraries to be included instead of just one, BlackBerry specific one.
 
 Only the classes that could be implemented are implemented.
-
-License is LGPL 2.1 (since GestureField already uses it)
 
 Desired additions:
 -networking/messaging API

@@ -2,22 +2,22 @@
 
 //---------------------------------------------------------------------------------
 //
-//  BlackBerry Extensions
-//  Copyright (c) 2011-2012 Vincent Simonetti
+// BlackBerry Extensions
+// Copyright (c) 2011-2012 Vincent Simonetti
 //
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and 
+// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // 
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 // 
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+// PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
 //
 //---------------------------------------------------------------------------------
 //
@@ -388,19 +388,87 @@ public final class MathUtilities
 	}
 	
 	/**
-	 * Clamps provided value between a lower and upper bound.
-	 * <p>
-	 * <b>Note:</b> This method only produces sensible results if the lower bound is less than, or equal to, the higher bound.
-	 * @param low Lower bound value.
+	 * Clamps provided integer value between a lower and upper bound.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
 	 * @param value Value to clamp.
 	 * @param high Upper bound value.
 	 * @return If the value is lower than the lower bound, this method returns the lower bound; if the value is higher than the higher bound, this method returns 
 	 * the higher bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
 	 * @since BBX 1.0.0
 	 */
 	public static int clamp(int low, int value, int high)
 	{
 		return net.rim.device.api.util.MathUtilities.clamp(low, value, high);
+	}
+	
+	/**
+	 * Clamps provided long integer value between a lower and upper bound.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
+	 * @param value Value to clamp.
+	 * @param high Upper bound value.
+	 * @return If the value is lower than the lower bound, this method returns the lower bound; if the value is higher than the higher bound, this method returns 
+	 * the higher bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
+	 * @since BBX 1.0.1
+	 */
+	public static long clamp(long low, long value, long high)
+	{
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
+		if(low > high)
+		{
+			throw new IllegalArgumentException("low > high");
+		}
+		return Math.max(low, Math.min(high, value));
+//#else
+		return net.rim.device.api.util.MathUtilities.clamp(low, value, high);
+//#endif
+	}
+	
+	/**
+	 * Clamps provided float value between a lower and upper bound.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
+	 * @param value Value to clamp.
+	 * @param high Upper bound value.
+	 * @return If the value is lower than the lower bound, this method returns the lower bound; if the value is higher than the higher bound, this method returns 
+	 * the higher bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
+	 * @since BBX 1.0.1
+	 */
+	public static float clamp(float low, float value, float high)
+	{
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
+		if(low > high)
+		{
+			throw new IllegalArgumentException("low > high");
+		}
+		return Math.max(low, Math.min(high, value));
+//#else
+		return net.rim.device.api.util.MathUtilities.clamp(low, value, high);
+//#endif
+	}
+	
+	/**
+	 * Clamps provided double value between a lower and upper bound.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
+	 * @param value Value to clamp.
+	 * @param high Upper bound value.
+	 * @return If the value is lower than the lower bound, this method returns the lower bound; if the value is higher than the higher bound, this method returns 
+	 * the higher bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
+	 * @since BBX 1.0.1
+	 */
+	public static double clamp(double low, double value, double high)
+	{
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
+		if(low > high)
+		{
+			throw new IllegalArgumentException("low > high");
+		}
+		return Math.max(low, Math.min(high, value));
+//#else
+		return net.rim.device.api.util.MathUtilities.clamp(low, value, high);
+//#endif
 	}
 	
 	/**
@@ -629,18 +697,118 @@ public final class MathUtilities
 	}
 	
 	/**
-	 * Wraps provided value around a lower and upper bound.
+	 * Wraps provided integer value around a lower and upper bound.
 	 * <p>
-	 * <b>Note:</b> This method only produces sensible results if the lower bound is less than, or equal to, the higher bound.
-	 * @param low Lower bound value.
+	 * This method does the opposite of {@link MathUtilities#clamp(int, int, int)}.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
 	 * @param value Value to wrap.
 	 * @param high Upper bound value.
-	 * @return If the value is lower than the lower bound, this method returns the higher bound; if the value is higher than the higher bound, this method 
-	 * returns the lower bound; otherwise, this method returns the value itself. This is the opposite of clamp()
+	 * @return If the value is lower than the lower bound, this method returns the higher bound; if the value is higher than the higher bound, this method returns 
+	 * the lower bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
 	 * @since BBX 1.0.0
 	 */
 	public static int wrap(int low, int value, int high)
 	{
 		return net.rim.device.api.util.MathUtilities.wrap(low, value, high);
+	}
+	
+	/**
+	 * Wraps provided long integer value around a lower and upper bound.
+	 * <p>
+	 * This method does the opposite of {@link MathUtilities#clamp(long, long, long)}.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
+	 * @param value Value to wrap.
+	 * @param high Upper bound value.
+	 * @return If the value is lower than the lower bound, this method returns the higher bound; if the value is higher than the higher bound, this method returns 
+	 * the lower bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
+	 * @since BBX 1.0.1
+	 */
+	public static long wrap(long low, long value, long high)
+	{
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
+		if(low > high)
+		{
+			throw new IllegalArgumentException("low > high");
+		}
+		if(value < low)
+		{
+			return high;
+		}
+		else if(value > high)
+		{
+			return low;
+		}
+		return value;
+//#else
+		return net.rim.device.api.util.MathUtilities.wrap(low, value, high);
+//#endif
+	}
+	
+	/**
+	 * Wraps provided float value around a lower and upper bound.
+	 * <p>
+	 * This method does the opposite of {@link MathUtilities#clamp(float, float, float)}.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
+	 * @param value Value to wrap.
+	 * @param high Upper bound value.
+	 * @return If the value is lower than the lower bound, this method returns the higher bound; if the value is higher than the higher bound, this method returns 
+	 * the lower bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
+	 * @since BBX 1.0.1
+	 */
+	public static float wrap(float low, float value, float high)
+	{
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
+		if(low > high)
+		{
+			throw new IllegalArgumentException("low > high");
+		}
+		if(value < low)
+		{
+			return high;
+		}
+		else if(value > high)
+		{
+			return low;
+		}
+		return value;
+//#else
+		return net.rim.device.api.util.MathUtilities.wrap(low, value, high);
+//#endif
+	}
+	
+	/**
+	 * Wraps provided double value around a lower and upper bound.
+	 * <p>
+	 * This method does the opposite of {@link MathUtilities#clamp(double, double, double)}.
+	 * @param low Lower bound value; must be less than your upper bound parameter.
+	 * @param value Value to wrap.
+	 * @param high Upper bound value.
+	 * @return If the value is lower than the lower bound, this method returns the higher bound; if the value is higher than the higher bound, this method returns 
+	 * the lower bound; otherwise, this method returns the value itself.
+	 * @throws IllegalArgumentException If you provide a low parameter value that is greater than your high parameter value.
+	 * @since BBX 1.0.1
+	 */
+	public static double wrap(double low, double value, double high)
+	{
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
+		if(low > high)
+		{
+			throw new IllegalArgumentException("low > high");
+		}
+		if(value < low)
+		{
+			return high;
+		}
+		else if(value > high)
+		{
+			return low;
+		}
+		return value;
+//#else
+		return net.rim.device.api.util.MathUtilities.wrap(low, value, high);
+//#endif
 	}
 }
