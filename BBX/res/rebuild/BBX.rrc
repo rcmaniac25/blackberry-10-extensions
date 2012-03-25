@@ -33,6 +33,12 @@ PATH_ROOTS#0={
 };
 STANDARD_BB_PATH_FOLDER_ICONS#0="file:///system/samples/folder icons/";
 STANDARD_SIM_PATH_FOLDER_ICONS#0="file:///store/samples/folder icons/";
+TIFF_DIFFERENT_RATIONAL#0="The numerator count and denominator count don't match.";
+TIFF_INVALID_COMPRESSION#0="An invalid TIFF compression was used as an argument. This should be one of the specified values in the CompressionTag class.";
+TIFF_INVALID_PHOTOMETRIC#0="An invalid TIFF photometric was used as an argument. This should be one of the specified values in the PhotometricInterpretationTag class.";
+TIFF_INVALID_PLANAR_FORMAT#0="An invalid TIFF planar configuration was used as an argument. This should be one of the specified values in the PlanarConfigurationTag class.";
+TIFF_UNSUPPORTED_COMPRESSION#0="Only \"no compression\" is supported.";
+TIFF_UNSUPPORTED_PHOTOMETRIC#0="Only \"RGB/A\" is supported.";
 TIFF_WRONG_WRITER#0="Incorrect write function called.";
 UTIL_CONTAINS_CHECKSTRINGNULL#0="stringToCheck is null.";
 UTIL_CONTAINS_VALUESTRINGNULL#0="value is null.";

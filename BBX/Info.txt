@@ -6,7 +6,6 @@ Bring the following types from RebuildLib to BBX:
 -UIUtil (maybe rework a bit)
 -Some of the functions in MathUtil
 -All of "ref"
--TIFFEncoder (and all the tags and other code from the "tiff" namespace)
 
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 

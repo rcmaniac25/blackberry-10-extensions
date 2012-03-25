@@ -27,6 +27,8 @@ import java.io.IOException;
 
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.XYRect;
+import rebuild.BBXResource;
+import rebuild.Resources;
 import rebuild.graphics.tiff.IFD;
 import rebuild.graphics.tiff.Tag;
 import rebuild.graphics.tiff.tags.BitsPerSampleTag;
@@ -53,7 +55,7 @@ import rebuild.util.GraphicsUtilities;
 /**
  * A Tagged Image File Format (TIFF) encoder.
  * <p>Currently only the Baseline TIFF is supported for writing (with the exception of alpha). Any tags that
- * modify the image format is not supported even if the variables are there. Only one image, non-compressed,
+ * modify the image format are not supported even if the variables are there. Only one image, non-compressed,
  * RGB/A, 8bits per sample is supported.</p>
  */
 public class TIFFEncoder extends ImageEncoder
@@ -181,7 +183,7 @@ public class TIFFEncoder extends ImageEncoder
     	}
     	catch(Exception e)
     	{
-    		throw new IllegalArgumentException(Resources.getString(LibResource.TIFF_INVALID_PHOTOMETRIC));
+    		throw new IllegalArgumentException(Resources.getString(BBXResource.TIFF_INVALID_PHOTOMETRIC));
     	}
     }
     
@@ -432,10 +434,10 @@ public class TIFFEncoder extends ImageEncoder
     					int pixelLength = ifd.indexOf(EXTRA_SAMPLES_TAG) == -1 ? 3 : 4;
     					return pixelLength * width;
 					default:
-						throw new java.lang.UnsupportedOperationException(LIBResources.getString(LibResource.TIFF_UNSUPPORTED_COMPRESSION));
+						throw new java.lang.UnsupportedOperationException(Resources.getString(BBXResource.TIFF_UNSUPPORTED_COMPRESSION));
     			}
     		default:
-    			throw new java.lang.UnsupportedOperationException(LIBResources.getString(LibResource.TIFF_UNSUPPORTED_PHOTOMETRIC));
+    			throw new java.lang.UnsupportedOperationException(Resources.getString(BBXResource.TIFF_UNSUPPORTED_PHOTOMETRIC));
     	}
     }
     */
@@ -473,7 +475,7 @@ public class TIFFEncoder extends ImageEncoder
     	    	}
     			break;
     		default:
-    			throw new java.lang.UnsupportedOperationException(Resources.getString(LibResource.TIFF_UNSUPPORTED_PHOTOMETRIC));
+    			throw new java.lang.UnsupportedOperationException(Resources.getString(BBXResource.TIFF_UNSUPPORTED_PHOTOMETRIC));
     	}
     }
     

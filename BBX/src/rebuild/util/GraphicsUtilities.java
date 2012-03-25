@@ -24,7 +24,6 @@ package rebuild.util;
 
 import javax.microedition.lcdui.Image;
 
-import net.rim.device.api.io.File;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.PNGEncodedImage;
@@ -35,6 +34,7 @@ import rebuild.graphics.JPEGEncoder;
 import rebuild.graphics.PNGEncoder;
 import rebuild.graphics.TIFFEncoder;
 import rebuild.graphics.WBMPEncoder;
+import rebuild.util.io.File;
 
 /**
  * A collection of various Graphics utilities.
