@@ -1,11 +1,11 @@
 --TODO:
 Do the todos in GestureField
 Bring the following types from RebuildLib to BBX:
--Version
--Util (maybe rework a bit)
 -UIUtil (maybe rework a bit)
 -Some of the functions in MathUtil
 -All of "ref"
+
+Review code to look for anything that could go wrong
 
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 

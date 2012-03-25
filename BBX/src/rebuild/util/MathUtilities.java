@@ -811,4 +811,96 @@ public final class MathUtilities
 		return net.rim.device.api.util.MathUtilities.wrap(low, value, high);
 //#endif
 	}
+	
+	/**
+	 * Returns a value indicating whether the specified number evaluates to negative infinity.
+	 * @param d A single-precision floating point number.
+	 * @return true if d evaluates to {@link Float.NEGATIVE_INFINITY}; otherwise, false.
+	 */
+	public static boolean isNegativeInfinity(float d)
+	{
+	    return (d == Float.NEGATIVE_INFINITY);
+	}
+	
+	/**
+	 * Returns a value indicating whether the specified number evaluates to positive infinity.
+	 * @param d A single-precision floating point number.
+	 * @return true if d evaluates to {@link Float.POSITIVE_INFINITY}; otherwise, false.
+	 */
+	public static boolean isPositiveInfinity(float d)
+	{
+	    return (d == Float.POSITIVE_INFINITY);
+	}
+	
+	/**
+	 * Returns a value indicating whether the specified number evaluates to negative infinity.
+	 * @param d A double-precision floating point number.
+	 * @return true if d evaluates to {@link Double.NEGATIVE_INFINITY}; otherwise, false.
+	 */
+	public static boolean isNegativeInfinity(double d)
+	{
+	    return (d == Double.NEGATIVE_INFINITY);
+	}
+	
+	/**
+	 * Returns a value indicating whether the specified number evaluates to positive infinity.
+	 * @param d A double-precision floating point number.
+	 * @return true if d evaluates to {@link Double.POSITIVE_INFINITY}; otherwise, false.
+	 */
+	public static boolean isPositiveInfinity(double d)
+	{
+	    return (d == Double.POSITIVE_INFINITY);
+	}
+	
+	/**
+	 * Produces the full product of two 32-bit numbers.
+	 * @param a The first int to multiply.
+	 * @param b The second int to multiply.
+	 * @return The long containing the product of the specified numbers.
+	 */
+	public static long bigMul(int a, int b)
+	{
+	    return ((long)a * (long)b);
+	}
+	
+	//TODO: divRem
+	
+	/**
+	 * Returns the logarithm of a specified number in a specified base.
+	 * @param a A number whose logarithm is to be found.
+	 * @param newBase The base of the logarithm.
+	 * @return In the following table +Infinity denotes {@link Double.POSITIVE_INFINITY}, -Infinity denotes {@link Double.NEGATIVE_INFINITY}, and {@link Double.NaN} denotes {@link Double.NaN}.
+	 * <p><table><tr><th><p><span>a</span></p></th><th><p><span>newBase</span></p></th><th><p>Return Value</p>
+	 * </th></tr><tr><td><p><span>a</span><span>&gt;</span> 0</p></td><td><p>(0 <span>&lt;</span><span>newBase</span>
+	 * <span>&lt;</span> 1) -or-(<span>newBase</span><span>&gt;</span> 1)</p></td><td><p>log<sub>newBase</sub>(a)</p>\
+	 * </td></tr><tr><td><p><span>a</span><span>&lt;</span> 0</p></td><td><p>(any value)</p></td><td><p>NaN</p></td></tr>
+	 * <tr><td><p>(any value)</p></td><td><p><span>newBase</span><span>&lt;</span> 0</p></td><td><p>NaN</p></td></tr><tr>
+	 * <td><p><span>a</span> != 1</p></td><td><p><span>newBase</span> = 0</p></td><td><p>NaN</p></td></tr><tr><td><p>
+	 * <span>a</span> != 1</p></td><td><p><span>newBase</span> = +Infinity</p></td><td><p>NaN</p></td></tr><tr><td><p>
+	 * <span>a</span> = NaN</p></td><td><p>(any value)</p></td><td><p>NaN</p></td></tr><tr><td><p>(any value)</p></td>
+	 * <td><p><span>newBase</span> = NaN</p></td><td><p>NaN</p></td></tr><tr><td><p>(any value)</p></td><td><p>
+	 * <span>newBase</span> = 1</p></td><td><p>NaN</p></td></tr><tr><td><p><span>a</span> = 0</p></td><td>
+	 * <p>0 <span>&lt;</span><span>newBase</span><span>&lt;</span> 1 </p></td><td><p>+Infinity</p></td></tr><tr><td><p>
+	 * <span>a</span> = 0</p></td><td><p><span>newBase</span><span>&gt;</span> 1</p></td><td><p>-Infinity</p></td></tr>
+	 * <tr><td><p><span>a</span> =  +Infinity</p></td><td>
+	 * <p>0 <span>&lt;</span><span>newBase</span><span>&lt;</span> 1</p></td><td><p>-Infinity</p></td></tr><tr><td><p>
+	 * <span>a</span> =  +Infinity</p></td><td><p><span>newBase</span><span>&gt;</span> 1</p></td><td><p>+Infinity</p>
+	 * </td></tr><tr><td><p><span>a</span> = 1</p></td><td><p><span>newBase</span> = 0</p></td><td><p>0</p></td></tr>
+	 * <tr><td><p><span>a</span> = 1</p></td><td><p><span>newBase</span> = +Infinity</p></td><td><p>0</p></td></tr>
+	 * </table></p>
+	 */
+	public static double log(double a, double newBase)
+	{
+		if ((newBase != 1.0) && ((a == 1.0) || ((newBase != 0.0) && !isPositiveInfinity(newBase))))
+	    {
+	        return (log(a) / log(newBase));
+	    }
+	    return Double.NaN;
+	}
+	
+	//TODO: "sign" functions
+	
+	//TODO: hyperbolic functions (if I can make sure that they work)
+	
+	//TODO: nextDouble?
 }

@@ -33,10 +33,10 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.system.DeviceInfo;
-import rebuild.Resources;
 import rebuild.BBXResource;
-import rebuild.system.Util;
+import rebuild.Resources;
 import rebuild.util.StringUtilities;
+import rebuild.util.Utilities;
 
 /**
  * Various path related functions for the Blackberry.
@@ -371,7 +371,7 @@ public final class Path
     public static String GetRandomFileName()
     {
         byte[] data = new byte[12];
-        Util.RNGGetBytes(data);
+        Utilities.RNGGetBytes(data);
         char[] chArray = ToBase32StringSuitableForDirName(data).toCharArray();
         chArray[8] = '.';
         return String.valueOf(chArray, 0, 12);

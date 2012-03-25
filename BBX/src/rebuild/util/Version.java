@@ -1,3 +1,5 @@
+//#preprocessor
+
 //---------------------------------------------------------------------------------
 //
 // BlackBerry Extensions
@@ -28,7 +30,11 @@ import rebuild.Resources;
 /**
  * Represents the version number.
  */
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.7.0
+public final class Version
+//#else
 public final class Version implements Comparable
+//#endif
 {
 	private int _Build;
     private int _Major;
