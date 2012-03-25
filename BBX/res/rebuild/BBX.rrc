@@ -1,7 +1,10 @@
+ARGUMENT_BOUNDS_LOWER_UPPER_OUTOFRANGE#0="Argument must be between {0} and {1}.";
 ARGUMENT_ENUMILLEGALVAL#0="Illegal enum value: ";
 ARGUMENT_INDEXOUTOFRANGE#0="Index was out of range. Must be non-negative and less than the size of the collection.";
 ARGUMENT_INDEXOUTOFRANGE_NEGCOUNT#0="Count cannot be less than zero.";
 ARGUMENT_NULL_CHAR#0="The specified value cannot have a null ('0') or 0 (zero) value in it.";
+ARGUMENT_VERSIONOUTOFRANGE#0="Version's parameters must be greater than or equal to zero.";
+ARGUMENT_VERSIONSTRING#0="Version string portion was too short or too long.";
 EMPTY_STRING_EXCEPTION#0="The specified String cannot be empty (\"\"). ";
 FILEPICKER_DEFAULT_TITLE#0="Select";
 FILEPICKER_FRIENDLY_ROOTS#0={

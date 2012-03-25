@@ -33,6 +33,14 @@ import rebuild.BBXResource;
 public final class StringUtilities
 {
 	/**
+     * The return value includes array elements that contain an empty string.
+     */
+    public static final short STRINGSPLITOPTIONS_NONE = 0;
+    /**
+     * The return value does not include array elements that contain an empty string.
+     */
+    public static final short STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES = 1;
+	/**
      * Does not insert line breaks after every 76 characters in the string representation.
      */
     public static final int BASE64FORMATTINGOPTIONS_NONE = 0;
@@ -208,7 +216,114 @@ public final class StringUtilities
     	return temp;
     }
     
-    //XXX split would be nice. Would need to rewrite
+    /**
+     * Returns a String array containing the substrings in this instance that are delimited by a separator.
+     * @param str The String to split.
+     * @param separator A Unicode character that delimit the substrings in this instance.
+     * @return An array whose elements contain the substrings in this instance that are delimited by the separator.
+     */
+    public static String[] split(String str, char separator)
+    {
+        return split(str, new char[] { separator }, Integer.MAX_VALUE, STRINGSPLITOPTIONS_NONE);
+    }
+    
+    /**
+     * Returns a String array containing the substrings in this instance that are delimited by elements of a specified char array.
+     * @param str The String to split.
+     * @param separator An array of Unicode characters that delimit the substrings in this instance, an empty array containing no delimiters, or null.
+     * @return An array whose elements contain the substrings in this instance that are delimited by one or more characters in separator.
+     */
+    public static String[] split(String str, char[] separator)
+    {
+        return split(str, separator, Integer.MAX_VALUE, STRINGSPLITOPTIONS_NONE);
+    }
+    
+    /**
+     * Returns a String array containing the substrings in this instance that are delimited by elements of a specified char array. A parameter specifies the maximum number of substrings to return.
+     * @param str The String to split.
+     * @param separator An array of Unicode characters that delimit the substrings in this instance, an empty array containing no delimiters, or null.
+     * @param count The maximum number of substrings to return.
+     * @return An array whose elements contain the substrings in this instance that are delimited by one or more characters in separator.
+     * @throws StringIndexOutOfBoundsException count is negative.
+     */
+    public static String[] split(String str, char[] separator, int count)
+    {
+        return split(str, separator, count, STRINGSPLITOPTIONS_NONE);
+    }
+    
+    /**
+     * Returns a String array containing the substrings in this string that are delimited by elements of a specified char array. A parameter specifies whether to return empty array elements.
+     * @param str The String to split.
+     * @param separator An array of Unicode characters that delimit the substrings in this string, an empty array containing no delimiters, or null.
+     * @param options Specify STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES to omit empty array elements from the array returned, or STRINGSPLITOPTIONS_NONE to include empty array elements in the array returned.
+     * @return An array whose elements contain the substrings in this string that are delimited by one or more characters in separator.
+     * @throws IllegalArgumentException options is not one of the STRINGSPLITOPTIONS_* values.
+     */
+    public static String[] split(String str, char[] separator, short options)
+    {
+        return split(str, separator, Integer.MAX_VALUE, options);
+    }
+    
+    /**
+     * Returns a String array containing the substrings in this string that are delimited by elements of a specified String array. A parameter specifies whether to return empty array elements.
+     * @param str The String to split.
+     * @param separator An array of strings that delimit the substrings in this string, an empty array containing no delimiters, or null.
+     * @param options Specify STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES to omit empty array elements from the array returned, or STRINGSPLITOPTIONS_NONE to include empty array elements in the array returned.
+     * @return An array whose elements contain the substrings in this string that are delimited by one or more strings in separator.
+     * @throws IllegalArgumentException options is not one of the STRINGSPLITOPTIONS_* values.
+     */
+    public static String[] split(String str, String[] separator, short options)
+    {
+        return split(str, separator, Integer.MAX_VALUE, options);
+    }
+    
+    /**
+     * Returns a String array containing the substrings in this string that are delimited by elements of a specified char array. Parameters specify the maximum number of substrings to return and whether to return empty array elements.
+     * @param str The String to split.
+     * @param separator An array of Unicode characters that delimit the substrings in this string, an empty array containing no delimiters, or null.
+     * @param count The maximum number of substrings to return.
+     * @param options Specify STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES to omit empty array elements from the array returned, or STRINGSPLITOPTIONS_NONE to include empty array elements in the array returned.
+     * @return An array whose elements contain the substrings in this stringthat are delimited by one or more characters in separator.
+     * @throws StringIndexOutOfBoundsException count is negative.
+     * @throws IllegalArgumentException options is not one of the STRINGSPLITOPTIONS_* values.
+     */
+    public static String[] split(String str, char[] separator, int count, short options)
+    {
+        if(count < 0)
+        {
+            throw new StringIndexOutOfBoundsException(Resources.getString(BBXResource.INDEXOUTOFRANGE_NEGATIVECOUNT));
+        }
+        if ((options < STRINGSPLITOPTIONS_NONE) || (options > STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES))
+        {
+            throw new IllegalArgumentException(Resources.getString(BBXResource.ARGUMENT_ENUMILLEGALVAL) + Integer.toString(options));
+        }
+        //TODO
+        return null;
+    }
+    
+    /**
+     * Returns a String array containing the substrings in this string that are delimited by elements of a specified String array. Parameters specify the maximum number of substrings to return and whether to return empty array elements.
+     * @param str The String to split.
+     * @param separator An array of strings that delimit the substrings in this string, an empty array containing no delimiters, or null.
+     * @param count The maximum number of substrings to return.
+     * @param options Specify STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES to omit empty array elements from the array returned, or STRINGSPLITOPTIONS_NONE to include empty array elements in the array returned.
+     * @return An array whose elements contain the substrings in this string that are delimited by one or more strings in separator.
+     * @throws StringIndexOutOfBoundsException count is negative.
+     * @throws IllegalArgumentException options is not one of the STRINGSPLITOPTIONS_* values.
+     */
+    public static String[] split(String str, String[] separator, int count, short options)
+    {
+        if(count < 0)
+        {
+            throw new StringIndexOutOfBoundsException(Resources.getString(BBXResource.INDEXOUTOFRANGE_NEGATIVECOUNT));
+        }
+        if ((options < STRINGSPLITOPTIONS_NONE) || (options > STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES))
+        {
+            throw new IllegalArgumentException(Resources.getString(BBXResource.ARGUMENT_ENUMILLEGALVAL) + Integer.toString(options));
+        }
+        //TODO
+        return null;
+    }
     
     /**
      * Compares substrings of two specified String objects by evaluating the numeric values of the corresponding char objects in each substring.
