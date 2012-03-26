@@ -24,9 +24,8 @@
 // Created 2008
 package rebuild.util;
 
-import net.rim.device.api.util.Arrays;
-import rebuild.Resources;
 import rebuild.BBXResource;
+import rebuild.Resources;
 
 /**
  * Various String utilities.
@@ -311,14 +310,13 @@ public final class StringUtilities
         }
     	//Split the string (logically)
     	int[] sep = new int[str.length()];
-        int[] len = new int[sep.length];
-        int splitCount = determineSubstrings(str, separator, sep, len, count, options == STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES);
-        if(splitCount == 0 || count == 1)
+        int splitCount = determineSubstrings(str, separator, sep, count);
+        if(splitCount == 0 || count == 1) //If no split occurred or we only want one element
         {
         	return new String[]{str};
         }
         //Split the string (physically)
-        return split(str, sep, len, splitCount);
+        return split(str, sep, null, Math.min(splitCount + 1, count), options == STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES);
     }
     
     /**
@@ -333,6 +331,12 @@ public final class StringUtilities
      */
     public static String[] split(String str, String[] separator, int count, short options)
     {
+    	//If separator is null or empty, we can skip everything else and just let the char separator handle splitting the string
+    	if(separator == null || separator.length == 0)
+    	{
+    		return split(str, (char[])null, count, options);
+    	}
+    	
     	//Check the arguments
     	if(splitPreChecks(str, count, options))
         {
@@ -341,13 +345,13 @@ public final class StringUtilities
     	//Split the string (logically)
     	int[] sep = new int[str.length()];
         int[] len = new int[sep.length];
-        int splitCount = determineSubstrings(str, separator, sep, len, count, options == STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES);
-        if(splitCount == 0 || count == 1)
+        int splitCount = determineSubstrings(str, separator, sep, len, count);
+        if(splitCount == 0 || count == 1) //If no split occurred or we only want one element
         {
         	return new String[]{str};
         }
         //Split the string (physically)
-        return split(str, sep, len, splitCount);
+        return split(str, sep, len, Math.min(splitCount + 1, count), options == STRINGSPLITOPTIONS_REMOVEEMPTYENTRIES);
     }
     
     private static boolean splitPreChecks(String str, int count, short options)
@@ -367,106 +371,28 @@ public final class StringUtilities
         return count == 0; //Return an empty string
     }
     
-    private static int determineSubstrings(String str, char[] sep, int[] index, int[] len, int count, boolean ignoreEmpties)
+    private static int determineSubstrings(String str, char[] sep, int[] index, int count)
     {
-    	int seplen;
-    	if(sep == null || (seplen = sep.length) == 0)
+    	String[] sepStrings;
+    	if(sep == null || sep.length == 0)
     	{
-    		//Default separator is the ' '
-    		sep = new char[]{' '};
-    		seplen = 1;
+    		sepStrings = new String[]{" "};
     	}
-    	
-    	int slen = str.length();
-    	int ilen = Math.min(index.length, count);
-    	
-    	int splits = 0;
-    	int startIndex = 0;
-    	
-    	//If the first element is a separator, move the start index
-    	if(slen > 0 && Arrays.getIndex(sep, str.charAt(0)) != -1)
+    	else
     	{
-    		if(!ignoreEmpties && ilen > 0)
+    		int l;
+    		sepStrings = new String[l = sep.length];
+    		for(int i = 0; i < l; i++)
     		{
-    			index[0] = 0;
-    			len[0] = 0;
-    			splits++;
+    			sepStrings[i] = String.valueOf(sep[i]);
     		}
-    		startIndex = 1;
     	}
-    	
-    	//Look for splits
-    	int i;
-    	for(i = startIndex; i < slen && splits < ilen; i++) //Need to make sure that we don't go out of bounds of string, index[], and the max-count we want
-    	{
-    		int in = indexOfAny(str, i, sep, seplen);
-    		if(in == -1)
-    		{
-    			//No more splits
-    			break;
-    		}
-    		//Get the length and index
-    		len[splits] = in - (index[splits] = i);
-    		
-    		//Move the len/index array index (if we want to)
-    		if(!(len[splits] == 0 && ignoreEmpties))
-    		{
-	    		splits++;
-    		}
-    		
-    		//Move the string index
-    		i = in;
-    	}
-    	
-    	//We only want splits that are index-able
-		if(i < slen)
-		{
-	    	if(splits > 0)
-	    	{
-	    		//Make sure the split is complete
-	    		len[splits] = slen - (index[splits] = i);
-	    		
-	    		//Move the len/index array index (if we want to)
-	    		if(!(len[splits] == 0 && ignoreEmpties))
-	    		{
-		    		splits++;
-	    		}
-	    	}
-	    	else if((i = indexOfAny(str, 0, sep, seplen)) != -1)
-	    	{
-	    		//We didn't split anything, but we have separators
-	    		if(ignoreEmpties && i == 0)
-	    		{
-	    			len[splits] = slen - (index[splits] = 1);
-	    			splits++;
-	    		}
-	    	}
-		}
-    	return splits;
+    	return determineSubstrings(str, sepStrings, index, null, count);
     }
     
-    private static int indexOfAny(String str, int index, char[] sep, int slen)
-    {
-    	int in;
-    	for(int i = 0; i < slen; i++)
-    	{
-    		in = str.indexOf(sep[i], index);
-    		if(in != -1)
-    		{
-    			return in;
-    		}
-    	}
-    	return -1;
-    }
-    
-    private static int determineSubstrings(String str, String[] sep, int[] index, int[] len, int count, boolean ignoreEmpties)
+    private static int determineSubstrings(String str, String[] sep, int[] index, int[] len, int count)
     {
     	int seplen = sep.length;
-    	if(sep == null || (seplen = sep.length) == 0)
-    	{
-    		return determineSubstrings(str, (char[])null, index, len, count, ignoreEmpties);
-    	}
-    	
     	int slen = str.length();
     	int ilen = Math.min(index.length, count);
     	
@@ -480,9 +406,17 @@ public final class StringUtilities
     			if(!isNullOrEmpty(s)) //Only want "actual" separators
     			{
     				int separatorLen = s.length();
-    				if(str.charAt(i) == s.charAt(0) && separatorLen <= (slen - i) && ((separatorLen == 1) || (compareOrdinal(str, i, s, 0, separatorLen) == 0)))
+    				if(str.charAt(i) == s.charAt(0) && //See if the first char matches (quick elimination)
+    						separatorLen <= (slen - i) && //Check the the separator would even fit in the string
+    						((separatorLen == 1) || (compareOrdinal(str, i, s, 0, separatorLen) == 0))) //Check if the String matches (or if it was just that single char we checked)
     				{
-    					
+    					index[splits] = i;
+    					if(len != null)
+    					{
+    						len[splits] = separatorLen;
+    					}
+    					splits++;
+    					i += separatorLen - 1;
     				}
     			}
     		}
@@ -490,12 +424,35 @@ public final class StringUtilities
     	return splits;
     }
     
-    private static String[] split(String str, int[] sep, int[] len, int count)
+    private static String[] split(String str, int[] sep, int[] len, int count, boolean ignoreEmpties)
     {
-    	String[] result = new String[count];
+    	String[] result = new String[count--];
+    	int c = 0;
+    	int start = 0;
+    	
+    	//Get the sections of the string
     	for(int i = 0; i < count; i++)
     	{
-    		//TODO
+    		int end = sep[i];
+    		if(!((end - start) == 0 && ignoreEmpties))
+    		{
+    			result[c++] = str.substring(start, end);
+    		}
+    		start += (end - start) + (len != null ? len[i] : 1);
+    	}
+    	
+    	//Get the remaining string
+    	if(!((str.length() - start) <= 0 && ignoreEmpties))
+    	{
+    		result[c++] = str.substring(start, str.length());
+    	}
+    	
+    	//If the actual number of elements is less then the total number of elements, resize the array
+    	if(ignoreEmpties && c <= count)
+    	{
+    		String[] r = new String[c];
+    		System.arraycopy(result, 0, r, 0, c);
+    		result = r;
     	}
     	return result;
     }
@@ -515,7 +472,7 @@ public final class StringUtilities
         {
             return nativeCompareOrdinalEx(strA, indexA, strB, indexB, length);
         }
-        if (strA.equals(strB))
+        if (strA == strB)
         {
             return 0;
         }
