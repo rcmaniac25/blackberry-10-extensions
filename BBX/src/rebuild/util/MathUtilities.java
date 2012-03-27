@@ -3,7 +3,7 @@
 //---------------------------------------------------------------------------------
 //
 // BlackBerry Extensions
-// Copyright (c) 2011-2012 Vincent Simonetti
+// Copyright (c) 2008-2012 Vincent Simonetti
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
@@ -25,6 +25,7 @@ package rebuild.util;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
+import rebuild.util.ref.RefLong;
 
 //asin, acos, atan2 are from J4ME and use the Apache License 2.0
 
@@ -869,7 +870,19 @@ public final class MathUtilities
 	    return ((long)a * (long)b);
 	}
 	
-	//TODO: divRem
+	/**
+	 * Calculates the quotient of two 64-bit signed integers and also returns the remainder in an output parameter.
+	 * @param a The long that contains the dividend.
+	 * @param b The long that contains the divisor.
+	 * @param result The {@link RefLong} that receives the remainder.
+	 * @return The long containing the quotient of the specified numbers.
+	 * @throws ArithmeticException b is zero.
+	 */
+	public static int divRem(int a, int b, RefLong result)
+	{
+		result.setValue(a % b);
+	    return (a / b);
+	}
 	
 	/**
 	 * Returns the logarithm of a specified number in a specified base.

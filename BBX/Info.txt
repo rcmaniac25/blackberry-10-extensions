@@ -1,8 +1,7 @@
 --TODO:
 Do the todos in GestureField
 Bring the following types from RebuildLib to BBX:
--Some of the functions in MathUtil (divRem after "ref")
--All of "ref"
+-Some of the functions in MathUtil
 
 Check over functions within "ref" and see if additional functions are desired (because of newer OSes)
 Review code to look for anything that could go wrong

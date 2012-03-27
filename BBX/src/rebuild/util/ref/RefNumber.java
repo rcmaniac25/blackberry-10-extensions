@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 // BlackBerry Extensions
-// Copyright (c) 2011-2012 Vincent Simonetti
+// Copyright (c) 2008-2012 Vincent Simonetti
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
@@ -31,10 +31,10 @@ import rebuild.util.StringUtilities;
  * <p>A reference number, this class contains many of the different operations that a number could do.</p>
  * <p>Anything of type {@link RefNumber} is treated like the number it represents. If a number of type 
  * <code>double</code> must be converted to an <code>int</code> to be processed, the same will occur here and the type 
- * will be automatically converted to the required type. Also the same operation will be occur for 
+ * will be automatically converted to the required type. Also the same operation will occur for 
  * {@link RefDouble} and {@link RefInteger} if the same operation were to occur (just like explained above).</p>
- * <p>If the number could not be converted, or there is more then one type it could be converted to that could cause a 
- * different result (with the exception of different size types) then the number will be returned as-is and no 
+ * <p>If the number could not be converted, or there is more then one type it could be converted to, and that could cause a 
+ * different result (with the exception of different size types), then the number will be returned as-is and no 
  * processing will occur. If a numeric error will occur with any numbers (such as divide by zero), it will be thrown.</p>
  * <p>{@link RefNumber}s can be "fixed" or constant. They cannot be changed and must be cloned in order to change there
  * value. If any operation is performed on a fixed {@link RefNumber} then the number is cloned automatically and the
