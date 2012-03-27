@@ -21,6 +21,7 @@ FILEPICKER_ROOT_PATH_LABEL#0="Explore";
 FILE_SDCARD#0="file:///SDCard";
 FILE_SYSTEM#0="file:///store";
 INDEXOUTOFRANGE_NEGATIVECOUNT#0="Count cannot be less than zero.";
+MATH_NaN#0="Function does not accept floating point Not-a-Number values.";
 PATH_ROOTS#0={
     "file",
     "device",

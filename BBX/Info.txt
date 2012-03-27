@@ -2,7 +2,7 @@
 Do the todos in GestureField
 Bring the following types from RebuildLib to BBX:
 -UIUtil (maybe rework a bit)
--Some of the functions in MathUtil
+-Some of the functions in MathUtil (divRem after "ref")
 -All of "ref"
 
 Review code to look for anything that could go wrong

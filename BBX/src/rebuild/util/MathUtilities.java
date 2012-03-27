@@ -23,13 +23,19 @@
 //
 package rebuild.util;
 
-//asin, acos, atan2 are from J4ME and use the Apache License 2.0 (which is compatible with LGPL)
+import rebuild.BBXResource;
+import rebuild.Resources;
+
+//asin, acos, atan2 are from J4ME and use the Apache License 2.0
 
 /**
  * Provides some basic numeric operations.
  */
 public final class MathUtilities
 {
+	private static final long POSITIVEINFINITY = 0x7FF0000000000000L;
+	private static final long SIGN = 0x8000000000000000L;
+	
 //#ifdef BlackBerrySDK4.5.0
 	private static final double LOG2 = 0.69314718055994530941723212145818;
 //#endif
@@ -898,9 +904,313 @@ public final class MathUtilities
 	    return Double.NaN;
 	}
 	
-	//TODO: "sign" functions
+	/**
+	 * Returns a value indicating the sign of a double-precision floating-point number.
+	 * @param value A signed number.
+	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 * @throws ArithmeticException value is equal to {@link Double.NaN}.
+	 */
+	public static int sign(double value)
+	{
+	    if (value < 0.0)
+	    {
+	        return -1;
+	    }
+	    if (value > 0.0)
+	    {
+	        return 1;
+	    }
+	    if (value != 0.0)
+	    {
+	        throw new ArithmeticException(Resources.getString(BBXResource.MATH_NaN));
+	    }
+	    return 0;
+	}
+	
+	/**
+	 * Returns a value indicating the sign of a 8-bit signed integer.
+	 * @param value A signed number.
+	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 */
+	public static int sign(byte value)
+	{
+	    if (value < 0)
+	    {
+	        return -1;
+	    }
+	    if (value > 0)
+	    {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	/**
+	 * Returns a value indicating the sign of a 16-bit signed integer.
+	 * @param value A signed number.
+	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 */
+	public static int sign(short value)
+	{
+	    if (value < 0)
+	    {
+	        return -1;
+	    }
+	    if (value > 0)
+	    {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	/**
+	 * Returns a value indicating the sign of a 32-bit signed integer.
+	 * @param value A signed number.
+	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 */
+	public static int sign(int value)
+	{
+	    if (value < 0)
+	    {
+	        return -1;
+	    }
+	    if (value > 0)
+	    {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	/**
+	 * Returns a value indicating the sign of a 64-bit signed integer.
+	 * @param value A signed number.
+	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 */
+	public static int sign(long value)
+	{
+	    if (value < 0)
+	    {
+	        return -1;
+	    }
+	    if (value > 0)
+	    {
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	/**
+	 * Returns a value indicating the sign of a single-precision floating-point number.
+	 * @param value A signed number.
+	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 * @throws ArithmeticException value is equal to {@link Float.NaN}.
+	 */
+	public static int sign(float value)
+	{
+	    if (value < 0f)
+	    {
+	        return -1;
+	    }
+	    if (value > 0f)
+	    {
+	        return 1;
+	    }
+	    if (value != 0f)
+	    {
+	    	throw new ArithmeticException(Resources.getString(BBXResource.MATH_NaN));
+	    }
+	    return 0;
+	}
 	
 	//TODO: hyperbolic functions (if I can make sure that they work)
 	
-	//TODO: nextDouble?
+	/**
+	 * Finds the least double greater than d.
+	 * @param d The double to get the next positive value of.
+	 * @return The next positive double.
+	 */
+	public static double nextDouble(double d)
+    {
+        return nextDouble(d, true);
+    }
+	
+	/**
+	 * Finds the greatest double less than d.
+	 * @param d The double to get the next negative value of.
+	 * @return The next negative double.
+	 */
+    public static double previousDouble(double d)
+    {
+        return nextDouble(d, false);
+    }
+    
+    //Hmm, after thinking about it. I don't remember where this function came from. It looks extremely similar to the one included in OpenJDK (java.text.ChoiceFormat) but that uses the 
+    //significant portion of the double, and this one does not. I don't know if I based mine off it, used an older version, or what.
+    
+	/**
+	 * Finds the least double greater than d (if positive == true), or the greatest double less than d (if positive == false).
+	 * @param d The number to get the next double of.
+	 * @param positive Should the next value be the next positive value (adding) or negative value (subtraction).
+	 * @return The next double.
+	 */
+	public static double nextDouble(double d, boolean positive)
+    {
+        //filter out NaN's
+        if (Double.isNaN(d))
+        {
+            return d;
+        }
+        
+        //zero's are also a special case
+        if (d == 0.0)
+        {
+            double smallestPositiveDouble = Double.longBitsToDouble(1L);
+            if (positive)
+            {
+                return smallestPositiveDouble;
+            }
+            else
+            {
+                return -smallestPositiveDouble;
+            }
+        }
+        
+        //if entering here, d is a nonzero value
+        
+        //hold all bits in a long for later use
+        long bits = Double.doubleToLongBits(d);
+        
+        /* strip off the sign bit */
+        long magnitude = bits & ~SIGN;
+        
+        //if next double away from zero, increase magnitude
+        if ((bits > 0) == positive)
+        {
+            if (magnitude != POSITIVEINFINITY)
+            {
+                magnitude += 1;
+            }
+        }
+        //else decrease magnitude
+        else
+        {
+            magnitude -= 1;
+        }
+        
+        //restore sign bit and return
+        long signbit = bits & SIGN;
+        return Double.longBitsToDouble(magnitude | signbit);
+    }
+	
+	//Fixed point stuff from "http://jet.ro/files/The_neglected_art_of_Fixed_Point_arithmetic_20060913.pdf"
+	
+	/**
+	 * Convert a 16.16 fixed-point number to a {@link Float}. Certain predefined values are returned with calculation.
+	 * @param fp A 16.16 fixed-point number.
+	 * @return A {@link Float} that represents a fixed-point number.
+	 */
+	public static float fpToFloat(int fp)
+	{
+		return ((float)fp) * (1f / 65536f);
+	}
+	
+	/**
+	 * Convert a 16.16 fixed-point number to a {@link Double}. Certain predefined values are returned with calculation.
+	 * @param fp A 16.16 fixed-point number.
+	 * @return A {@link Double} that represents a fixed-point number.
+	 */
+	public static double fpToDouble(int fp)
+	{
+		/*
+		switch(fp)
+		{
+			case Fixed32.E:
+				return Math.E;
+			case Fixed32.MAX_VALUE:
+				return 32767.9999847412109375;
+			case Fixed32.MIN_VALUE:
+				return -32768.0;
+			case Fixed32.PI:
+				return Math.PI;
+			case Fixed32.PI_OVER_2:
+				return PIOVER2;
+			case Fixed32.RAD2DEG:
+				return 180.0 / Math.PI;
+			case Fixed32.TWOPI:
+				return TWOPI;
+			case Fixed32.FP090:
+				return 90.0;
+			case Fixed32.FP180:
+				return 180.0;
+			case Fixed32.FP270:
+				return 270.0;
+			case Fixed32.FP360:
+				return 360.0;
+			case Fixed32.HALF:
+				return 0.5;
+			case Fixed32.ONE:
+				return 1.0;
+			case Fixed32.QUARTER:
+				return 0.25;
+			default:
+				double val = 0.0;
+				//Get the fraction
+				int i = Fixed32.toIntTenThou(fp & 0x0000FFFF);
+				val += ((double)i) * 0.0001;
+				//Get the whole number
+				i = Fixed32.toInt(fp & 0x7FFF0000);
+				val += (double)i;
+				//Get sign
+				if((fp & 0x80000000) == 80000000)
+				{
+					val = -val;
+				}
+				return val;
+		}
+		*/
+		return ((double)fp) * (1.0 / 65536.0);
+	}
+	
+	/**
+	 * Convert a {@link Float} to a 16.16 fixed-point number. Certain predefined values are returned with calculation.
+	 * @param value A {@link Float} number.
+	 * @return A 16.16 fixed-point number that represents a {@link Float}.
+	 */
+	public static int doubleToFP(float value)
+	{
+		return round((value * 65536f) + (value >= 0 ? 0.5f : -0.5f));
+	}
+	
+	/**
+	 * Convert a {@link Double} to a 16.16 fixed-point number. Certain predefined values are returned with calculation.
+	 * @param value A {@link Double} number.
+	 * @return A 16.16 fixed-point number that represents a {@link Double}.
+	 */
+	public static int doubleToFP(double value)
+	{
+		/*
+		rebuild.system.ref.RefInteger i = new rebuild.system.ref.RefInteger(0);
+		if(predefinedFP(value, i))
+		{
+			return i.intValue();
+		}
+		int fp = 0;
+		double abs = Math.abs(value);
+		//Get the whole number
+		double whole = truncate(abs);
+		fp |= Fixed32.toFP((int)whole);
+		abs -= whole;
+		//Get the fraction
+		abs *= 10000.0;
+		whole = truncate(abs);
+		fp |= Fixed32.tenThouToFP((int)whole);
+		//Get sign
+		if(value < 0.0)
+		{
+			fp = -fp;
+		}
+		return fp;
+		*/
+		return (int)round((value * 65536.0) + (value >= 0 ? 0.5 : -0.5));
+	}
 }
