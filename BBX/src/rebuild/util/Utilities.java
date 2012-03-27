@@ -1,3 +1,5 @@
+//#preprocessor
+
 //---------------------------------------------------------------------------------
 //
 // BlackBerry Extensions
@@ -28,13 +30,14 @@ import java.util.Vector;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.Application;
+import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Dialog;
 import rebuild.BBXResource;
 import rebuild.Resources;
 
 /**
- * A collection of general utility functions.
+ * A collection of various utility functions.
  */
 public final class Utilities
 {
@@ -286,5 +289,48 @@ public final class Utilities
 	        return change;
     	}
     	return true;
+    }
+    
+    //Not the greatest UI components, but still an attempt
+    
+    /**
+     * Set the field to either enabled/disabled.
+     * @param f The field to enabled/disabled.
+     * @param isDisabled True if the field should be disabled, false if otherwise.
+     */
+    public static void setDisabled(Field f, boolean isDisabled)
+    {
+        f.setEditable(!isDisabled);
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK5.0.0
+        f.setEnabled(!isDisabled);
+//#endif
+        int state = f.getVisualState();
+        if(isDisabled)
+        {
+            state &= ~Field.VISUAL_STATE_NORMAL;
+            state |= Field.VISUAL_STATE_DISABLED;
+        }
+        else
+        {
+            state &= ~Field.VISUAL_STATE_DISABLED;
+            state |= Field.VISUAL_STATE_NORMAL;
+        }
+        f.setVisualState(state);
+    }
+    
+    /**
+     * Determine if the specified field is disabled.
+     * @param f The field to check.
+     * @return True if the field is disabled, false if otherwise.
+     */
+    public static boolean isDisabled(Field f)
+    {
+//#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK5.0.0
+    	boolean edit = !f.isEnabled();
+//#else
+    	boolean edit = !f.isEditable();
+//#endif
+        boolean dis = (f.getVisualState() & Field.VISUAL_STATE_DISABLED) == Field.VISUAL_STATE_DISABLED;
+        return edit && dis;
     }
 }

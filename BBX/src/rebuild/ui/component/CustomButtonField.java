@@ -289,7 +289,7 @@ public class CustomButtonField extends ButtonField
         {
             return;
         }
-//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.7.0 | BlackBerrySDK5.0.0
+//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK5.0.0
         if(!graphics.isDrawingStyleSet(Graphics.DRAWSTYLE_AALINES))
         {
             graphics.setDrawingStyle(Graphics.DRAWSTYLE_AALINES, true);
