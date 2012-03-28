@@ -298,6 +298,9 @@ public final class Utilities
      * @param f The field to enabled/disabled.
      * @param isDisabled True if the field should be disabled, false if otherwise.
      */
+//#ifdef BlackBerrySDK4.5.0
+    /*
+//#endif
     public static void setDisabled(Field f, boolean isDisabled)
     {
         f.setEditable(!isDisabled);
@@ -317,12 +320,18 @@ public final class Utilities
         }
         f.setVisualState(state);
     }
+//#ifdef BlackBerrySDK4.5.0
+    */
+//#endif
     
     /**
      * Determine if the specified field is disabled.
      * @param f The field to check.
      * @return True if the field is disabled, false if otherwise.
      */
+//#ifdef BlackBerrySDK4.5.0
+    /*
+//#endif
     public static boolean isDisabled(Field f)
     {
 //#ifndef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK5.0.0
@@ -333,4 +342,7 @@ public final class Utilities
         boolean dis = (f.getVisualState() & Field.VISUAL_STATE_DISABLED) == Field.VISUAL_STATE_DISABLED;
         return edit && dis;
     }
+//#ifdef BlackBerrySDK4.5.0
+    */
+//#endif
 }

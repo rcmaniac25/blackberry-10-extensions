@@ -800,7 +800,6 @@ public final class MathUtilities
 	 */
 	public static double wrap(double low, double value, double high)
 	{
-//#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.6.1 | BlackBerrySDK4.7.0 | BlackBerrySDK4.7.1 | BlackBerrySDK5.0.0 | BlackBerrySDK6.0.0
 		if(low > high)
 		{
 			throw new IllegalArgumentException("low > high");
@@ -814,9 +813,6 @@ public final class MathUtilities
 			return low;
 		}
 		return value;
-//#else
-		return net.rim.device.api.util.MathUtilities.wrap(low, value, high);
-//#endif
 	}
 	
 	/**
@@ -1035,7 +1031,74 @@ public final class MathUtilities
 	    return 0;
 	}
 	
-	//TODO: hyperbolic functions (if I can make sure that they work)
+	//Similar to the "nextDouble" functions, I am not to sure where these hyperbolic functions came from. OpenJDK, J4ME, Google/Bing don't turn up anything. They seem to work and
+	//match the Wikipedia definitions. But, knowing me, I probably got them from some open source library back in 2009 and don't remember which.
+	
+	/**
+	 * Returns the hyperbolic sine of the specified angle.
+	 * @param value An angle, measured in radians.
+	 * @return The hyperbolic sine of value. If value is equal to {@link Double.NEGATIVE_INFINITY}, {@link Double.POSITIVE_INFINITY}, or {@link Double.NaN}, this method returns a {@link Double} equal to value.
+	 */
+	public static double sinh(double value)
+	{
+		if(Double.isInfinite(value) || Double.isNaN(value))
+		{
+			return value;
+		}
+		if (value >= 0.0)
+        {
+            double epos = MathUtilities.exp(value);
+            return (epos - 1.0 / epos) / 2.0;
+        }
+        else
+        {
+            double eneg = MathUtilities.exp(-value);
+            return (1.0 / eneg - eneg) / 2.0;
+        }
+	}
+	
+	/**
+	 * Returns the hyperbolic cosine of the specified angle.
+	 * @param value An angle, measured in radians.
+	 * @return The hyperbolic cosine of value.
+	 */
+	public static double cosh(double value)
+	{
+		if(Double.isNaN(value))
+		{
+			return Double.NaN;
+		}
+		if(Double.isInfinite(value))
+		{
+			return Double.POSITIVE_INFINITY;
+		}
+		double retval = MathUtilities.exp(Math.abs(value));
+		return (retval + 1.0 / retval) / 2.0;
+	}
+	
+	/**
+	 * Returns the hyperbolic tangent of the specified angle.
+	 * @param value An angle, measured in radians.
+	 * @return The hyperbolic tangent of value. If value is equal to {@link Double.NEGATIVE_INFINITY}, this method returns -1. If value is equal to {@link Double.POSITIVE_INFINITY}, this method returns 1. If value is equal to {@link Double.NaN}, this method returns {@link Double.NaN}.
+	 */
+	public static double tanh(double value)
+	{
+		if(Double.isNaN(value))
+		{
+			return Double.NaN;
+		}
+		if(isNegativeInfinity(value) || (value < -50.0))
+		{
+			return -1.0;
+		}
+		else if(isPositiveInfinity(value) || (value > 50.0))
+		{
+			return 1.0;
+		}
+		double ebig = MathUtilities.exp(value);
+        double esmall = 1.0 / ebig;
+        return (ebig - esmall) / (ebig + esmall);
+	}
 	
 	/**
 	 * Finds the least double greater than d.

@@ -1,11 +1,8 @@
 --TODO:
-Do the todos in GestureField
-Bring the following types from RebuildLib to BBX:
--Some of the functions in MathUtil
-
 Check over functions within "ref" and see if additional functions are desired (because of newer OSes)
 Review code to look for anything that could go wrong
 
+Do the todos in GestureField
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 
 --NOTES:
@@ -31,8 +28,8 @@ Desired additions:
 -Emoticon field
 -Bring over some of the utilities and classes from LCMS and PDFRender
 
-Long term, personal Todo: depreciate Rebuild and replace with this. Move over similar classes and redesign some components. The Plugin system is one of the most important
-systems because it will allow the base library to be included and extras like Graphics or GLUT to be included only when desired.
+Long term, personal Todo: The Plugin system is one of the most important systems because it will allow the base library to be included and extras like Graphics or GLUT to be 
+included only when desired.
 
 Plugins:
 ///

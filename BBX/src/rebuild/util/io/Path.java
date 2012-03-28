@@ -26,7 +26,6 @@ package rebuild.util.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Vector;
 
 import javax.microedition.io.Connection;
 import javax.microedition.io.Connector;
@@ -88,10 +87,7 @@ public final class Path
 //#ifdef DEBUG
     private static boolean isSim; //If currently in simulator mode.
 //#endif
-    private static Path ttP; //Temporary files
     private static char[] validChar; //Valid path chars
-    
-    private Vector tP;
     
     static
     {
@@ -157,10 +153,7 @@ public final class Path
     
     private Path()
     {
-        tP = new Vector();
     }
-    
-    //todo (cleanup)
     
     /**
      * Get a standard system path.
