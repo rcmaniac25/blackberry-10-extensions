@@ -972,4 +972,29 @@ public final class StringUtilities
     		return null;
     	}
     }
+    
+    //Based off J2SE docs version 6
+    /**
+     * Get the character value for the specified numeric digit.
+     * @param digit The numeric digit to retrieve.
+     * @param radix The radix the resulting character should be.
+     * @return The digit converted to a character of the specified radix. Or a null char (value of zero) will be returned if parameters are not correct.
+     * @since BBX 1.2.0
+     */
+    public static char forDigit(int digit, int radix)
+    {
+    	if(radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
+    	{
+    		return '\0';
+    	}
+    	if(digit < 0 || digit > radix)
+    	{
+    		return '\0';
+    	}
+    	if(digit < 10)
+    	{
+    		return (char)('0' + digit);
+    	}
+    	return (char)('a' + digit - 10);
+    }
 }

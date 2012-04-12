@@ -22,6 +22,9 @@ FILEPICKER_ROOT_PATH_LABEL#0="Explore";
 FILE_SDCARD#0="file:///SDCard";
 FILE_SYSTEM#0="file:///store";
 INDEXOUTOFRANGE_NEGATIVECOUNT#0="Count cannot be less than zero.";
+LARGENUMBER_INVALID_EXP#0="Maximum exponent is 1075";
+LARGENUMBER_SRC1_LESST_SRC2#0="src1 is less then src2";
+LARGENUMBER_UNSIGNED_NUMBER_UNPARSEABLE#0="Number is too large or too small to be a LargeNumber.";
 MATH_NaN#0="Function does not accept floating point Not-a-Number values.";
 PATH_ROOTS#0={
     "file",

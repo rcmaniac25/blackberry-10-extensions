@@ -5,10 +5,8 @@ Review code to look for anything that could go wrong
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 
 From LCMS:
--LargeNumber
 -Stream
 -Utility
---forDigit
 --ctime
 --singleton functions (check the ID that is used between LCMS and PDF Renderer)
 --print functions (vsnprintf {StringBuffer, char[]}, vsprintf, sprintf {StringBuffer, char[]}, printf, fprintf {PrintStream, Stream})
@@ -32,6 +30,7 @@ Do the todos in GestureField
 
 --DEFINES:
 BIT_CONVERTER_USE_IO - Allow the use of the native IO functions to do the actual conversion of primitives to bytes (with manual conversion happening otherwise, or if the IO conversion fails)
+LARGENUMBER_USE_NATIVE_BIGINT - BlackBerry's Crypto system has built in Large Number support. It requires signing but could be faster since it is native.
 
 --NOTES:
 -Some previous projects I worked on use the same code as this project or has "contributed" code to this project. Changes in names are purely for the project, licenses should remain the same.

@@ -8,7 +8,10 @@
   </Resources>
   <KeywordResources KeywordResourceBundleName="" KeywordResourceBundleRelativePath="" KeywordResourceBundleClassName="" KeywordResourceBundleKey=""/>
   <Compile OutputCompilerMessages="false" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
-    <PreprocessorDefines/>
+    <PreprocessorDefines>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="LARGENUMBER_USE_NATIVE_BIGINT" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="BIT_CONVERTER_USE_IO" Scope="0"/>
+    </PreprocessorDefines>
   </Compile>
   <Packaging PreBuildStep="" PostBuildStep="" CleanStep="" OutputFileName="BBX" OutputFolder="deliverables" GenerateALXFile="true">
     <AlxFiles/>
