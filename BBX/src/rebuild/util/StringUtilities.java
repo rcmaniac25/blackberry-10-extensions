@@ -499,6 +499,58 @@ public final class StringUtilities
         }
         return a.compareTo(b);
     }
+    
+    /**
+	 * Format a string. USE A format_java function.
+	 * @param format The string format to use.
+	 * @param arg0 The argument to apply to the string format.
+	 * @return The formatted string.
+	 * @deprecated
+	 */
+	public static String format(String format, Object arg0)
+	{
+		return format_java(format, new Object[]{arg0});
+	}
+	
+	/**
+	 * Format a string. USE A format_java function.
+	 * @param format The string format to use.
+	 * @param arg0 The argument to apply to the string format.
+	 * @param arg1 The argument to apply to the string format.
+	 * @return The formatted string.
+	 * @deprecated
+	 */
+	public static String format(String format, Object arg0, Object arg1)
+	{
+		return format_java(format, new Object[]{arg0, arg1});
+	}
+	
+	/**
+	 * Format a string. USE A format_java function.
+	 * @param format The string format to use.
+	 * @param arg0 The argument to apply to the string format.
+	 * @param arg1 The argument to apply to the string format.
+	 * @param arg2 The argument to apply to the string format.
+	 * @return The formatted string.
+	 * @deprecated
+	 */
+	public static String format(String format, Object arg0, Object arg1, Object arg2)
+	{
+		return format_java(format, new Object[]{arg0, arg1, arg2});
+	}
+	
+	//This is from one of my other libraries (Bing for BlackBerry)
+	/**
+	 * Format a string. Based off java.text.MessageFormat. USE A format_java function.
+	 * @param format The string format to use.
+	 * @param args The arguments to apply to the string format.
+	 * @return The formatted string.
+	 * @deprecated
+	 */
+	public static String format(String format, Object[] args)
+	{
+		return format_java(format, args);
+	}
 	
 	/**
 	 * Format a string.
@@ -506,9 +558,9 @@ public final class StringUtilities
 	 * @param arg0 The argument to apply to the string format.
 	 * @return The formatted string.
 	 */
-	public static String format(String format, Object arg0)
+	public static String format_java(String format, Object arg0)
 	{
-		return format(format, new Object[]{arg0});
+		return format_java(format, new Object[]{arg0});
 	}
 	
 	/**
@@ -518,9 +570,9 @@ public final class StringUtilities
 	 * @param arg1 The argument to apply to the string format.
 	 * @return The formatted string.
 	 */
-	public static String format(String format, Object arg0, Object arg1)
+	public static String format_java(String format, Object arg0, Object arg1)
 	{
-		return format(format, new Object[]{arg0, arg1});
+		return format_java(format, new Object[]{arg0, arg1});
 	}
 	
 	/**
@@ -531,9 +583,9 @@ public final class StringUtilities
 	 * @param arg2 The argument to apply to the string format.
 	 * @return The formatted string.
 	 */
-	public static String format(String format, Object arg0, Object arg1, Object arg2)
+	public static String format_java(String format, Object arg0, Object arg1, Object arg2)
 	{
-		return format(format, new Object[]{arg0, arg1, arg2});
+		return format_java(format, new Object[]{arg0, arg1, arg2});
 	}
 	
 	//This is from one of my other libraries (Bing for BlackBerry)
@@ -543,7 +595,7 @@ public final class StringUtilities
 	 * @param args The arguments to apply to the string format.
 	 * @return The formatted string.
 	 */
-	public static String format(String format, Object[] args)
+	public static String format_java(String format, Object[] args)
 	{
 		//Until net.rim.device.api.i18n.MessageFormat supports the "number" property this has to be done manually.
 		int len = format.length();

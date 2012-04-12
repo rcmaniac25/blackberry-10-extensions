@@ -22,10 +22,10 @@
 // Created 2008
 package rebuild;
 
-import java.util.Hashtable;
+//import java.util.Hashtable;
 
 import net.rim.device.api.i18n.ResourceBundle;
-import net.rim.device.api.system.EncodedImage;
+//import net.rim.device.api.system.EncodedImage;
 
 /**
  * Library resources

@@ -24,11 +24,15 @@
 // Created 2009
 package rebuild.util;
 
+import java.util.Calendar;
 import java.util.Random;
 import java.util.Vector;
 
+//#ifndef NO_SIGNING
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
+//#endif
+import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.UiApplication;
@@ -248,6 +252,7 @@ public final class Utilities
 		}
 	}
 	
+//#ifndef NO_SIGNING
 	/**
      * Setup application permissions, this will assign a set of permissions to a application. If no permissions need to be
      * set then nothing will change. If there are any permissions need to be assigned then the permission dialog is
@@ -291,6 +296,7 @@ public final class Utilities
     	}
     	return true;
     }
+//#endif
     
     //Not the greatest UI components, but still an attempt
     
@@ -346,4 +352,16 @@ public final class Utilities
 //#ifdef BlackBerrySDK4.5.0
     */
 //#endif
+    
+    /**
+     * Format a Calendar in the same manner as the Standard C function "ctime"
+     * @param timer The calendar to format.
+     * @return The formatted calendar String.
+     * @since BBX 1.2.0
+     */
+    public static String ctime(Calendar timer)
+	{
+    	//ctime format: "Www Mmm dd hh:mm:ss yyyy" and appends \n to the end
+    	return new SimpleDateFormat(Resources.getString(BBXResource.UTIL_CTIME_FORMAT)).format(timer, new StringBuffer(), null).toString();//Ex: Sun Mar 08 2:10:20 2006
+	}
 }

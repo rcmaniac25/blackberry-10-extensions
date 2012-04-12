@@ -55,6 +55,7 @@ UNKNOWN_TYPE_W_MESSAGE#0="Unknown object of type: {0}; {1}.";
 UNSIGNED_NUMBER_UNPARSEABLE#0="Number is too large or too small to be a unsigned {0}.";
 UTIL_CONTAINS_CHECKSTRINGNULL#0="stringToCheck is null.";
 UTIL_CONTAINS_VALUESTRINGNULL#0="value is null.";
+UTIL_CTIME_FORMAT#0="EEE MMM dd HH':'mm':'ss yyyy'\n'";
 VALID_CHARS#0={
     "a",
     "b",
