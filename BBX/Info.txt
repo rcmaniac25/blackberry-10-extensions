@@ -2,8 +2,36 @@
 Check over functions within "ref" and see if additional functions are desired (because of newer OSes)
 Review code to look for anything that could go wrong
 
-Do the todos in GestureField
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
+
+From LCMS:
+-LargeNumber
+-Stream
+-Utility
+--forDigit
+--ctime
+--singleton functions (check the ID that is used between LCMS and PDF Renderer)
+--print functions (vsnprintf {StringBuffer, char[]}, vsprintf, sprintf {StringBuffer, char[]}, printf, fprintf {PrintStream, Stream})
+--scan functions (sscanf, fscanf)
+--PrintUtility (needed for the print/scan functions)
+
+From PDF Renderer:
+-nio (for non-5.0 devices)
+-LinkedList
+-PDFUtil
+--String_lastIndexOf
+--Vector_equals
+--Hashtable_putAll
+--Character_isLetterOrDigit
+--synchronizedVector
+--synchronizedTable
+--readonlyVector
+--**make** readonlyTable
+
+Do the todos in GestureField
+
+--DEFINES:
+BIT_CONVERTER_USE_IO - Allow the use of the native IO functions to do the actual conversion of primitives to bytes (with manual conversion happening otherwise, or if the IO conversion fails)
 
 --NOTES:
 -Some previous projects I worked on use the same code as this project or has "contributed" code to this project. Changes in names are purely for the project, licenses should remain the same.
@@ -16,17 +44,15 @@ Only the classes that could be implemented are implemented.
 Desired additions:
 -networking/messaging API
 -kSoap
--Authenticate ??
+-Authenticate (oAuth, etc.) ??
 -String formatting (built in formatting [Java], .Net, printf, scanf)
 -DeviceCapability API (in progress)
 -Camera Overlay
--JSR184 (on top of OpenGL)
 -GestureField
 -"Slider fields" from OS 6.0
 -RegEx
 -Plugin system
 -Emoticon field
--Bring over some of the utilities and classes from LCMS and PDFRender
 
 Long term, personal Todo: The Plugin system is one of the most important systems because it will allow the base library to be included and extras like Graphics or GLUT to be 
 included only when desired.
