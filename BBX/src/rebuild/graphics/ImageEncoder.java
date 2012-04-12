@@ -29,6 +29,7 @@ import net.rim.device.api.ui.XYRect;
 
 /**
  * The base abstract class that represents an image encoder.
+ * @since BBX 1.0.1
  */
 public abstract class ImageEncoder
 {

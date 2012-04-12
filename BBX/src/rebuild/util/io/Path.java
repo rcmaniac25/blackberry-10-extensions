@@ -39,6 +39,7 @@ import rebuild.util.Utilities;
 
 /**
  * Various path related functions for the Blackberry.
+ * @since BBX 1.0.1
  */
 public final class Path
 {

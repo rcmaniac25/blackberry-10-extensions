@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Integer is the same as {@link Integer} but allows you to set the int without creating a new {@link RefInteger}.
+ * @since BBX 1.1.0
  */
 public final class RefInteger extends RefNumber
 {

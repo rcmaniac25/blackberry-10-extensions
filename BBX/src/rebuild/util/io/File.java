@@ -26,6 +26,7 @@ import javax.microedition.io.file.FileConnection;
 
 /**
  * Various file related methods for the Blackberry.
+ * @since BBX 1.0.1
  */
 public final class File
 {

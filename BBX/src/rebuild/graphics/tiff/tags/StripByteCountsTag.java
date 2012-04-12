@@ -29,6 +29,7 @@ import rebuild.graphics.tiff.Writer;
 
 /**
  * For each strip, the number of bytes in the strip after compression.
+ * @since BBX 1.0.1
  */
 public final class StripByteCountsTag extends Tag
 {

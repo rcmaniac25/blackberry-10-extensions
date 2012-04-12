@@ -28,6 +28,7 @@ import rebuild.graphics.tiff.Tag;
 
 /**
  * Compression scheme used on the image data.
+ * @since BBX 1.0.1
  */
 public final class CompressionTag extends ShortTag
 {

@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Double is the same as {@link Double} but allows you to set the double without creating a new {@link Double}.
+ * @since BBX 1.1.0
  */
 public final class RefDouble extends RefNumber
 {

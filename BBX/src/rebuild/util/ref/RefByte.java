@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Byte is the same as {@link Byte} but allows you to set the byte without creating a new {@link Byte}.
+ * @since BBX 1.1.0
  */
 public final class RefByte extends RefNumber
 {

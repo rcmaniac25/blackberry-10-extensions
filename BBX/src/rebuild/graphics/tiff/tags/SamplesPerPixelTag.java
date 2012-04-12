@@ -24,6 +24,7 @@ package rebuild.graphics.tiff.tags;
 
 /**
  * The number of components per pixel.
+ * @since BBX 1.0.1
  */
 public final class SamplesPerPixelTag extends ShortTag
 {

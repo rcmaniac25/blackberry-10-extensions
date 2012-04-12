@@ -38,6 +38,7 @@ import rebuild.util.io.File;
 
 /**
  * A collection of various Graphics utilities.
+ * @since BBX 1.0.1
  */
 public final class GraphicsUtilities
 {

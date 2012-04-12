@@ -24,6 +24,7 @@ package rebuild.graphics.tiff.tags;
 
 /**
  * The number of bits per component in the image.
+ * @since BBX 1.0.1
  */
 public final class BitsPerSampleTag extends ShortTag
 {

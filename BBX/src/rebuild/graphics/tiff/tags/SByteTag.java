@@ -26,6 +26,7 @@ import rebuild.graphics.tiff.Writer;
 
 /**
  * A tag that contains one or more {@link Writer.SBYTE} items.
+ * @since BBX 1.0.1
  */
 public class SByteTag extends ByteTag
 {

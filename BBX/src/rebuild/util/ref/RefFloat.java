@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Float is the same as {@link Float} but allows you to set the float without creating a new {@link RefFloat}.
+ * @since BBX 1.1.0
  */
 public final class RefFloat extends RefNumber
 {

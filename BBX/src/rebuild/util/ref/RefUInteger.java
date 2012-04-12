@@ -28,6 +28,7 @@ import rebuild.util.StringUtilities;
 
 /**
  * Reference UInteger is the same as {@link Integer} but is unsigned and allows you to set the int without creating a new {@link Integer}.
+ * @since BBX 1.1.0
  */
 public final class RefUInteger extends RefNumber
 {

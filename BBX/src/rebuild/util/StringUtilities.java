@@ -29,6 +29,7 @@ import rebuild.Resources;
 
 /**
  * Various String utilities.
+ * @since BBX 1.0.1
  */
 public final class StringUtilities
 {
@@ -71,6 +72,7 @@ public final class StringUtilities
      * Indicates whether the specified String object is null, an Empty string, or whitespace.
      * @param value A String reference.
      * @return true if the value parameter is null, an empty string (""), or whitespace; otherwise, false.
+     * @since BBX 1.1.0
      */
     public static boolean isNullEmptyOrWhitespace(String value)
     {

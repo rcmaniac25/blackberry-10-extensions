@@ -28,6 +28,7 @@ import rebuild.graphics.tiff.Tag;
 
 /**
  * The color space of the image data.
+ * @since BBX 1.0.1
  */
 public final class PhotometricInterpretationTag extends ShortTag
 {

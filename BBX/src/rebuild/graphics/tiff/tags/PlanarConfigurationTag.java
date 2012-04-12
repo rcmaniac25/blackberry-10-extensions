@@ -28,6 +28,7 @@ import rebuild.graphics.tiff.Tag;
 
 /**
  * How the components of each pixel are stored.
+ * @since BBX 1.0.1
  */
 public final class PlanarConfigurationTag extends ShortTag
 {

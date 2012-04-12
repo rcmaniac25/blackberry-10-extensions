@@ -31,6 +31,7 @@ import rebuild.util.StringUtilities;
 
 /**
  * Various directory related methods for the Blackberry.
+ * @since BBX 1.0.1
  */
 public final class Directory
 {

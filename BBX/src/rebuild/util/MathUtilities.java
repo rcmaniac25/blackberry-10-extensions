@@ -31,6 +31,7 @@ import rebuild.util.ref.RefLong;
 
 /**
  * Provides some basic numeric operations.
+ * @since BBX 1.0.0
  */
 public final class MathUtilities
 {
@@ -819,6 +820,7 @@ public final class MathUtilities
 	 * Returns a value indicating whether the specified number evaluates to negative infinity.
 	 * @param d A single-precision floating point number.
 	 * @return true if d evaluates to {@link Float.NEGATIVE_INFINITY}; otherwise, false.
+	 * @since BBX 1.1.0
 	 */
 	public static boolean isNegativeInfinity(float d)
 	{
@@ -829,6 +831,7 @@ public final class MathUtilities
 	 * Returns a value indicating whether the specified number evaluates to positive infinity.
 	 * @param d A single-precision floating point number.
 	 * @return true if d evaluates to {@link Float.POSITIVE_INFINITY}; otherwise, false.
+	 * @since BBX 1.1.0
 	 */
 	public static boolean isPositiveInfinity(float d)
 	{
@@ -839,6 +842,7 @@ public final class MathUtilities
 	 * Returns a value indicating whether the specified number evaluates to negative infinity.
 	 * @param d A double-precision floating point number.
 	 * @return true if d evaluates to {@link Double.NEGATIVE_INFINITY}; otherwise, false.
+	 * @since BBX 1.1.0
 	 */
 	public static boolean isNegativeInfinity(double d)
 	{
@@ -849,6 +853,7 @@ public final class MathUtilities
 	 * Returns a value indicating whether the specified number evaluates to positive infinity.
 	 * @param d A double-precision floating point number.
 	 * @return true if d evaluates to {@link Double.POSITIVE_INFINITY}; otherwise, false.
+	 * @since BBX 1.1.0
 	 */
 	public static boolean isPositiveInfinity(double d)
 	{
@@ -860,6 +865,7 @@ public final class MathUtilities
 	 * @param a The first int to multiply.
 	 * @param b The second int to multiply.
 	 * @return The long containing the product of the specified numbers.
+	 * @since BBX 1.1.0
 	 */
 	public static long bigMul(int a, int b)
 	{
@@ -873,6 +879,7 @@ public final class MathUtilities
 	 * @param result The {@link RefLong} that receives the remainder.
 	 * @return The long containing the quotient of the specified numbers.
 	 * @throws ArithmeticException b is zero.
+	 * @since BBX 1.1.0
 	 */
 	public static int divRem(int a, int b, RefLong result)
 	{
@@ -903,6 +910,7 @@ public final class MathUtilities
 	 * </td></tr><tr><td><p><span>a</span> = 1</p></td><td><p><span>newBase</span> = 0</p></td><td><p>0</p></td></tr>
 	 * <tr><td><p><span>a</span> = 1</p></td><td><p><span>newBase</span> = +Infinity</p></td><td><p>0</p></td></tr>
 	 * </table></p>
+	 * @since BBX 1.1.0
 	 */
 	public static double log(double a, double newBase)
 	{
@@ -918,6 +926,7 @@ public final class MathUtilities
 	 * @param value A signed number.
 	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
 	 * @throws ArithmeticException value is equal to {@link Double.NaN}.
+	 * @since BBX 1.1.0
 	 */
 	public static int sign(double value)
 	{
@@ -940,6 +949,7 @@ public final class MathUtilities
 	 * Returns a value indicating the sign of a 8-bit signed integer.
 	 * @param value A signed number.
 	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 * @since BBX 1.1.0
 	 */
 	public static int sign(byte value)
 	{
@@ -958,6 +968,7 @@ public final class MathUtilities
 	 * Returns a value indicating the sign of a 16-bit signed integer.
 	 * @param value A signed number.
 	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 * @since BBX 1.1.0
 	 */
 	public static int sign(short value)
 	{
@@ -976,6 +987,7 @@ public final class MathUtilities
 	 * Returns a value indicating the sign of a 32-bit signed integer.
 	 * @param value A signed number.
 	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 * @since BBX 1.1.0
 	 */
 	public static int sign(int value)
 	{
@@ -994,6 +1006,7 @@ public final class MathUtilities
 	 * Returns a value indicating the sign of a 64-bit signed integer.
 	 * @param value A signed number.
 	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
+	 * @since BBX 1.1.0
 	 */
 	public static int sign(long value)
 	{
@@ -1013,6 +1026,7 @@ public final class MathUtilities
 	 * @param value A signed number.
 	 * @return A number indicating the sign of value.Number Description -1 value is less than zero. 0 value is equal to zero. 1 value is greater than zero.
 	 * @throws ArithmeticException value is equal to {@link Float.NaN}.
+	 * @since BBX 1.1.0
 	 */
 	public static int sign(float value)
 	{
@@ -1038,6 +1052,7 @@ public final class MathUtilities
 	 * Returns the hyperbolic sine of the specified angle.
 	 * @param value An angle, measured in radians.
 	 * @return The hyperbolic sine of value. If value is equal to {@link Double.NEGATIVE_INFINITY}, {@link Double.POSITIVE_INFINITY}, or {@link Double.NaN}, this method returns a {@link Double} equal to value.
+	 * @since BBX 1.1.0
 	 */
 	public static double sinh(double value)
 	{
@@ -1061,6 +1076,7 @@ public final class MathUtilities
 	 * Returns the hyperbolic cosine of the specified angle.
 	 * @param value An angle, measured in radians.
 	 * @return The hyperbolic cosine of value.
+	 * @since BBX 1.1.0
 	 */
 	public static double cosh(double value)
 	{
@@ -1080,6 +1096,7 @@ public final class MathUtilities
 	 * Returns the hyperbolic tangent of the specified angle.
 	 * @param value An angle, measured in radians.
 	 * @return The hyperbolic tangent of value. If value is equal to {@link Double.NEGATIVE_INFINITY}, this method returns -1. If value is equal to {@link Double.POSITIVE_INFINITY}, this method returns 1. If value is equal to {@link Double.NaN}, this method returns {@link Double.NaN}.
+	 * @since BBX 1.1.0
 	 */
 	public static double tanh(double value)
 	{
@@ -1104,6 +1121,7 @@ public final class MathUtilities
 	 * Finds the least double greater than d.
 	 * @param d The double to get the next positive value of.
 	 * @return The next positive double.
+	 * @since BBX 1.1.0
 	 */
 	public static double nextDouble(double d)
     {
@@ -1114,6 +1132,7 @@ public final class MathUtilities
 	 * Finds the greatest double less than d.
 	 * @param d The double to get the next negative value of.
 	 * @return The next negative double.
+	 * @since BBX 1.1.0
 	 */
     public static double previousDouble(double d)
     {
@@ -1128,6 +1147,7 @@ public final class MathUtilities
 	 * @param d The number to get the next double of.
 	 * @param positive Should the next value be the next positive value (adding) or negative value (subtraction).
 	 * @return The next double.
+	 * @since BBX 1.1.0
 	 */
 	public static double nextDouble(double d, boolean positive)
     {
@@ -1184,6 +1204,7 @@ public final class MathUtilities
 	 * Convert a 16.16 fixed-point number to a {@link Float}. Certain predefined values are returned with calculation.
 	 * @param fp A 16.16 fixed-point number.
 	 * @return A {@link Float} that represents a fixed-point number.
+	 * @since BBX 1.1.0
 	 */
 	public static float fpToFloat(int fp)
 	{
@@ -1194,6 +1215,7 @@ public final class MathUtilities
 	 * Convert a 16.16 fixed-point number to a {@link Double}. Certain predefined values are returned with calculation.
 	 * @param fp A 16.16 fixed-point number.
 	 * @return A {@link Double} that represents a fixed-point number.
+	 * @since BBX 1.1.0
 	 */
 	public static double fpToDouble(int fp)
 	{
@@ -1251,6 +1273,7 @@ public final class MathUtilities
 	 * Convert a {@link Float} to a 16.16 fixed-point number. Certain predefined values are returned with calculation.
 	 * @param value A {@link Float} number.
 	 * @return A 16.16 fixed-point number that represents a {@link Float}.
+	 * @since BBX 1.1.0
 	 */
 	public static int doubleToFP(float value)
 	{
@@ -1261,6 +1284,7 @@ public final class MathUtilities
 	 * Convert a {@link Double} to a 16.16 fixed-point number. Certain predefined values are returned with calculation.
 	 * @param value A {@link Double} number.
 	 * @return A 16.16 fixed-point number that represents a {@link Double}.
+	 * @since BBX 1.1.0
 	 */
 	public static int doubleToFP(double value)
 	{

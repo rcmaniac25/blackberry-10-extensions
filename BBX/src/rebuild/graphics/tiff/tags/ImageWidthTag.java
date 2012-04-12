@@ -29,6 +29,7 @@ import rebuild.graphics.tiff.Writer;
 
 /**
  * The number of columns in the image, i.e., the number of pixels per scanline.
+ * @since BBX 1.0.1
  */
 public final class ImageWidthTag extends Tag
 {

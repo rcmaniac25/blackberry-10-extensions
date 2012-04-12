@@ -73,6 +73,8 @@ import net.rim.device.api.util.CRC32;
  * 08-Apr-2008 : Ported to BlackBerry (by Richard Puckett II)
  * 10-May-2009 : Modified so it fits a standard image encoder base class.
  * 24-Mar-2012 : Moved to new library.
+ * 
+ * @since BBX 1.0.1
  */
 public class PNGEncoder extends ImageEncoder
 {

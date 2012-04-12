@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Short is the same as {@link Short} but allows you to set the short without creating a new {@link RefShort}.
+ * @since BBX 1.1.0
  */
 public final class RefShort extends RefNumber
 {

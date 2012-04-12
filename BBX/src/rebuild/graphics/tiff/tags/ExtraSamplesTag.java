@@ -24,6 +24,7 @@ package rebuild.graphics.tiff.tags;
 
 /**
  * Description of extra components.
+ * @since BBX 1.0.1
  */
 public final class ExtraSamplesTag extends ShortTag
 {

@@ -30,6 +30,7 @@ import rebuild.util.StringUtilities;
 
 /**
  * The abstract tag that will be used in TIFFs.
+ * @since BBX 1.0.1
  */
 public abstract class Tag
 {

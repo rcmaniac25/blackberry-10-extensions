@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Long is the same as {@link Long} but allows you to set the long without creating a new {@link RefLong}.
+ * @since BBX 1.1.0
  */
 public final class RefLong extends RefNumber
 {

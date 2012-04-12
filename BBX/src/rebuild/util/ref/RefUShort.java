@@ -28,6 +28,7 @@ import rebuild.util.StringUtilities;
 
 /**
  * Reference UShort is the same as {@link Short} but is unsigned and allows you to set the short without creating a new {@link Short}.
+ * @since BBX 1.1.0
  */
 public final class RefUShort extends RefNumber
 {

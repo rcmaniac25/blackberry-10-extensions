@@ -29,6 +29,7 @@ import rebuild.graphics.tiff.Writer;
 
 /**
  * The number of rows of pixels in the image.
+ * @since BBX 1.0.1
  */
 public final class ImageLengthTag extends Tag
 {

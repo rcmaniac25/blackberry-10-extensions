@@ -28,6 +28,7 @@ import rebuild.graphics.tiff.Writer;
 
 /**
  * For each strip, the byte offset of that strip.
+ * @since BBX 1.0.1
  */
 public final class StripOffsetsTag extends Tag
 {

@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Character is the same as {@link Character} but allows you to set the character without creating a new {@link Character}.
+ * @since BBX 1.1.0
  */
 public final class RefCharacter
 {

@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Object is the same as {@link Object} but allows you to set the object without creating a new {@link Object}.
+ * @since BBX 1.1.0
  */
 public final class RefObject
 {

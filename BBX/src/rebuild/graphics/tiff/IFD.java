@@ -29,6 +29,7 @@ import net.rim.device.api.collection.util.BigVector;
 
 /**
  * An "Image File Directory" that defines characteristics about the TIFF image.
+ * @since BBX 1.0.1
  */
 public final class IFD
 {

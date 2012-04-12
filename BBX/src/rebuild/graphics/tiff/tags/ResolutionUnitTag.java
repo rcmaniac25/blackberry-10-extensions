@@ -24,6 +24,7 @@ package rebuild.graphics.tiff.tags;
 
 /**
  * The unit of measurement for XResolution and YResolution.
+ * @since BBX 1.0.1
  */
 public final class ResolutionUnitTag extends ShortTag
 {

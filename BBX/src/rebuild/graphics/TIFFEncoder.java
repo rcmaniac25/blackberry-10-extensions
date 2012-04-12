@@ -57,6 +57,7 @@ import rebuild.util.GraphicsUtilities;
  * <p>Currently only the Baseline TIFF is supported for writing (with the exception of alpha). Any tags that
  * modify the image format are not supported even if the variables are there. Only one image, non-compressed,
  * RGB/A, 8bits per sample is supported.</p>
+ * @since BBX 1.0.1
  */
 public class TIFFEncoder extends ImageEncoder
 {

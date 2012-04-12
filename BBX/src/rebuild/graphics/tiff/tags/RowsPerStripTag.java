@@ -29,6 +29,7 @@ import rebuild.graphics.tiff.Writer;
 
 /**
  * The number of rows per strip.
+ * @since BBX 1.0.1
  */
 public final class RowsPerStripTag extends Tag
 {

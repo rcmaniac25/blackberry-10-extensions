@@ -37,6 +37,7 @@ import rebuild.util.GraphicsUtilities;
 
 /**
  * Customizable button
+ * @since BBX 1.0.1
  */
 public class CustomButtonField extends ButtonField
 {

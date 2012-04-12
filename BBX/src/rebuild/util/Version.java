@@ -29,6 +29,7 @@ import rebuild.Resources;
 
 /**
  * Represents the version number.
+ * @since BBX 1.0.1
  */
 //#ifdef BlackBerrySDK4.5.0 | BlackBerrySDK4.6.0 | BlackBerrySDK4.7.0
 public final class Version

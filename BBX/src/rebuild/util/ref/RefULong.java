@@ -28,6 +28,7 @@ import rebuild.util.StringUtilities;
 
 /**
  * Reference ULong is the same as {@link Long} but is unsigned and allows you to set the long without creating a new {@link Long}.
+ * @since BBX 1.1.0
  */
 public final class RefULong extends RefNumber
 {

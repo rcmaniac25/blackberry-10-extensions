@@ -29,6 +29,7 @@ import net.rim.device.api.system.JPEGEncodedImage;
 
 /**
  * A JPEG encoder.
+ * @since BBX 1.0.1
  */
 public class JPEGEncoder extends ImageEncoder
 {

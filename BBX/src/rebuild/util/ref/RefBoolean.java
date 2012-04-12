@@ -24,6 +24,7 @@ package rebuild.util.ref;
 
 /**
  * Reference Boolean is the same as {@link Boolean} but allows you to set the boolean without creating a new {@link Boolean}.
+ * @since BBX 1.1.0
  */
 public final class RefBoolean
 {

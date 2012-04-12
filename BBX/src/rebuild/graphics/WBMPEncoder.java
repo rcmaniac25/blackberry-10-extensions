@@ -30,6 +30,7 @@ import net.rim.device.api.ui.XYRect;
 
 /**
  * A Windows Bitmap (WBMP) encoder.
+ * @since BBX 1.0.1
  */
 public class WBMPEncoder extends ImageEncoder
 {

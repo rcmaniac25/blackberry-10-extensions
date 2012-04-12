@@ -39,6 +39,7 @@ import rebuild.util.StringUtilities;
  * <p>{@link RefNumber}s can be "fixed" or constant. They cannot be changed and must be cloned in order to change there
  * value. If any operation is performed on a fixed {@link RefNumber} then the number is cloned automatically and the
  * operation is performed on the clone. The original number is not changed at all.</p>
+ * @since BBX 1.1.0
  */
 public abstract class RefNumber
 {

@@ -38,6 +38,7 @@ import rebuild.Resources;
 
 /**
  * A collection of various utility functions.
+ * @since BBX 1.1.0
  */
 public final class Utilities
 {

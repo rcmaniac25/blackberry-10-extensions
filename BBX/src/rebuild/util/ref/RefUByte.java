@@ -28,6 +28,7 @@ import rebuild.util.StringUtilities;
 
 /**
  * Reference UByte is the same as {@link Byte} but is unsigned and allows you to set the byte without creating a new {@link Byte}.
+ * @since BBX 1.1.0
  */
 public final class RefUByte extends RefNumber
 {

@@ -30,6 +30,7 @@ import rebuild.Resources;
 
 /**
  * A data type writer for TIFF.
+ * @since BBX 1.0.1
  */
 public final class Writer
 {

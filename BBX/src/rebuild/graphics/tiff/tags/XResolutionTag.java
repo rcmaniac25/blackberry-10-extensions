@@ -24,6 +24,7 @@ package rebuild.graphics.tiff.tags;
 
 /**
  * The number of pixels per {@link ResolutionUnitTag} in the {@link ImageWidthTag} direction.
+ * @since BBX 1.0.1
  */
 public final class XResolutionTag extends RationalTag
 {
