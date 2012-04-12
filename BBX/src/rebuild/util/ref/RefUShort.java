@@ -24,7 +24,7 @@ package rebuild.util.ref;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Reference UShort is the same as {@link Short} but is unsigned and allows you to set the short without creating a new {@link Short}.
@@ -182,7 +182,7 @@ public final class RefUShort extends RefNumber
 		int sh = Integer.parseInt(s, radix);
 		if(sh < 0 || sh > 0xFFFF)
 		{
-			throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "short"));
+			throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "short"));
 		}
 		RefUShort clone = new RefUShort();
 		clone._val = sh;

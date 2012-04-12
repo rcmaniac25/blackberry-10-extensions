@@ -34,8 +34,8 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.system.DeviceInfo;
 import rebuild.BBXResource;
 import rebuild.Resources;
-import rebuild.util.StringUtilities;
 import rebuild.util.Utilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Various path related functions for the Blackberry.

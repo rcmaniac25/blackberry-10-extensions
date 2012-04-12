@@ -25,7 +25,7 @@ package rebuild.util.ref;
 import rebuild.BBXResource;
 import rebuild.Resources;
 import rebuild.util.MathUtilities;
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * <p>A reference number, this class contains many of the different operations that a number could do.</p>
@@ -525,7 +525,7 @@ public abstract class RefNumber
 			}
 			else
 			{
-				throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
+				throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
 			}
 		}
 		return this;
@@ -691,7 +691,7 @@ public abstract class RefNumber
 			}
 			else
 			{
-				throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
+				throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
 			}
 		}
 		return this;
@@ -856,7 +856,7 @@ public abstract class RefNumber
 			}
 			else
 			{
-				throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
+				throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
 			}
 		}
 		return this;
@@ -1021,7 +1021,7 @@ public abstract class RefNumber
 			}
 			else
 			{
-				throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
+				throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
 			}
 		}
 		return this;
@@ -1159,7 +1159,7 @@ public abstract class RefNumber
 			}
 			else
 			{
-				throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
+				throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNKNOWN_TYPE_W_MESSAGE), this.getClass(), Resources.getString(BBXResource.UNKNOWN_REFNUMBER)));
 			}
 		}
 		return this;

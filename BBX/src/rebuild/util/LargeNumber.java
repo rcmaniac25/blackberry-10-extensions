@@ -32,6 +32,7 @@ import net.rim.device.api.crypto.CryptoInteger;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Large number representation. Only handles unsigned integers.

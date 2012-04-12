@@ -24,7 +24,7 @@ package rebuild.util.ref;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Reference UByte is the same as {@link Byte} but is unsigned and allows you to set the byte without creating a new {@link Byte}.
@@ -182,7 +182,7 @@ public final class RefUByte extends RefNumber
 		short sh = Short.parseShort(s, radix);
 		if(sh < 0 || sh > 0xFF)
 		{
-			throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "byte"));
+			throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "byte"));
 		}
 		RefUByte clone = new RefUByte();
 		clone._val = sh;

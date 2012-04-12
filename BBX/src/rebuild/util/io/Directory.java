@@ -27,7 +27,7 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Various directory related methods for the Blackberry.
@@ -258,7 +258,7 @@ public final class Directory
     				java.util.Enumeration en = file.list("*", true);
     				while(en.hasMoreElements())
     				{
-    					String nPath = StringUtilities.format("file://{0}{1}{2}", file.getPath(), file.getName(), (String)en.nextElement());
+    					String nPath = StringUtilities.format_java("file://{0}{1}{2}", file.getPath(), file.getName(), (String)en.nextElement());
     					FileConnection nFile = (FileConnection)Connector.open(nPath, Connector.READ);
     					boolean nFileDir = isDirectory(nFile);
     					nFile.close();

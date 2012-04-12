@@ -24,7 +24,7 @@ package rebuild.util.ref;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Reference ULong is the same as {@link Long} but is unsigned and allows you to set the long without creating a new {@link Long}.
@@ -273,7 +273,7 @@ public final class RefULong extends RefNumber
             if (firstChar == '-')
             {
             	//Negative number not supported
-            	throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "long"));
+            	throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "long"));
             }
             else if (firstChar != '+')
             {
@@ -305,7 +305,7 @@ public final class RefULong extends RefNumber
         	if (result._val > multmin)
             {
         		//The number is greater then the maximum range of this function.
-                throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "long"));
+                throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "long"));
             }
         	result.multiply(radRef);
         	if (result._highBit && Long.MAX_VALUE - result._val < digit)

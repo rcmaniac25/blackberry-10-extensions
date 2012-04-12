@@ -5,7 +5,6 @@ Review code to look for anything that could go wrong
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 
 From LCMS:
--Stream
 -PrintUtility (needed for the print/scan functions)
 -Utility
 --singleton functions (check the ID that is used between LCMS and PDF Renderer)

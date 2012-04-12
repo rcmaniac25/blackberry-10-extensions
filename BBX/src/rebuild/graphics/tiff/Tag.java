@@ -26,7 +26,7 @@ import java.io.IOException;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * The abstract tag that will be used in TIFFs.
@@ -358,6 +358,6 @@ public abstract class Tag
 	
 	public String toString()
 	{
-		return StringUtilities.format("Tag: {0,number,integer}", new Integer(this.tag));
+		return StringUtilities.format_java("Tag: {0,number,integer}", new Integer(this.tag));
 	}
 }

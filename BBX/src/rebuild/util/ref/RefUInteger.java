@@ -24,7 +24,7 @@ package rebuild.util.ref;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
-import rebuild.util.StringUtilities;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Reference UInteger is the same as {@link Integer} but is unsigned and allows you to set the int without creating a new {@link Integer}.
@@ -182,7 +182,7 @@ public final class RefUInteger extends RefNumber
 		long sh = Long.parseLong(s, radix);
 		if(sh < 0 || sh > 0xFFFFFFFF)
 		{
-			throw new NumberFormatException(StringUtilities.format(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "int"));
+			throw new NumberFormatException(StringUtilities.format_java(Resources.getString(BBXResource.UNSIGNED_NUMBER_UNPARSEABLE), "int"));
 		}
 		RefUInteger clone = new RefUInteger();
 		clone._val = sh;

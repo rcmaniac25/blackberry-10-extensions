@@ -26,6 +26,7 @@ package rebuild.util;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
+import rebuild.util.text.StringUtilities;
 
 /**
  * Represents the version number.
@@ -401,7 +402,7 @@ public final class Version implements Comparable
         }
     	if (this._Build == -1)
     	{
-    		throw new IllegalArgumentException(StringUtilities.format(Resources.getString(BBXResource.ARGUMENT_BOUNDS_LOWER_UPPER_OUTOFRANGE), new Integer(0), new Integer(2)));
+    		throw new IllegalArgumentException(StringUtilities.format_java(Resources.getString(BBXResource.ARGUMENT_BOUNDS_LOWER_UPPER_OUTOFRANGE), new Integer(0), new Integer(2)));
     	}
     	if (fieldCount == 3)
     	{
@@ -409,7 +410,7 @@ public final class Version implements Comparable
     	}
     	if (this._Revision == -1 || fieldCount != 4)
     	{
-    		throw new IllegalArgumentException(StringUtilities.format(Resources.getString(BBXResource.ARGUMENT_BOUNDS_LOWER_UPPER_OUTOFRANGE), new Integer(0), new Integer(this._Revision == -1 ? 3 : 4)));
+    		throw new IllegalArgumentException(StringUtilities.format_java(Resources.getString(BBXResource.ARGUMENT_BOUNDS_LOWER_UPPER_OUTOFRANGE), new Integer(0), new Integer(this._Revision == -1 ? 3 : 4)));
     	}
     	return Integer.toString(this._Major) + '.' + Integer.toString(this._Minor) + '.' + Integer.toString(this._Build) + '.' + Integer.toString(this._Revision);
     }
