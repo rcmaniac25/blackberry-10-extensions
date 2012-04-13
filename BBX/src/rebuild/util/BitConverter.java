@@ -21,7 +21,7 @@
 //
 //---------------------------------------------------------------------------------
 //
-//Taken from LCMS
+//Taken from LCMS for BlackBerry
 package rebuild.util;
 
 //#ifdef BIT_CONVERTER_USE_IO

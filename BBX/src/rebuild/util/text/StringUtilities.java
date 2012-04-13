@@ -24,8 +24,15 @@
 // Created 2008
 package rebuild.util.text;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import rebuild.BBXResource;
 import rebuild.Resources;
+import rebuild.util.io.Stream;
 
 /**
  * Various String utilities.
@@ -723,6 +730,62 @@ public final class StringUtilities
 	}
 	
 	/**
+	 * Format a string.
+	 * @param format The string format to use.
+	 * @param arg0 The argument to apply to the string format.
+	 * @return The formatted string.
+	 * @since BBX 1.2.0
+	 */
+	public static String format_printf(String format, Object arg0)
+	{
+		return format_printf(format, new Object[]{arg0});
+	}
+	
+	/**
+	 * Format a string.
+	 * @param format The string format to use.
+	 * @param arg0 The argument to apply to the string format.
+	 * @param arg1 The argument to apply to the string format.
+	 * @return The formatted string.
+	 * @since BBX 1.2.0
+	 */
+	public static String format_printf(String format, Object arg0, Object arg1)
+	{
+		return format_printf(format, new Object[]{arg0, arg1});
+	}
+	
+	/**
+	 * Format a string.
+	 * @param format The string format to use.
+	 * @param arg0 The argument to apply to the string format.
+	 * @param arg1 The argument to apply to the string format.
+	 * @param arg2 The argument to apply to the string format.
+	 * @return The formatted string.
+	 * @since BBX 1.2.0
+	 */
+	public static String format_printf(String format, Object arg0, Object arg1, Object arg2)
+	{
+		return format_printf(format, new Object[]{arg0, arg1, arg2});
+	}
+	
+	/**
+	 * Format a string.
+	 * @param format The string format to use.
+	 * @param args The arguments to apply to the string format.
+	 * @return The formatted string or null if an error occurred.
+	 * @since BBX 1.2.0
+	 */
+	public static String format_printf(String format, Object[] args)
+	{
+		StringBuffer strBuf = new StringBuffer();
+		if(sprintf(strBuf, format, args) < 0)
+		{
+			return null;
+		}
+		return strBuf.toString();
+	}
+	
+	/**
      * Appends a specified number of copies of the string representation of a Unicode character to the end of the StringBuffer.
      * @param buf The StringBuffer to append the chars to.
      * @param value The character to append.
@@ -996,5 +1059,302 @@ public final class StringUtilities
     		return (char)('0' + digit);
     	}
     	return (char)('a' + digit - 10);
+    }
+    
+    private static class CharOut extends OutputStream
+	{
+		private StringBuffer strBuf;
+		private char[] chars;
+		private int pos;
+		private int appendPos;
+		
+		public CharOut(StringBuffer buf)
+		{
+			this.strBuf = buf;
+			this.pos = 0;
+			this.appendPos = buf.length();
+		}
+		
+		public CharOut(char[] buf)
+		{
+			this.chars = buf;
+			this.pos = 0;
+		}
+		
+		public void write(int b) throws IOException
+		{
+			write(new byte[]{(byte)b});
+		}
+		
+		public void write(byte[] b, int off, int len) throws IOException
+		{
+			len += off;
+			for(int i = off; i < len; i++)
+			{
+				if(strBuf == null)
+				{
+					this.chars[pos++] = (char)b[i];
+					if(pos >= chars.length)
+					{
+						break;
+					}
+				}
+				else
+				{
+					if(pos >= appendPos)
+					{
+						this.strBuf.append((char)b[i]);
+						pos++;
+					}
+					else
+					{
+						this.strBuf.setCharAt(pos++, (char)b[i]);
+					}
+				}
+			}
+		}
+	}
+    
+    /**
+     * Print formatted variable argument list to a string buffer.
+     * @param buffer The string buffer to write to.
+     * @param count Maximum number of characters to write. If this is less then zero then it will not truncate the output.
+     * @param format Format string to write to the buffer.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+    public static int vsnprintf(StringBuffer buffer, int count, final String format, Object[] argptr)
+	{
+    	return fprintf(new PrintStream(new CharOut(buffer)), count, format, argptr);
+	}
+	
+    /**
+     * Print formatted variable argument list to a char array.
+     * @param buffer The char array to write to.
+     * @param count Maximum number of characters to write. If this is less then zero then it will not truncate the output.
+     * @param format Format string to write to the buffer.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int vsnprintf(char[] buffer, int count, final String format, Object[] argptr)
+	{
+		return fprintf(new PrintStream(new CharOut(buffer)), count, format, argptr);
+	}
+	
+	/**
+     * Print formatted variable argument list to a string buffer.
+     * @param buffer The string buffer to write to.
+     * @param format Format string to write to the buffer.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int sprintf(StringBuffer buffer, final String format, Object[] argptr)
+	{
+		return fprintf(new PrintStream(new CharOut(buffer)), format, argptr);
+	}
+	
+	/**
+     * Print formatted variable argument list to a char array.
+     * @param buffer The char array to write to.
+     * @param format Format string to write to the buffer.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int sprintf(char[] buffer, final String format, Object[] argptr)
+	{
+		return fprintf(new PrintStream(new CharOut(buffer)), format, argptr);
+	}
+	
+	/**
+     * Print formatted data to {@link System#out System.out}
+     * @param format Format string to write to {@link System#out System.out}.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int printf(final String format, Object[] argptr)
+	{
+		return fprintf(System.out, format, argptr);
+	}
+    
+    private static class StreamOut extends OutputStream
+	{
+		private Stream st;
+		
+		public StreamOut(Stream st)
+		{
+			this.st = st;
+		}
+		
+		public void write(int b) throws IOException
+		{
+			write(new byte[]{(byte)b}, 0, 1);
+		}
+		
+		public void write(byte[] b, int off, int len) throws IOException
+		{
+			st.write(b, off, len, 1);
+		}
+	}
+	
+    /**
+     * Write formatted output to a print stream.
+     * @param stream The print stream to write to.
+     * @param format Format string to write to the stream.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int fprintf(PrintStream stream, final String format, Object[] argptr)
+	{
+		return fprintf(stream, -1, format, argptr);
+	}
+	
+	/**
+     * Write formatted output to a output stream.
+     * @param stream The print stream to write to.
+     * @param format Format string to write to the stream.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int fprintf(OutputStream stream, final String format, Object[] argptr)
+	{
+		return fprintf(new PrintStream(stream), -1, format, argptr);
+	}
+	
+	/**
+     * Write formatted output to a stream.
+     * @param stream The print stream to write to.
+     * @param format Format string to write to the stream.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int fprintf(Stream stream, final String format, Object[] argptr)
+	{
+		return fprintf(new PrintStream(new StreamOut(stream)), -1, format, argptr);
+	}
+	
+	/**
+     * Write formatted output to a print stream.
+     * @param stream The print stream to write to.
+     * @param count Maximum number of characters to write. If this is less then zero then it will not truncate the output.
+     * @param format Format string to write to the stream.
+     * @param argptr Depending on the format string, the function may expect a sequence of additional arguments, each containing one value to be inserted instead of each %-tag specified in 
+     * the format parameter, if any. There should be the same number of these arguments as the number of %-tags that expect a value.
+     * @return On success, the total number of characters written is returned. On failure, a negative number is returned.
+     * @since BBX 1.2.0
+     */
+	public static int fprintf(PrintStream stream, int count, final String format, Object[] argptr)
+	{
+		if(format == null)
+		{
+			return 0;
+		}
+		return PrintUtility.output(stream, count, format, argptr, null, 0);
+	}
+    
+    /**
+     * Read formatted data from string.
+     * @param str String that the function processes as its source to retrieve the data.
+     * @param format String describing the format of str.
+     * @param argptr The function expects a sequence of pointers as additional arguments, each one pointing to an object of the type specified by their 
+     * corresponding %-tag within the format string, in the same order.
+     * @return On success, the function returns the number of variables filled. This count can match the expected number of readings or fewer, even zero, if a matching failure happens.
+     * @since BBX 1.2.0
+     */
+    public static int sscanf(final String str, final String format, Object[] argptr)
+    {
+		int len = 0;
+		ByteArrayInputStream bais = null;
+		try
+		{
+			byte[] data = str.getBytes("UTF-8");
+			bais = new ByteArrayInputStream(data);
+			len = fscanf(bais, format, argptr);
+		}
+		catch(IOException ioe)
+		{
+		}
+		finally
+		{
+			if(bais != null)
+			{
+				try
+				{
+					bais.close();
+				}
+				catch(Exception e)
+				{
+				}
+			}
+		}
+    	return len;
+    }
+    
+    private static class StreamIn extends InputStream
+	{
+		private Stream st;
+		
+		public StreamIn(Stream st)
+		{
+			this.st = st;
+		}
+
+		public int read() throws IOException
+		{
+			byte[] b = new byte[1];
+			if(this.st.read(b, 0, 1, 1) == 1)
+			{
+				return b[0] & 0xFF;
+			}
+			return -1;
+		}
+		
+		public int read(byte[] b, int off, int len) throws IOException
+		{
+			return (int)this.st.read(b, off, 1, len);
+		}
+	}
+    
+    /**
+     * Read formatted data from a stream.
+     * @param file The stream to read data from.
+     * @param format String describing the format of file.
+     * @param argptr The function expects a sequence of pointers as additional arguments, each one pointing to an object of the type specified by their 
+     * corresponding %-tag within the format string, in the same order.
+     * @return On success, the function returns the number of variables filled. This count can match the expected number of readings or fewer, even zero, if a matching failure happens.
+     * @since BBX 1.2.0
+     */
+    public static int fscanf(final Stream file, final String format, Object[] argptr)
+    {
+    	return PrintUtility.fscanf(new StreamIn(file), format, argptr, null, 0);
+    }
+	
+    /**
+     * Read formatted data from a input stream.
+     * @param file The stream to read data from.
+     * @param format String describing the format of file.
+     * @param argptr The function expects a sequence of pointers as additional arguments, each one pointing to an object of the type specified by their 
+     * corresponding %-tag within the format string, in the same order.
+     * @return On success, the function returns the number of variables filled. This count can match the expected number of readings or fewer, even zero, if a matching failure happens.
+     * @since BBX 1.2.0
+     */
+    public static int fscanf(final InputStream file, final String format, Object[] argptr)
+    {
+    	return PrintUtility.fscanf(file, format, argptr, null, 0);
     }
 }

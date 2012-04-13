@@ -21,7 +21,7 @@
 //
 //---------------------------------------------------------------------------------
 //
-//Taken from LCMS
+//Taken from LCMS for BlackBerry
 package rebuild.util;
 
 import net.rim.device.api.util.Arrays;

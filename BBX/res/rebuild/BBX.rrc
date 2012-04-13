@@ -41,6 +41,10 @@ PATH_ROOTS#0={
     "ssl",
     "btspp",
 };
+PRINTUTILITY_BAD_STRING_FORMAT#0="Bad Format";
+PRINTUTILITY_NULL_POINTER_ERR#0="null pointer return";
+PRINTUTILITY_UNK_ARG#0=": Unknown argument, defaulting to ";
+PRINTUTILITY_UNSIGNED_NUMBER_UNPARSEABLE_LONG#0="Number is too large or too small to be a unsigned long.";
 STANDARD_BB_PATH_FOLDER_ICONS#0="file:///system/samples/folder icons/";
 STANDARD_SIM_PATH_FOLDER_ICONS#0="file:///store/samples/folder icons/";
 TIFF_DIFFERENT_RATIONAL#0="The numerator count and denominator count don't match.";
