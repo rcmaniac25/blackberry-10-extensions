@@ -4,22 +4,11 @@ Review code to look for anything that could go wrong
 
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 
-From PDF Renderer:
--nio (for non-5.0 devices)
--LinkedList
--PDFUtil
---String_lastIndexOf
---Vector_equals
---Hashtable_putAll
---Character_isLetterOrDigit
---synchronizedVector
---synchronizedTable
---readonlyVector
---**make** readonlyTable
-
 Modify PrintUtility so that it supports "ref" functions
+Add remaining NIO classes (make duplicate of native NIO)
 Finish FilePicker
 Do the todos in GestureField
+Remove Utilities.toArray in 1.3.0
 
 Modify PrintUtility so that the print formats are extendable (use StringUtilities as the front end, PrintUtility as the back end)
 

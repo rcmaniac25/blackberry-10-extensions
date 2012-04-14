@@ -30,6 +30,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import net.rim.device.api.util.CharacterUtilities;
+
 import rebuild.BBXResource;
 import rebuild.Resources;
 import rebuild.util.io.Stream;
@@ -238,6 +240,35 @@ public final class StringUtilities
     	
     	return temp;
     }
+    
+    /**
+     * Returns the index within a string of the last occurrence of the specified substring.
+     * @param str The String to search in.
+     * @param value The value to search for.
+     * @return The last index of the specified value within the string, or -1 if it doesn't exist.
+     * @since BBX 1.2.0
+     */
+    public static int lastIndexOf(String str, String value)
+	{
+		int pos = -1;
+		int lpos = -1;
+		while((pos = str.indexOf(value, pos + 1)) > -1)
+		{
+			lpos = pos;
+		}
+		return lpos;
+	}
+    
+    /**
+	 * Determines if the specified character is a letter or digit.
+	 * @param ch the character to be tested.
+	 * @return <code>true</code> if the character is a letter or digit; <code>false</code> otherwise.
+	 * @since BBX 1.2.0
+	 */
+	public static boolean isLetterOrDigit(char ch)
+	{
+		return CharacterUtilities.isLetter(ch) || CharacterUtilities.isDigit(ch);
+	}
     
     /**
      * Returns a String array containing the substrings in this instance that are delimited by a separator.

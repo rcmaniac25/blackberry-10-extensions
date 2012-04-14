@@ -41,8 +41,10 @@ import net.rim.device.api.ui.component.Dialog;
 //#ifndef BlackBerrySDK4.5.0
 import net.rim.device.api.util.LongVector;
 //#endif
+
 import rebuild.BBXResource;
 import rebuild.Resources;
+import rebuild.collections.CollectionUtilities;
 
 /**
  * A collection of various utility functions.
@@ -50,7 +52,9 @@ import rebuild.Resources;
  */
 public final class Utilities
 {
+//#ifndef NO_SIGNING
 	private static final long SINGLETON_STORAGE_ID = 0xF57E30F85CB3A690L;
+//#endif
 	
 	private static Random ran1;
     private static Random ran2;
@@ -130,11 +134,11 @@ public final class Utilities
      * @param data The array of bytes to fill with random numbers.
      * @throws NullPointerException If data is null.
      */
-    public static void GetNonZeroBytes(byte[] data)
+    public static void getNonZeroBytes(byte[] data)
     {
         int l = data.length;
         int[] d = new int[l];
-        GetNonZeroBytes(d);
+        getNonZeroBytes(d);
         for(int i = 0; i < l; i++)
         {
             data[i] = (byte)d[i];
@@ -178,7 +182,7 @@ public final class Utilities
      * @param data The array of bytes to fill with random numbers.
      * @throws NullPointerException If data is null.
      */
-    public static void GetNonZeroBytes(int[] data)
+    public static void getNonZeroBytes(int[] data)
     {
         RNGGetBytes(data);
         int l = data.length;
@@ -196,16 +200,11 @@ public final class Utilities
      * @param vect The {@link java.util.Vector} to convert to an array.
      * @return If vect is <code>null</code> then <code>null</code> is returned. Else an array is returned of the
      * items in vect.
+     * @deprecated
      */
-    public static Object[] ToArray(Vector vect)
+    public static Object[] toArray(Vector vect)
     {
-    	if(vect == null)
-    	{
-    		return null;
-    	}
-    	Object[] objs = new Object[vect.size()];
-    	vect.copyInto(objs);
-    	return objs;
+    	return CollectionUtilities.toArray(vect);
     }
     
     /**
