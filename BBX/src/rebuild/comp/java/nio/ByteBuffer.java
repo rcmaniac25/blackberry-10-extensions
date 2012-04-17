@@ -68,6 +68,10 @@ public abstract class ByteBuffer extends Buffer
 	 */
 	public static ByteBuffer wrap(byte[] array)
 	{
+		if(array == null)
+		{
+			throw new NullPointerException();
+		}
 		return new ByteBufferImpl(array);
 	}
 	

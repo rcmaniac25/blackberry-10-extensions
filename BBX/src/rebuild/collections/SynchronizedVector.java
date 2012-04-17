@@ -21,6 +21,7 @@
 //
 //---------------------------------------------------------------------------------
 //
+//Taken from PDF Renderer for BlackBerry
 package rebuild.collections;
 
 import java.util.Enumeration;
@@ -47,6 +48,18 @@ final class SynchronizedVector extends Vector
 		this.list = l;
 		this.mutex = this;
 	}
+	
+	SynchronizedVector(Vector l, Object mutex)
+	{
+		if(l == null)
+		{
+			throw new NullPointerException();
+		}
+		this.list = l;
+		this.mutex = mutex;
+	}
+	
+	//We don't care about any synchronized functions as we do our own synchronization (though the methods would be a little faster)
 	
 	public void addElement(Object obj)
 	{

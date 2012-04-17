@@ -241,6 +241,7 @@ public final class StringUtilities
     	return temp;
     }
     
+    //Taken from PDF Renderer for BlackBerry
     /**
      * Returns the index within a string of the last occurrence of the specified substring.
      * @param str The String to search in.

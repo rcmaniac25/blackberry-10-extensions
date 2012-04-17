@@ -46,22 +46,22 @@ final class ReadonlyTable extends Hashtable
 		this.t = table;
 	}
 	
-	public void clear()
+	public synchronized void clear()
 	{
 		throw new UnsupportedOperationException();
 	}
 	
-	public boolean contains(Object value)
+	public synchronized boolean contains(Object value)
 	{
 		return this.t.contains(value);
 	}
 	
-	public boolean containsKey(Object key)
+	public synchronized boolean containsKey(Object key)
 	{
 		return this.t.containsKey(key);
 	}
 	
-	public Enumeration elements()
+	public synchronized Enumeration elements()
 	{
 		return this.t.elements();
 	}
@@ -71,7 +71,7 @@ final class ReadonlyTable extends Hashtable
 		return this.t.equals(obj);
 	}
 	
-	public Object get(Object key)
+	public synchronized Object get(Object key)
 	{
 		return this.t.get(key);
 	}
@@ -86,12 +86,12 @@ final class ReadonlyTable extends Hashtable
 		return this.t.isEmpty();
 	}
 	
-	public Enumeration keys()
+	public synchronized Enumeration keys()
 	{
 		return this.t.keys();
 	}
 	
-	public Object put(Object key, Object value)
+	public synchronized Object put(Object key, Object value)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -101,7 +101,7 @@ final class ReadonlyTable extends Hashtable
 		throw new UnsupportedOperationException();
 	}
 	
-	public Object remove(Object key)
+	public synchronized Object remove(Object key)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -111,7 +111,7 @@ final class ReadonlyTable extends Hashtable
 		return this.t.size();
 	}
 	
-	public String toString()
+	public synchronized String toString()
 	{
 		return this.t.toString();
 	}

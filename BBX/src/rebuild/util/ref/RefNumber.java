@@ -289,14 +289,14 @@ public abstract class RefNumber
 	}
 	
 	/**
-	 * Deincrement this number.
-	 * @return This number. If it is read only then a copy that has been deincremented is returned.
+	 * Decrement this number.
+	 * @return This number. If it is read only then a copy that has been decremented is returned.
 	 */
-	public RefNumber deincrement()
+	public RefNumber decrement()
 	{
 		if(this._fixed)
 		{
-			return this.cloneNumber().deincrement();
+			return this.cloneNumber().decrement();
 		}
 		if(this instanceof RefByte)
 		{
@@ -343,7 +343,7 @@ public abstract class RefNumber
 			RefUInteger rn = ((RefUInteger)this);
 			if(rn._val == 0)
 			{
-				rn._val = 0xFFFFFFFF;
+				rn._val = 0xFFFFFFFFL;
 			}
 			else
 			{
@@ -475,41 +475,17 @@ public abstract class RefNumber
 			else if(this instanceof RefUByte)
 			{
 				RefUByte rb = (RefUByte)this;
-				rb._val += RefNumber.castToUByte(number)._val;
-				while(rb._val < 0)
-				{
-					rb._val += 0x100;
-				}
-				while(rb._val > 0xFF)
-				{
-					rb._val -= 0x100;
-				}
+				rb._val = (short)((rb._val + RefNumber.castToUByte(number)._val) % 0x100);
 			}
 			else if(this instanceof RefUShort)
 			{
 				RefUShort rs = (RefUShort)this;
-				rs._val += RefNumber.castToUShort(number)._val;
-				while(rs._val < 0)
-				{
-					rs._val += 0x10000;
-				}
-				while(rs._val > 0xFFFF)
-				{
-					rs._val -= 0x10000;
-				}
+				rs._val = (rs._val + RefNumber.castToUShort(number)._val) % 0x10000;
 			}
 			else if(this instanceof RefUInteger)
 			{
 				RefUInteger ri = (RefUInteger)this;
-				ri._val += RefNumber.castToUInt(number)._val;
-				while(ri._val < 0L)
-				{
-					ri._val += 0x100000000L;
-				}
-				while(ri._val > 0xFFFFFFFF)
-				{
-					ri._val -= 0x100000000L;
-				}
+				ri._val = (ri._val + RefNumber.castToUInt(number)._val) % 0x100000000L;
 			}
 			else if(this instanceof RefULong)
 			{
@@ -641,41 +617,17 @@ public abstract class RefNumber
 			else if(this instanceof RefUByte)
 			{
 				RefUByte rb = (RefUByte)this;
-				rb._val -= RefNumber.castToUByte(number)._val;
-				while(rb._val < 0)
-				{
-					rb._val += 0x100;
-				}
-				while(rb._val > 0xFF)
-				{
-					rb._val -= 0x100;
-				}
+				rb._val = (short)((rb._val - RefNumber.castToUByte(number)._val) % 0x100);
 			}
 			else if(this instanceof RefUShort)
 			{
 				RefUShort rs = (RefUShort)this;
-				rs._val -= RefNumber.castToUShort(number)._val;
-				while(rs._val < 0)
-				{
-					rs._val += 0x10000;
-				}
-				while(rs._val > 0xFFFF)
-				{
-					rs._val -= 0x10000;
-				}
+				rs._val = (rs._val - RefNumber.castToUShort(number)._val) % 0x10000;
 			}
 			else if(this instanceof RefUInteger)
 			{
 				RefUInteger ri = (RefUInteger)this;
-				ri._val -= RefNumber.castToUInt(number)._val;
-				while(ri._val < 0L)
-				{
-					ri._val += 0x100000000L;
-				}
-				while(ri._val > 0xFFFFFFFF)
-				{
-					ri._val -= 0x100000000L;
-				}
+				ri._val = (ri._val - RefNumber.castToUInt(number)._val) % 0x100000000L;
 			}
 			else if(this instanceof RefULong)
 			{
@@ -806,41 +758,17 @@ public abstract class RefNumber
 			else if(this instanceof RefUByte)
 			{
 				RefUByte rb = (RefUByte)this;
-				rb._val *= RefNumber.castToUByte(number)._val;
-				while(rb._val < 0)
-				{
-					rb._val += 0x100;
-				}
-				while(rb._val > 0xFF)
-				{
-					rb._val -= 0x100;
-				}
+				rb._val = (short)((rb._val * RefNumber.castToUByte(number)._val) % 0x100);
 			}
 			else if(this instanceof RefUShort)
 			{
 				RefUShort rs = (RefUShort)this;
-				rs._val *= RefNumber.castToUShort(number)._val;
-				while(rs._val < 0)
-				{
-					rs._val += 0x10000;
-				}
-				while(rs._val > 0xFFFF)
-				{
-					rs._val -= 0x10000;
-				}
+				rs._val = (rs._val * RefNumber.castToUShort(number)._val) % 0x10000;
 			}
 			else if(this instanceof RefUInteger)
 			{
 				RefUInteger ri = (RefUInteger)this;
-				ri._val *= RefNumber.castToUInt(number)._val;
-				while(ri._val < 0L)
-				{
-					ri._val += 0x100000000L;
-				}
-				while(ri._val > 0xFFFFFFFF)
-				{
-					ri._val -= 0x100000000L;
-				}
+				ri._val = (ri._val * RefNumber.castToUInt(number)._val) % 0x100000000L;
 			}
 			else if(this instanceof RefULong)
 			{
@@ -971,41 +899,17 @@ public abstract class RefNumber
 			else if(this instanceof RefUByte)
 			{
 				RefUByte rb = (RefUByte)this;
-				rb._val /= RefNumber.castToUByte(number)._val;
-				while(rb._val < 0)
-				{
-					rb._val += 0x100;
-				}
-				while(rb._val > 0xFF)
-				{
-					rb._val -= 0x100;
-				}
+				rb._val = (short)((rb._val / RefNumber.castToUByte(number)._val) % 0x100);
 			}
 			else if(this instanceof RefUShort)
 			{
 				RefUShort rs = (RefUShort)this;
-				rs._val /= RefNumber.castToUShort(number)._val;
-				while(rs._val < 0)
-				{
-					rs._val += 0x10000;
-				}
-				while(rs._val > 0xFFFF)
-				{
-					rs._val -= 0x10000;
-				}
+				rs._val = (rs._val / RefNumber.castToUShort(number)._val) % 0x10000;
 			}
 			else if(this instanceof RefUInteger)
 			{
 				RefUInteger ri = (RefUInteger)this;
-				ri._val /= RefNumber.castToUInt(number)._val;
-				while(ri._val < 0L)
-				{
-					ri._val += 0x100000000L;
-				}
-				while(ri._val > 0xFFFFFFFF)
-				{
-					ri._val -= 0x100000000L;
-				}
+				ri._val = (ri._val / RefNumber.castToUInt(number)._val) % 0x100000000L;
 			}
 			else if(this instanceof RefULong)
 			{
@@ -1280,10 +1184,6 @@ public abstract class RefNumber
 			{
 				shift = castToULong(number);
 			}
-			if(shift._highBit)
-			{
-				shift._val |= 0x8000000000000000L;
-			}
 			
 			if(this instanceof RefByte)
 			{
@@ -1299,19 +1199,24 @@ public abstract class RefNumber
 			}
 			else if(this instanceof RefLong)
 			{
+				//Only place where this is needed
+				if(shift._highBit)
+				{
+					shift._val |= 0x8000000000000000L;
+				}
 				((RefLong)this)._val &= shift._val;
 			}
 			else if(this instanceof RefUByte)
 			{
-				((RefUByte)this)._val &= (byte)(shift._val & 0x00000000000000FFL);
+				((RefUByte)this)._val &= (short)(shift._val & 0x00000000000000FFL);
 			}
 			else if(this instanceof RefUShort)
 			{
-				((RefUShort)this)._val &= (short)(shift._val & 0x000000000000FFFFL);
+				((RefUShort)this)._val &= (int)(shift._val & 0x000000000000FFFFL);
 			}
 			else if(this instanceof RefUInteger)
 			{
-				((RefUInteger)this)._val &= (int)(shift._val & 0x00000000FFFFFFFFL);
+				((RefUInteger)this)._val &= shift._val & 0x00000000FFFFFFFFL;
 			}
 			else if(this instanceof RefULong)
 			{
@@ -1432,10 +1337,6 @@ public abstract class RefNumber
 			{
 				shift = castToULong(number);
 			}
-			if(shift._highBit)
-			{
-				shift._val |= 0x8000000000000000L;
-			}
 			
 			if(this instanceof RefByte)
 			{
@@ -1451,19 +1352,24 @@ public abstract class RefNumber
 			}
 			else if(this instanceof RefLong)
 			{
+				//Only place where this is needed
+				if(shift._highBit)
+				{
+					shift._val |= 0x8000000000000000L;
+				}
 				((RefLong)this)._val |= shift._val;
 			}
 			else if(this instanceof RefUByte)
 			{
-				((RefUByte)this)._val |= (byte)(shift._val & 0x00000000000000FFL);
+				((RefUByte)this)._val |= (short)(shift._val & 0x00000000000000FFL);
 			}
 			else if(this instanceof RefUShort)
 			{
-				((RefUShort)this)._val |= (short)(shift._val & 0x000000000000FFFFL);
+				((RefUShort)this)._val |= (int)(shift._val & 0x000000000000FFFFL);
 			}
 			else if(this instanceof RefUInteger)
 			{
-				((RefUInteger)this)._val |= (int)(shift._val & 0x00000000FFFFFFFFL);
+				((RefUInteger)this)._val |= shift._val & 0x00000000FFFFFFFFL;
 			}
 			else if(this instanceof RefULong)
 			{
@@ -1582,10 +1488,6 @@ public abstract class RefNumber
 			{
 				shift = castToULong(number);
 			}
-			if(shift._highBit)
-			{
-				shift._val |= 0x8000000000000000L;
-			}
 			
 			/*
 			if(!shift._highBit)
@@ -1605,26 +1507,30 @@ public abstract class RefNumber
 				}
 				else if(this instanceof RefLong)
 				{
+					//Only place where this is needed
+					if(shift._highBit)
+					{
+						shift._val |= 0x8000000000000000L;
+					}
 					((RefLong)this)._val ^= shift._val;
 				}
 				else if(this instanceof RefUByte)
 				{
-					((RefUByte)this)._val ^= (byte)(shift._val & 0x00000000000000FFL);
+					((RefUByte)this)._val ^= (short)(shift._val & 0x00000000000000FFL);
 				}
 				else if(this instanceof RefUShort)
 				{
-					((RefUShort)this)._val ^= (short)(shift._val & 0x000000000000FFFFL);
+					((RefUShort)this)._val ^= (int)(shift._val & 0x000000000000FFFFL);
 				}
 				else if(this instanceof RefUInteger)
 				{
-					((RefUInteger)this)._val ^= (int)(shift._val & 0x00000000FFFFFFFFL);
+					((RefUInteger)this)._val ^= shift._val & 0x00000000FFFFFFFFL;
 				}
 				else if(this instanceof RefULong)
 				{
 					RefULong th = (RefULong)this;
 					th._highBit = ((!shift._highBit && th._highBit) || (shift._highBit && !th._highBit));
-					th._val ^= shift._val;
-					th._val &= 0x7FFFFFFFFFFFFFFFL;
+					th._val = (th._val ^ shift._val) & 0x7FFFFFFFFFFFFFFFL;
 				}
 			/*
 			}
@@ -2071,17 +1977,28 @@ public abstract class RefNumber
 					//case RefNumber.BIT_SHIFT_LEFT_LOGICAL:
 						long ls = ul._val | (ul._highBit ? 0x8000000000000000L : 0L);
 						ls <<= shift._val;
-						ls &= 0x7FFFFFFFFFFFFFFFL;
 						ul._highBit = (ls & 0x8000000000000000L) == 0x8000000000000000L;
-						ul._val = ls;
+						ul._val = ls & 0x7FFFFFFFFFFFFFFFL;
 						break;
 					case RefNumber.BIT_SHIFT_RIGHT:
 					case RefNumber.BIT_SHIFT_RIGHT_LOGICAL:
 						ul._val >>= shift._val;
 						if(ul._highBit)
 						{
-							ul._val |= (0x8000000000000000L >> shift._val);
+							long mod = 0x8000000000000000L;
+							if(op == RefNumber.BIT_SHIFT_RIGHT)
+							{
+								mod >>= shift._val;
+							}
+							else
+							{
+								mod >>>= shift._val;
+							}
+							ul._val = ul._val | mod;
 						}
+						//Normalize the value (otherwise if ul._highBit = true, and shift._val == 0, the number will be invalid)
+						ul._highBit = (ul._val & 0x8000000000000000L) == 0x8000000000000000L;
+						ul._val &= 0x7FFFFFFFFFFFFFFFL;
 						break;
 				}
 			}
@@ -2197,6 +2114,7 @@ public abstract class RefNumber
 			}
 			else
 			{
+				//We cast this value so we don't end up with: 0.6 == 1? cast 0.6 = 1. 1 == 1
 				RefULong ulThis = castToULong(this);
 				double dThis;
 				if(this instanceof RefUByte || this instanceof RefUShort || this instanceof RefUInteger || 
@@ -2431,6 +2349,7 @@ public abstract class RefNumber
 			}
 			else
 			{
+				//We cast this value so we don't end up with: 0.6 < 1? cast 0.6 = 1. 1 < 1
 				RefULong ulThis = castToULong(this);
 				double dThis;
 				if(this instanceof RefUByte || this instanceof RefUShort || this instanceof RefUInteger || 
@@ -2635,6 +2554,7 @@ public abstract class RefNumber
 			}
 			else
 			{
+				//We cast this value so we don't end up with: 0.6 > 1? cast 0.6 = 1. 1 > 1
 				RefULong ulThis = castToULong(this);
 				double dThis;
 				if(this instanceof RefUByte || this instanceof RefUShort || this instanceof RefUInteger || 
@@ -3519,7 +3439,7 @@ public abstract class RefNumber
 	 */
 	public static RefLong castToLong(double value)
 	{
-		return new RefLong((long)MathUtilities.round(value));
+		return new RefLong(MathUtilities.round(value));
 	}
 	
 	/**
@@ -4035,7 +3955,7 @@ public abstract class RefNumber
 	 */
 	public static RefUByte castToUByte(double value)
 	{
-		return castToUByte(castToInt(value));
+		return castToUByte(castToUInt(value));
 	}
 	
 	/**
@@ -4197,7 +4117,7 @@ public abstract class RefNumber
 	 */
 	public static RefUShort castToUShort(float value)
 	{
-		return castToUShort(castToInt(value));
+		return castToUShort(castToUInt(value));
 	}
 	
 	/**
@@ -4207,7 +4127,7 @@ public abstract class RefNumber
 	 */
 	public static RefUShort castToUShort(double value)
 	{
-		return castToUShort(castToInt(value));
+		return castToUShort(castToUInt(value));
 	}
 	
 	/**
@@ -4565,7 +4485,7 @@ public abstract class RefNumber
 	 */
 	public static RefULong castToULong(double value)
 	{
-		return new RefULong((long)MathUtilities.round(value));
+		return new RefULong(MathUtilities.round(value));
 	}
 	
 	/**

@@ -51,8 +51,7 @@ public abstract class Tag
 	 */
 	protected Tag(short tag, short dataType, int count, int value, Object data)
 	{
-		this(tag, dataType, (long)count, (long)value, data);
-		this.extra = extraData(false);
+		this(tag, dataType, (long)count, (long)value, data, false);
 	}
 	
 	/**
@@ -65,12 +64,26 @@ public abstract class Tag
 	 */
 	protected Tag(short tag, short dataType, long count, long value, Object data)
 	{
+		this(tag, dataType, count, value, data, true);
+	}
+	
+	/**
+	 * Create a new {@link Tag}.
+	 * @param tag The tag code for this tag.
+	 * @param dataType The type of data that will be written.
+	 * @param count The number of items that will be written. Note this is not the number of bytes to write but the number of items.
+	 * @param value The value that this tag has. The tag must always be left justified, so if a {@link Writer.SHORT} is to be written then it's value must be value << 16. If the tag contains any data bigger then 4 bytes then it must be set in <code>data</code> and this value will be ignored.
+	 * @param data Any data that does not fit in the 8 byte <code>value</code> parameter.
+	 * @param big If the tag will be a BigTIFF tag.
+	 */
+	private Tag(short tag, short dataType, long count, long value, Object data, boolean big)
+	{
 		this.tag = tag;
 		this.dataType = dataType;
 		this.count = count;
 		this.value = value;
 		this.data = data;
-		this.extra = extraData(true);
+		this.extra = extraData(big);
 	}
 	
 	/**
@@ -82,7 +95,7 @@ public abstract class Tag
 	{
 		if(!extra)
 		{
-			write(wr, -1);
+			write(wr, -1, false);
 		}
 		else
 		{
@@ -147,8 +160,8 @@ public abstract class Tag
 		}
 		else
 		{
-			wr.writeUInt((int)(count & 0x00000000FFFFFFFF));
-			wr.writeTagValue((int)((offset > -1) ? offset & 0x00000000FFFFFFFF : value & 0x00000000FFFFFFFF), offset > -1, dataType);
+			wr.writeUInt((int)(count & 0x00000000FFFFFFFFL));
+			wr.writeTagValue((int)((offset > -1) ? offset & 0x00000000FFFFFFFFL : value & 0x00000000FFFFFFFFL), offset > -1, dataType);
 		}
 	}
 	
@@ -188,7 +201,7 @@ public abstract class Tag
 	 */
 	public final int getCount()
 	{
-		return (int)(count & 0x00000000FFFFFFFF);
+		return (int)(count & 0x00000000FFFFFFFFL);
 	}
 	
 	/**
@@ -228,7 +241,7 @@ public abstract class Tag
 	 */
 	public final int getValue()
 	{
-		return (int)(value & 0x00000000FFFFFFFF);
+		return (int)(value & 0x00000000FFFFFFFFL);
 	}
 	
 	/**

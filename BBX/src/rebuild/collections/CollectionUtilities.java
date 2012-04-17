@@ -54,6 +54,7 @@ public final class CollectionUtilities
     	return objs;
     }
 	
+    //Taken from PDF Renderer for BlackBerry
 	/**
      * Perform a shallow comparison of two Vectors to determine if they are equal.
      * @param main The first Vector for comparison.
@@ -94,18 +95,37 @@ public final class CollectionUtilities
 			{
 				return false;
 			}
-			for(Enumeration en = main.keys(); en.hasMoreElements();)
+			if(main instanceof SynchronizedTable)
 			{
-				Object key = en.nextElement();
-				if(!comp.containsKey(key) || !ObjectUtilities.objEqual(main.get(key), comp.get(key)))
+				SynchronizedTable stable = (SynchronizedTable)main;
+				synchronized(stable.mutex)
 				{
-					return false;
+					for(Enumeration en = stable.t.keys(); en.hasMoreElements();)
+					{
+						Object key = en.nextElement();
+						if(!comp.containsKey(key) || !ObjectUtilities.objEqual(stable.t.get(key), comp.get(key)))
+						{
+							return false;
+						}
+					}
+				}
+			}
+			else
+			{
+				for(Enumeration en = main.keys(); en.hasMoreElements();)
+				{
+					Object key = en.nextElement();
+					if(!comp.containsKey(key) || !ObjectUtilities.objEqual(main.get(key), comp.get(key)))
+					{
+						return false;
+					}
 				}
 			}
 		}
 		return true;
 	}
     
+    //Taken from PDF Renderer for BlackBerry
     /**
 	 * Copies all of the mappings from the specified table to another table.
 	 * These mappings will replace any mappings that this table had for
@@ -117,8 +137,7 @@ public final class CollectionUtilities
 	 */
 	public static void putAll(Hashtable dest, Hashtable source)
 	{
-		int numKeysToBeAdded = source.size();
-		if (numKeysToBeAdded == 0)
+		if (source.size() == 0)
 		{
 			return;
 		}
@@ -156,8 +175,7 @@ public final class CollectionUtilities
 	 */
 	public static void putAll(Vector dest, Vector source)
 	{
-		int numElementsToBeAdded = source.size();
-		if (numElementsToBeAdded == 0)
+		if (source.size() == 0)
 		{
 			return;
 		}

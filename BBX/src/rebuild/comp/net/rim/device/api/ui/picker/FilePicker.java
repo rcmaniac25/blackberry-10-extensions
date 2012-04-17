@@ -23,34 +23,69 @@
 //
 package rebuild.comp.net.rim.device.api.ui.picker;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Vector;
-
-import javax.microedition.io.file.FileConnection;
-import javax.microedition.io.file.FileSystemRegistry;
-
-import rebuild.BBXResource;
-
-import net.rim.device.api.ui.Color;
-import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.FieldChangeListener;
-import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.LabelField;
-import net.rim.device.api.ui.component.SeparatorField;
-import net.rim.device.api.ui.container.HorizontalFieldManager;
-import net.rim.device.api.ui.container.PopupScreen;
-import net.rim.device.api.ui.container.VerticalFieldManager;
 
 /**
- * Imitation of 5.0 FilePicker. This works and acts the same way as the actual FilePicker.
+ * A user interface component for picking a file. This imitates the native file picker and is designed to work exactly like the built in one.
  * @since BBX 1.0.1
  */
 public abstract class FilePicker
 {
+	/**
+	 * OS 5.0's version of the FilePicker. Default.
+	 * @since BBX 1.3.0
+	 */
+	public static final int VERSION_5 = 5;
+	/**
+	 * OS 6.0's version of the FilePicker.
+	 * @since BBX 1.3.0
+	 */
+	public static final int VERSION_6 = 6;
+	/**
+	 * OS 7.0's version of the FilePicker.
+	 * @since BBX 1.3.0
+	 */
+	public static final int VERSION_7 = 7;
+	
+	/**
+	 * Generic file selection dialog type (like File Explorer).
+	 * @since BBX 1.3.0
+	 */
+	public static final int VIEW_ALL = 0;
+	/**
+	 * File selection dialog type for selecting music files (like a Music application).
+	 * @since BBX 1.3.0
+	 */
+	public static final int VIEW_MUSIC = 8;
+	/**
+	 * File selection dialog type for selecting pictures (like a Pictures application).
+	 * @since BBX 1.3.0
+	 */
+	public static final int VIEW_PICTURES = 1;
+	/**
+	 * File selection dialog type for selecting ringtones (like a Ring Tones application).
+	 * @since BBX 1.3.0
+	 */
+	public static final int VIEW_RINGTONES = 2;
+	/**
+	 * File selection dialog type for selecting videos (like a Video application).
+	 * @since BBX 1.3.0
+	 */
+	public static final int VIEW_VIDEOS = 4;
+	/**
+	 * File selection dialog type for selecting voice notes (Like a Voice Notes application).
+	 * @since BBX 1.3.0
+	 */
+	public static final int VIEW_VOICE_NOTES = 16;
+	
+	/**
+	 * Defines the functionality of a listener for when the user has selected a file.
+	 */
 	public static interface Listener
 	{
+		/**
+		 * Invoked when the user has selected a file.
+		 * @param selected The fully qualified URL encoded path to the file selected, for example "file:///store/home/user/documents/MyDoc.doc"
+		 */
 		void selectionDone(String selected);
 	}
 	
@@ -58,274 +93,93 @@ public abstract class FilePicker
 	{
 	}
 	
+	/**
+	 * Returns a file picker. By default, the path is the root, and there is no filter. Also by default, it is {@code VERSION_5} of the file picker.
+	 * @return The instance of FilePicker.
+	 */
 	public static final FilePicker getInstance()
 	{
-		return new FilePickerImpl();
+		return getInstance(VERSION_5);
 	}
 	
+	/**
+	 * Returns a file picker. By default, the path is the root, and there is no filter.
+	 * @param version The version of the file picker to create. Unsupported versions will get an {@code IllegalArgumentException}.
+	 * @return The instance of FilePicker.
+	 * @since BBX 1.3.0
+	 */
+	public static final FilePicker getInstance(int version)
+	{
+		switch(version)
+		{
+			case VERSION_5:
+			case VERSION_6:
+			case VERSION_7:
+				return new FilePickerImpl(version);
+		}
+		throw new IllegalArgumentException();
+	}
+	
+	/**
+	 * Removes the view of the file picker.
+	 */
 	public abstract void cancel();
 	
+	/**
+	 * Sets a filter for DRM forward locked files. This function is only available on version 7 of the file picker.
+	 * @param exclude If {@code true}, DRM forward locked files are excluded from the picker display. If {@code false}, DRM forward locked files are included in the picker display. 
+	 * By default, DRM forward locked files are included in the picker.
+	 * @since BBX 1.3.0
+	 */
+	public abstract void excludeDRMForwardLocked(boolean exclude);
+	
+	/**
+	 * Sets the filter that is used to reduce the set of files presented to the user. You can set multiple filters by separating each filter by a colon (:). For example:
+	 * <p><code><pre>
+	 * FilePicker filePicker = FilePicker.getInstance();
+	 * filePicker.setListener(_listener);
+	 * filePicker.setView(FilePicker.VIEW_ALL); //Only available on version 6 and greater of the file picker.
+	 * filePicker.setFilter(".doc:.xls:.ppt");
+	 * filePicker.setPath("file:///SDCard/BlackBerry/documents/");
+	 * filePicker.show());
+	 * </pre></code></p>
+	 * @param filterString The filter string used to reduce the set of files presented to the user. To present only files with the extension of jpg for example, enter a filter string 
+	 * of ".jpg". To set multiple filters, separate each filter with a :. If null, the filter is reset.
+	 */
 	public abstract void setFilter(String filterString);
 	
+	/**
+	 * Sets a listener for the user selecting a path. When the user accepts or cancels the dialog, the listener class is called.
+	 * @param listener The listener that will receive notifications from this picker.
+	 */
 	public abstract void setListener(Listener listener);
 	
+	/**
+	 * Sets the full URL path that will be initially displayed to the user upon presentation of the picker, for example "file:///store/home/user/documents/".
+	 * @param defaultPath The default path is the location on the filesystem that will be initially displayed to the user upon presentation of the dialog. If the path does not exist, the 
+	 * root of the device will be presented. If null, the filter is reset to the default file system root path.
+	 */
 	public abstract void setPath(String defaultPath);
 	
-	public abstract String show();
+	/**
+	 * Sets the custom title of the file selection dialog, overrides the default title of a media screen (such as "Select Picture"). This function is only available on version 6 and 
+	 * higher of the file picker.
+	 * @param title The custom dialog title overriding the default one. If null, the title is reset to the default.
+	 * @since BBX 1.3.0
+	 */
+	public abstract void setTitle(String title);
 	
-	private static class FilePickerImpl extends FilePicker
-	{
-		private static net.rim.device.api.i18n.ResourceBundle resources;
-		
-		static
-		{
-			FilePickerImpl.resources = net.rim.device.api.i18n.ResourceBundle.getBundle(BBXResource.BUNDLE_ID, BBXResource.BUNDLE_NAME);
-		}
-		
-		private String rootPath;
-		private String[] filters;
-		private Listener listener;
-		private FilePickerUI currentFPui;
-		
-		public void cancel()
-		{
-			if(this.currentFPui != null)
-			{
-				this.currentFPui.selectedFile = null;
-				this.currentFPui.close();
-			}
-		}
-		
-		public void setFilter(String filterString)
-		{
-			if(filterString == null)
-			{
-				this.filters = null;
-			}
-			else
-			{
-				Vector v = new Vector();
-				while(filterString.length() > 0)
-				{
-					int index = filterString.indexOf(':');
-					if(index == -1)
-					{
-						v.addElement(filterString);
-						filterString = "";
-					}
-					else
-					{
-						v.addElement(filterString.substring(0, index));
-						filterString = filterString.substring(index);
-					}
-				}
-				filters = new String[v.size()];
-				v.copyInto(filters);
-			}
-		}
-		
-		public void setListener(Listener listener)
-		{
-			this.listener = listener;
-		}
-		
-		public void setPath(String defaultPath)
-		{
-			//Could do checks for validity but the value that will be passed in will be the same as the value returned to the listener, so it will always be valid.
-			this.rootPath = defaultPath;
-		}
-		
-		public String show()
-		{
-			//Create picker
-			final FilePickerUI fpui = this.currentFPui = new FilePickerUI(this);
-			//Get UI application
-			final UiApplication app = UiApplication.getUiApplication();
-			//Push screen on display
-			if(UiApplication.isEventDispatchThread())
-			{
-				app.pushModalScreen(fpui);
-			}
-			else
-			{
-				app.invokeAndWait(new Runnable()
-				{
-					public void run()
-					{
-						app.pushModalScreen(fpui);
-					}
-				});
-			}
-			//Process results
-			this.currentFPui = null;
-			if(this.listener != null)
-			{
-				this.listener.selectionDone(fpui.selectedFile);
-			}
-			return fpui.selectedFile;
-		}
-		
-		private static class FilePickerUI extends PopupScreen implements FieldChangeListener
-		{
-			private FilePickerImpl fp;
-			public String selectedFile;
-			private VerticalFieldManager list;
-			private FileConnection file;
-			
-			public FilePickerUI(FilePickerImpl fp)
-			{
-				super(new VerticalFieldManager(), PopupScreen.DEFAULT_MENU | PopupScreen.DEFAULT_CLOSE | PopupScreen.USE_ALL_HEIGHT | PopupScreen.USE_ALL_WIDTH);
-				this.fp = fp;
-				
-				setupUI();
-			}
-			
-			public void close()
-			{
-				if(file != null && file.isOpen())
-				{
-					try
-					{
-						file.close();
-					}
-					catch (IOException e)
-					{
-					}
-				}
-				super.close();
-			}
-			
-			private void setupUI()
-			{
-				//Title
-				add(new LabelField(FilePickerImpl.resources.getString(BBXResource.FILEPICKER_DEFAULT_TITLE)));
-				
-				if(this.fp.rootPath == null)
-				{
-					add(new LabelField(FilePickerImpl.resources.getString(BBXResource.FILEPICKER_ROOT_PATH_LABEL)));
-				}
-				else
-				{
-					//Memory and path
-					HorizontalFieldManager horz = new HorizontalFieldManager();
-					
-					//XXX Add memory icon
-					
-					String path = file.getURL();
-					int pathIndex = path.indexOf('/', 1);
-					add(new LabelField('/' + friendlyName(path.substring(1, pathIndex)) + path.substring(pathIndex), LabelField.FIELD_LEFT | LabelField.ELLIPSIS));
-					
-					add(horz);
-				}
-				add(new SeparatorField());
-				
-				add(list = new VerticalFieldManager(VerticalFieldManager.USE_ALL_WIDTH));
-				populateList();
-			}
-			
-			private void populateList()
-			{
-				SelectField select;
-				LabelField lab;
-				int len;
-				int index = 0;
-				list.deleteAll();
-				if(this.fp.rootPath == null)
-				{
-					String[] roots = getRoots();
-					len = roots.length;
-					for(int i = 0; i < len; i++)
-					{
-						//In keeping with the original manner the FilePicker works
-						if(roots[i].equals("system"))
-						{
-							//Skip "system"
-							continue;
-						}
-						
-						select = new SelectField();
-						select.setChangeListener(this);
-						
-						//XXX Icon
-						
-						select.add(new LabelField(friendlyName(roots[i]), LabelField.FIELD_LEFT | LabelField.ELLIPSIS));
-						
-						list.add(select);
-					}
-				}
-				else
-				{
-					//TODO
-				}
-			}
-			
-			private String friendlyName(String name)
-			{
-				String[] roots = FilePickerImpl.resources.getStringArray(BBXResource.FILEPICKER_FRIENDLY_ROOTS_SRC);
-				String[] rootsF = FilePickerImpl.resources.getStringArray(BBXResource.FILEPICKER_FRIENDLY_ROOTS);
-				for(int i = roots.length - 1; i >= 0; i--)
-				{
-					if(name.equals(roots[i]))
-					{
-						return rootsF[i];
-					}
-				}
-				return name;
-			}
-			
-			private String[] getRoots()
-			{
-				Enumeration en = FileSystemRegistry.listRoots();
-				Vector v = new Vector();
-				while(en.hasMoreElements())
-				{
-					v.addElement(en.nextElement());
-				}
-				String[] str = new String[v.size()];
-				v.copyInto(str);
-				int l = v.size();
-				for(int i = 0; i < l; i++)
-				{
-					str[i] = str[i].substring(0, str[i].length() - 1);
-				}
-				return str;
-			}
-			
-			public void fieldChanged(Field field, int context)
-			{
-				if(context != FieldChangeListener.PROGRAMMATIC)
-				{
-					System.out.println("Stuff");
-					// TODO Auto-generated method stub
-				}
-			}
-		}
-		
-		private static class SelectField extends HorizontalFieldManager
-		{
-			public SelectField()
-			{
-				this(0);
-			}
-			
-			public SelectField(long style)
-			{
-				super(style | HorizontalFieldManager.FOCUSABLE | HorizontalFieldManager.READONLY | HorizontalFieldManager.USE_ALL_WIDTH);
-			}
-			
-			protected void paint(Graphics graphics)
-			{
-				if(this.isFocus())
-				{
-					int tc = graphics.getColor();
-					graphics.setColor(Color.RED);
-					graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
-					graphics.setColor(tc);
-				}
-				super.paint(graphics);
-			}
-			
-			//TODO
-		}
-	}
+	/**
+	 * Sets the view of the file selection dialog based on the currently supported Media application views. This function is only available on version 6 and higher of the file picker.
+	 * @param view Type of the file selection dialog view, such as VIEW_ALL, VIEW_PICTURES, VIEW_RINGTONES, VIEW_MUSIC, VIEW_VIDEOS, VIEW_VOICE_NOTES.
+	 * @since BBX 1.3.0
+	 */
+	public abstract void setView(int view);
+	
+	/**
+	 * Displays the File selection popup and returns the full URL encoded path to the selected file. The function will block until a file is selected or the selection process is cancelled. 
+	 * The function will return null if the user cancels.
+	 * @return the fully qualified URL encoded path to the file selected, for example "file:///store/home/user/documents/MyDoc.doc"
+	 */
+	public abstract String show();
 }

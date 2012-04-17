@@ -21,6 +21,7 @@
 //
 //---------------------------------------------------------------------------------
 //
+//Taken from PDF Renderer for BlackBerry
 package rebuild.collections;
 
 import java.util.Enumeration;
@@ -50,9 +51,15 @@ final class SynchronizedTable extends Hashtable
 	
 	SynchronizedTable(Hashtable table, Object mutex)
 	{
+		if(table == null)
+		{
+			throw new NullPointerException();
+		}
 		this.t = table;
 		this.mutex = mutex;
 	}
+	
+	//We don't care about any synchronized functions as we do our own synchronization (though the methods would be a little faster)
 	
 	public int size()
 	{

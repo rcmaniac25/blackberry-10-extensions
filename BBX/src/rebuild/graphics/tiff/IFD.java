@@ -188,12 +188,9 @@ public final class IFD
     	for(int i = 0; i < count; i++)
     	{
     		Tag t = (Tag)tagList.elementAt(i);
-    		if(t.hasDefault())
+    		if(t.hasDefault() && t.isDefault())
     		{
-    			if(t.isDefault())
-    			{
-    				continue;
-    			}
+    			continue;
     		}
     		tagCount++;
     	}
@@ -374,7 +371,7 @@ public final class IFD
     		}
     		else
     		{
-    			tag.write(tagDat, extra ? (int)(dataOffset & 0x00000000FFFFFFFF) : -1);
+    			tag.write(tagDat, extra ? (int)(dataOffset & 0x00000000FFFFFFFFL) : -1);
     		}
     		if(extra)
     		{
@@ -397,7 +394,7 @@ public final class IFD
     	}
     	else
     	{
-    		dat.writeUInt((int)(offset & 0x00000000FFFFFFFF));
+    		dat.writeUInt((int)(offset & 0x00000000FFFFFFFFL));
     	}
     	
     	dat.write(tagDataBuffer.toByteArray());

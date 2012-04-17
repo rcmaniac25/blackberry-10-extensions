@@ -186,7 +186,7 @@ public final class RefBoolean
 	}
 	
 	/**
-	 * Toggle the boolean value.
+	 * Toggle the boolean value if not fixed.
 	 */
 	public void toggle()
 	{

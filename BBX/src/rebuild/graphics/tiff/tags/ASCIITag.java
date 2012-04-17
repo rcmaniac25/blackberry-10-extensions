@@ -62,10 +62,6 @@ public class ASCIITag extends Tag
 	public ASCIITag(short tag, String[] val)
 	{
 		super(tag, Writer.ASCII, val.length, 0, val);
-		if(val == null)
-		{
-			throw new NullPointerException("val");
-		}
 		if(val.length == 0)
 		{
 			throw new IllegalArgumentException("val.length == 0");

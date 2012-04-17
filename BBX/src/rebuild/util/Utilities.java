@@ -196,18 +196,6 @@ public final class Utilities
     }
     
     /**
-     * Convert a {@link java.util.Vector} to an array.
-     * @param vect The {@link java.util.Vector} to convert to an array.
-     * @return If vect is <code>null</code> then <code>null</code> is returned. Else an array is returned of the
-     * items in vect.
-     * @deprecated
-     */
-    public static Object[] toArray(Vector vect)
-    {
-    	return CollectionUtilities.toArray(vect);
-    }
-    
-    /**
 	 * Checks for a condition; if the condition is false, outputs two specified messages and displays a message box that shows the message.
 	 * @param condition The conditional expression to evaluate. If this is <code>true</code>, the specified messages are not sent and the message box is not displayed. 
 	 */

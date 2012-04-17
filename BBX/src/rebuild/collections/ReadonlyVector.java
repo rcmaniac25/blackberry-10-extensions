@@ -21,6 +21,7 @@
 //
 //---------------------------------------------------------------------------------
 //
+//Taken from PDF Renderer for BlackBerry
 package rebuild.collections;
 
 import java.util.Enumeration;
