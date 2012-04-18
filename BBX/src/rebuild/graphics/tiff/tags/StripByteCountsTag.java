@@ -26,6 +26,7 @@ import java.io.IOException;
 
 import rebuild.graphics.tiff.Tag;
 import rebuild.graphics.tiff.Writer;
+import rebuild.util.ref.RefULong;
 
 /**
  * For each strip, the number of bytes in the strip after compression.
@@ -394,10 +395,10 @@ public final class StripByteCountsTag extends Tag
 		switch(super.dataType)
 		{
 			case Writer.SHORT:
-				((short[])super.getExtraData())[strip] = (short)(byteCount & 0x000000000000FFFF);
+				((short[])super.getExtraData())[strip] = (short)(byteCount & 0x000000000000FFFFL);
 				break;
 			case Writer.LONG:
-				((int[])super.getExtraData())[strip] = (int)(byteCount & 0x00000000FFFFFFFF);
+				((int[])super.getExtraData())[strip] = (int)(byteCount & 0x00000000FFFFFFFFL);
 				break;
 			case Writer.LONG8:
 				((long[])super.getExtraData())[strip] = byteCount;
@@ -424,14 +425,10 @@ public final class StripByteCountsTag extends Tag
 	
 	private static short dataTypeRequired(long value)
 	{
-		//TODO: Modify so it checks UNSIGNED numbers instead of Java's signed numbers
-		if(value < 0)
+		RefULong ul = new RefULong(value);
+		if(ul.greaterThan(Short.MAX_VALUE))
 		{
-			throw new IllegalArgumentException("value < 0");
-		}
-		if(value > Short.MAX_VALUE)
-		{
-			if(value > Integer.MAX_VALUE)
+			if(ul.greaterThan(Integer.MAX_VALUE))
 			{
 				return Writer.LONG8;
 			}

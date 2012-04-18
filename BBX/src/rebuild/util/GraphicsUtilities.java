@@ -366,7 +366,7 @@ public final class GraphicsUtilities
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ_WRITE);
     		if(!fil.exists())
     		{
-    			if(!File.EnsureCreation(fil.getURL()))
+    			if(!File.ensureCreation(fil.getURL()))
     			{
     				fil.close();
     				return saved;
@@ -432,7 +432,7 @@ public final class GraphicsUtilities
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ_WRITE);
     		if(!fil.exists())
     		{
-    			if(!File.EnsureCreation(fil.getURL()))
+    			if(!File.ensureCreation(fil.getURL()))
     			{
     				fil.close();
     				return saved;
@@ -496,7 +496,7 @@ public final class GraphicsUtilities
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ_WRITE);
     		if(!fil.exists())
     		{
-    			if(!File.EnsureCreation(fil.getURL()))
+    			if(!File.ensureCreation(fil.getURL()))
     			{
     				fil.close();
     				return saved;

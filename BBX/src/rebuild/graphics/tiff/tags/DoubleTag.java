@@ -60,10 +60,6 @@ public class DoubleTag extends Tag
 	public DoubleTag(short tag, double[] val)
 	{
 		super(tag, Writer.DOUBLE, val.length, 0, val);
-		if(val == null)
-		{
-			throw new NullPointerException("val");
-		}
 		if(val.length == 0)
 		{
 			throw new IllegalArgumentException("val.length == 0");

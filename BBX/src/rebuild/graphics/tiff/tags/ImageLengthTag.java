@@ -57,6 +57,7 @@ public final class ImageLengthTag extends Tag
 				imageGreaterThen64k ? height : Writer.shiftValue((short)height, 0), null);
 		if(height < 0)
 		{
+			//This can be triggered if value is actually greater then a signed int's value
 			throw new IllegalArgumentException("height < 0");
 		}
 	}
@@ -68,6 +69,11 @@ public final class ImageLengthTag extends Tag
 	 */
 	public void setValue(int height)
 	{
+		if(height < 0)
+		{
+			//This can be triggered if value is actually greater then a signed int's value
+			throw new IllegalArgumentException("height < 0");
+		}
 		boolean big = height > Short.MAX_VALUE;
 		this.value = (big ? height : Writer.shiftValue((short)height, 0));
 		this.dataType = (big ? Writer.LONG : Writer.SHORT);

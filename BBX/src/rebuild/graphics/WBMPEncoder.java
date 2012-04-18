@@ -29,7 +29,7 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.XYRect;
 
 /**
- * A Windows Bitmap (WBMP) encoder.
+ * A Wireless Application Protocol Bitmap (WBMP) encoder.
  * @since BBX 1.0.1
  */
 public class WBMPEncoder extends ImageEncoder
@@ -174,9 +174,9 @@ public class WBMPEncoder extends ImageEncoder
             {
                 // White-is-zero: need to invert data.
                 byte[] inverted = new byte[bytesPerRow];
-                for(int row = 0; row <  h; row++)
+                for(int row = 0; row < h; row++)
                 {
-                    for(int col = 0; col <  bytesPerRow; col++)
+                    for(int col = 0; col < bytesPerRow; col++)
                     {
                         inverted[col] = (byte)(~(bdata[col+offset]));
                     }

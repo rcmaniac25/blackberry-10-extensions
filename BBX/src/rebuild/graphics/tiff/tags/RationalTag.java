@@ -75,9 +75,10 @@ public class RationalTag extends Tag
 	protected RationalTag(short tag, int[] num, int[] den, short type)
 	{
 		super(tag, type, num.length, 0, new int[][]{ num, den});
-		if(num == null || den == null)
+		if(den == null)
 		{
-			throw new NullPointerException(num == null && den == null ? "num, den" : num == null ? "num" : "den");
+			//We don't need to check num because if it is null, we will get the exception from the super's constructor
+			throw new NullPointerException("den");
 		}
 		if(num.length == 0 || den.length == 0)
 		{

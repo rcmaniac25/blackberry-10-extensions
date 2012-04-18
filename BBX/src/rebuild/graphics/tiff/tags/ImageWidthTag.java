@@ -57,6 +57,7 @@ public final class ImageWidthTag extends Tag
 				imageGreaterThen64k ? width : Writer.shiftValue((short)width, 0), null);
 		if(width < 0)
 		{
+			//This can be triggered if value is actually greater then a signed int's value
 			throw new IllegalArgumentException("width < 0");
 		}
 	}
@@ -68,6 +69,11 @@ public final class ImageWidthTag extends Tag
 	 */
 	public void setValue(int width)
 	{
+		if(width < 0)
+		{
+			//This can be triggered if value is actually greater then a signed int's value
+			throw new IllegalArgumentException("width < 0");
+		}
 		boolean big = width > Short.MAX_VALUE;
 		this.value = (big ? width : Writer.shiftValue((short)width, 0));
 		this.dataType = ((short)(big ? Writer.LONG : Writer.SHORT));

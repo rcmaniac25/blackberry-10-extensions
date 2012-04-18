@@ -172,7 +172,6 @@ public final class Path
                     return Resources.getString(BBXResource.STANDARD_SIM_PATH_FOLDER_ICONS);
                 }
 //#endif
-                return Resources.getString(BBXResource.STANDARD_BB_PATH_FOLDER_ICONS);
             case PATH_FOLDER_ICONS_BB:
                 return Resources.getString(BBXResource.STANDARD_BB_PATH_FOLDER_ICONS);
             case PATH_FOLDER_ICONS_SIM:
@@ -190,7 +189,7 @@ public final class Path
      * @param path The path of a file or directory.
      * @return A String containing directory information for path, or null if an error occurs.
      */
-    public static String GetDirectoryName(String path)
+    public static String getDirectoryName(String path)
     {
         try
         {
@@ -210,7 +209,7 @@ public final class Path
      * @param path The path string from which to get the extension.
      * @return A String containing the extension of the specified path (including the "."), null, or Empty. If path is null, GetExtension returns null. If path does not have extension information, GetExtension returns "".
      */
-    public static String GetExtension(String path)
+    public static String getExtension(String path)
     {
         if (path == null)
         {
@@ -242,7 +241,7 @@ public final class Path
      * @param path The path string from which to obtain the file name and extension.
      * @return A String consisting of the characters after the last directory character in path.
      */
-    public static String GetFileName(String path)
+    public static String getFileName(String path)
     {
         try
         {
@@ -262,9 +261,9 @@ public final class Path
      * @param path The path of the file.
      * @return A String containing the string returned by GetFileName, minus the last period (.) and all characters following it.
      */
-    public static String GetFileNameWithoutExtension(String path)
+    public static String getFileNameWithoutExtension(String path)
     {
-        path = GetFileName(path);
+        path = getFileName(path);
         if (path == null)
         {
             return null;
@@ -282,7 +281,7 @@ public final class Path
      * @param path The path to test.
      * @return true if path contains an absolute path; otherwise, false.
      */
-    public static boolean IsPathRooted(String path)
+    public static boolean isPathRooted(String path)
     {
         if (path != null)
         {
@@ -336,7 +335,7 @@ public final class Path
      * @param c The desired type.
      * @return True if the path and type are the same, false if the path and type are not the same or path is null or c is null.
      */
-    public static boolean IsProperType(String path, Class c)
+    public static boolean isProperType(String path, Class c)
     {
         if(path != null)
         {
@@ -362,16 +361,16 @@ public final class Path
      * Returns a random folder name or file name.
      * @return A random folder name or file name.
      */
-    public static String GetRandomFileName()
+    public static String getRandomFileName()
     {
         byte[] data = new byte[12];
         Utilities.RNGGetBytes(data);
-        char[] chArray = ToBase32StringSuitableForDirName(data).toCharArray();
+        char[] chArray = toBase32StringSuitableForDirName(data).toCharArray();
         chArray[8] = '.';
         return String.valueOf(chArray, 0, 12);
     }
     
-    private static String ToBase32StringSuitableForDirName(byte[] buff)
+    private static String toBase32StringSuitableForDirName(byte[] buff)
     {
         StringBuffer buf = new StringBuffer();
         int length = buff.length;

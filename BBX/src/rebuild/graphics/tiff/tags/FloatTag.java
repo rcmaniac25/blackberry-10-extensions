@@ -60,10 +60,6 @@ public class FloatTag extends Tag
 	public FloatTag(short tag, float[] val)
 	{
 		super(tag, Writer.FLOAT, val.length, 0, val);
-		if(val == null)
-		{
-			throw new NullPointerException("val");
-		}
 		if(val.length == 0)
 		{
 			throw new IllegalArgumentException("val.length == 0");

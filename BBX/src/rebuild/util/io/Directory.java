@@ -46,9 +46,9 @@ public final class Directory
      * @param path The path to test.
      * @return <code>true</code> if path refers to an existing directory; otherwise, <code>false</code>.
      */
-    public static boolean Exists(String path)
+    public static boolean exists(String path)
     {
-    	return InExists(path, true);
+    	return inExists(path, true);
     }
     
     /**
@@ -57,11 +57,11 @@ public final class Directory
      * @param isdir <code>true</code> if the path is for a directory, <code>false</code> if otherwise.
      * @return <code>true</code> if path refers to an existing directory; otherwise, <code>false</code>.
      */
-    static boolean InExists(String path, boolean isdir)
+    static boolean inExists(String path, boolean isdir)
     {
     	boolean flag = false;
         FileConnection dir = null;
-        if(!Path.IsProperType(path, Path.FILE_TYPE))
+        if(!Path.isProperType(path, Path.FILE_TYPE))
         {
             return false;
         }
@@ -97,10 +97,10 @@ public final class Directory
      * @param path The path to the directory that is to be created.
      * @return <code>true</code> if the directory can be created, <code>false</code> if otherwise.
      */
-    public static boolean EnsureCreation(String path)
+    public static boolean ensureCreation(String path)
     {
     	boolean result = false;
-    	if(!Path.IsProperType(path, Path.FILE_TYPE))
+    	if(!Path.isProperType(path, Path.FILE_TYPE))
         {
             return false;
         }
@@ -227,9 +227,9 @@ public final class Directory
      * @param path The directory to delete.
      * @return <code>true</code> if the directory was deleted, <code>false</code> if otherwise.
      */
-    public static boolean Delete(String path)
+    public static boolean delete(String path)
     {
-    	return InDelete(path, true);
+    	return inDelete(path, true);
     }
     
     /**
@@ -238,10 +238,10 @@ public final class Directory
      * @param isdir <code>true</code> if the path is for a directory, <code>false</code> if otherwise.
      * @return <code>true</code> if the file/directory was deleted, <code>false</code> if otherwise.
      */
-    static boolean InDelete(String path, boolean isdir)
+    static boolean inDelete(String path, boolean isdir)
     {
     	boolean flag = false;
-    	if(!Path.IsProperType(path, Path.FILE_TYPE))
+    	if(!Path.isProperType(path, Path.FILE_TYPE))
         {
             return false;
         }
@@ -262,7 +262,7 @@ public final class Directory
     					FileConnection nFile = (FileConnection)Connector.open(nPath, Connector.READ);
     					boolean nFileDir = isDirectory(nFile);
     					nFile.close();
-    					if(!InDelete(nPath, nFileDir))
+    					if(!inDelete(nPath, nFileDir))
     					{
     						break BREAK_DRI;
     					}
@@ -303,9 +303,9 @@ public final class Directory
      * @param newPath The new directory path.
      * @return <code>true</code> if the directory was moved, <code>false</code> if otherwise.
      */
-    public static boolean Move(String originalPath, String newPath)
+    public static boolean move(String originalPath, String newPath)
     {
-    	return InMove(originalPath, newPath, true, true);
+    	return inMove(originalPath, newPath, true, true);
     }
     
     /**
@@ -316,13 +316,13 @@ public final class Directory
      * @param sameName <code>true</code> if the filenames should match for cut and paste, <code>false</code> if otherwise. ONLY APPLYS TO FILES.
      * @return <code>true</code> if the directory/file was moved, <code>false</code> if otherwise.
      */
-    static boolean InMove(String originalPath, String newPath, boolean isdir, boolean sameName)
+    static boolean inMove(String originalPath, String newPath, boolean isdir, boolean sameName)
     {
     	if(originalPath.compareTo(newPath) == 0)
     	{
     		return false;
     	}
-    	if((!Path.IsProperType(originalPath, Path.FILE_TYPE)) || (!Path.IsProperType(newPath, Path.FILE_TYPE)))
+    	if((!Path.isProperType(originalPath, Path.FILE_TYPE)) || (!Path.isProperType(newPath, Path.FILE_TYPE)))
         {
             return false;
         }
@@ -343,10 +343,10 @@ public final class Directory
     			}
     			if(orFile.getPath().equals(newFile.getPath()))
         		{
-    				//URLs are not the same but the paths are... So this is a renaming? OK, simpilfies my life
+    				//URLs are not the same but the paths are... So this is a renaming? OK, simplify my life
     				if(newFile.exists())
     				{
-    					if(!InDelete(newFile.getURL(), isDirectory(newFile)))
+    					if(!inDelete(newFile.getURL(), isDirectory(newFile)))
     					{
     						throw new Exception();
     					}
@@ -370,7 +370,7 @@ public final class Directory
 	    				//Move a directory
 	    				if(!newFile.exists())
 	    				{
-	    					if(!EnsureCreation(newFile.getURL()))
+	    					if(!ensureCreation(newFile.getURL()))
 	    					{
 	    						throw new Exception();
 	    					}
@@ -402,7 +402,7 @@ public final class Directory
 	    				int count = files.size();
 	    				for(int i = 0; i < count; i += 2)
 	    				{
-	    					if(!InMove((String)files.elementAt(i), (String)files.elementAt(i + 1), false, true))
+	    					if(!inMove((String)files.elementAt(i), (String)files.elementAt(i + 1), false, true))
 	    					{
 	    						throw new Exception();
 	    					}
@@ -410,7 +410,7 @@ public final class Directory
 	    				count = directories.size();
 	    				for(int i = 0; i < count; i += 2)
 	    				{
-	    					if(!InMove((String)directories.elementAt(i), (String)directories.elementAt(i + 1), true, true))
+	    					if(!inMove((String)directories.elementAt(i), (String)directories.elementAt(i + 1), true, true))
 	    					{
 	    						throw new Exception();
 	    					}
@@ -444,7 +444,7 @@ public final class Directory
 	    				{
 	    					newFile.delete();
 	    				}
-	    				if(!EnsureCreation(newFile.getURL()))
+	    				if(!ensureCreation(newFile.getURL()))
     					{
     						throw new Exception();
     					}
@@ -481,7 +481,7 @@ public final class Directory
     		if(!rename)
     		{
 	    		//Get rid of either the old data if move was successful or new data if moving was unsuccessful.
-	    		if(!InDelete(flag ? orFile.getURL() : newFile.getURL(), isdir))
+	    		if(!inDelete(flag ? orFile.getURL() : newFile.getURL(), isdir))
 				{
 	    			//ERROR cleaning up old data if it worked successfully, or new stuff if an error occurred
 	    			flag = false;

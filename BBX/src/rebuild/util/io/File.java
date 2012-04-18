@@ -39,9 +39,9 @@ public final class File
      * @param path The file to check.
      * @return true if the caller has the required permissions and path contains the name of an existing file; otherwise, false. This method also returns false if path is null or a zero-length string. If the caller does not have sufficient permissions to read the specified file, no exception is thrown and the method returns false regardless of the existence of path.
      */
-    public static boolean Exists(String path)
+    public static boolean exists(String path)
     {
-    	return Directory.InExists(path, false);
+    	return Directory.inExists(path, false);
     }
     
     /**
@@ -49,9 +49,9 @@ public final class File
      * @param path The file to delete.
      * @return True if the file was deleted, false if otherwise.
      */
-    public static boolean Delete(String path)
+    public static boolean delete(String path)
     {
-    	return Directory.InDelete(path, false);
+    	return Directory.inDelete(path, false);
     }
     
     /**
@@ -59,9 +59,9 @@ public final class File
      * @param path The path to the file that is to be created.
      * @return true if the file can be created, false if otherwise.
      */
-    public static boolean EnsureCreation(String path)
+    public static boolean ensureCreation(String path)
     {
-    	return Directory.EnsureCreation(path);
+    	return Directory.ensureCreation(path);
     }
     
     /**
@@ -80,9 +80,9 @@ public final class File
      * @param newPath The new file path.
      * @return <code>true</code> if the file was moved, <code>false</code> if otherwise.
      */
-    public static boolean Move(String originalPath, String newPath)
+    public static boolean move(String originalPath, String newPath)
     {
-    	return Move(originalPath, newPath, true);
+    	return move(originalPath, newPath, true);
     }
     
     /**
@@ -92,8 +92,8 @@ public final class File
      * @param sameName If a different filename is given should it be changed to the original filename?
      * @return <code>true</code> if the file was moved, <code>false</code> if otherwise.
      */
-    public static boolean Move(String originalPath, String newPath, boolean sameName)
+    public static boolean move(String originalPath, String newPath, boolean sameName)
     {
-    	return Directory.InMove(originalPath, newPath, false, sameName);
+    	return Directory.inMove(originalPath, newPath, false, sameName);
     }
 }

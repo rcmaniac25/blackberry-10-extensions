@@ -59,7 +59,7 @@ public class Long8Tag extends Tag
 	 */
 	public Long8Tag(short tag, long[] val)
 	{
-		this(tag, val, Writer.LONG);
+		this(tag, val, Writer.LONG8);
 	}
 	
 	/**
@@ -70,10 +70,6 @@ public class Long8Tag extends Tag
 	protected Long8Tag(short tag, long[] val, short type)
 	{
 		super(tag, type, val.length, 0, val);
-		if(val == null)
-		{
-			throw new NullPointerException("val");
-		}
 		if(val.length == 0)
 		{
 			throw new IllegalArgumentException("val.length == 0");

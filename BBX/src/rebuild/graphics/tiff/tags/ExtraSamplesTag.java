@@ -71,7 +71,7 @@ public final class ExtraSamplesTag extends ShortTag
 		{
 			if(samples[i] < UNSPECIFIED || samples[i] > UNASSALPHA)
 			{
-				throw new IllegalArgumentException("samples[i] < UNSPECIFIED || samples[i] > UNASSALPHA");
+				throw new IllegalArgumentException("samples[i] < UNSPECIFIED || samples[i] > UNASSALPHA, i=" + i);
 			}
 		}
 	}

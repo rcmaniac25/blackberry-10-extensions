@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import rebuild.graphics.tiff.Tag;
 import rebuild.graphics.tiff.Writer;
+import rebuild.util.ref.RefULong;
 
 /**
  * For each strip, the byte offset of that strip.
@@ -422,13 +423,10 @@ public final class StripOffsetsTag extends Tag
 	
 	private static short dataTypeRequired(long value)
 	{
-		if(value < 0)
+		RefULong ul = new RefULong(value);
+		if(ul.greaterThan(Short.MAX_VALUE))
 		{
-			throw new IllegalArgumentException("value < 0");
-		}
-		if(value > Short.MAX_VALUE)
-		{
-			if(value > Integer.MAX_VALUE)
+			if(ul.greaterThan(Integer.MAX_VALUE))
 			{
 				return Writer.LONG8;
 			}

@@ -70,10 +70,6 @@ public class LongTag extends Tag
 	protected LongTag(short tag, int[] val, short type)
 	{
 		super(tag, type, val.length, 0, val);
-		if(val == null)
-		{
-			throw new NullPointerException("val");
-		}
 		if(val.length == 0)
 		{
 			throw new IllegalArgumentException("val.length == 0");
