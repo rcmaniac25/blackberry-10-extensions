@@ -1309,7 +1309,7 @@ final class PrintUtility
                 	{
                 		c = (char)(c & 0xFF);
                 	}
-                    str = c + "";
+                    str = String.valueOf(c);
                 }
                 else if (obj instanceof Byte || obj instanceof Short || obj instanceof Integer || obj instanceof Long)
                 {
@@ -1331,7 +1331,7 @@ final class PrintUtility
                     {
                         val = ((Long)obj).longValue() & mask;
                     }
-                    str = ((char)val) + "";
+                    str = String.valueOf((char)val);
                 }
                 else
                 {
@@ -2279,6 +2279,7 @@ final class PrintUtility
 	private static class FloatFormatElement extends GeneralFormatElement
     {
 		private static final int DEFAULT_PRECISION = 6; //Nearly every reference says 6 except www.cplusplus.com
+		private static final LargeNumber TEN = new LargeNumber(10L);
 		
         public FloatFormatElement(String format)
         {
@@ -2738,7 +2739,6 @@ final class PrintUtility
                         LargeNumber man = new LargeNumber(mantissa);
                         LargeNumber exponent = new LargeNumber(exp);
                         
-                        LargeNumber ten = new LargeNumber(10L);
                         LargeNumber rem;
                         LargeNumber[] mod = null;
                         //Whole number
@@ -2749,12 +2749,12 @@ final class PrintUtility
                                 mod = new LargeNumber[1];
                             }
                             man.divideAndMod(exponent, mod).toString(buf, true);
-                            rem = mod[0].multiply(ten);
+                            rem = mod[0].multiply(TEN);
                         }
                         else
                         {
                             buf.append('0');
-                            rem = man.multiply(ten);
+                            rem = man.multiply(TEN);
                         }
                         //Decimal point
                         if (!rem.zero() && p >= 0)
@@ -2771,7 +2771,7 @@ final class PrintUtility
                                     rem.divideAndMod(exponent, mod).toString(buf, true);
                                     if(p >= 0)
                                     {
-                                    	rem = mod[0].multiply(ten);
+                                    	rem = mod[0].multiply(TEN);
                                     }
                                 }
                                 else
@@ -2779,7 +2779,7 @@ final class PrintUtility
                                     buf.append('0');
                                     if(p >= 0 && !rem.zero())
                                     {
-                                    	rem = rem.multiply(ten);
+                                    	rem = rem.multiply(TEN);
                                     }
                                 }
                             }

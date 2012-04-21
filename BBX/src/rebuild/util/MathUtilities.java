@@ -916,7 +916,7 @@ public final class MathUtilities
 	{
 		if ((newBase != 1.0) && ((a == 1.0) || ((newBase != 0.0) && !isPositiveInfinity(newBase))))
 	    {
-	        return (log(a) / log(newBase));
+	        return (net.rim.device.api.util.MathUtilities.log(a) / net.rim.device.api.util.MathUtilities.log(newBase));
 	    }
 	    return Double.NaN;
 	}

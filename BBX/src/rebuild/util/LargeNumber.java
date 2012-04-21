@@ -42,6 +42,8 @@ public final class LargeNumber
 {
 	private byte[] value;
     private Boolean mzero, mone;
+    
+    private static final LargeNumber ZERO = new LargeNumber(0L);
 	
 	//Non-representation specific
     public LargeNumber()
@@ -109,7 +111,7 @@ public final class LargeNumber
         //Create the result and use it temporarily for the multmin calculation.
         //LargeNumber maxLong = new LargeNumber(0xFFFFFFFFFFFFFFFFL);
         //LargeNumber multmin = maxLong.divide(radRef);
-        LargeNumber result = new LargeNumber(0L);
+        LargeNumber result = ZERO;
         LargeNumber ldigit;
         
         //Calculate the number, not the most efficient but gets the job done
@@ -146,15 +148,15 @@ public final class LargeNumber
     	//Generic checks
         if (this.zero() && num.zero())
         {
-            return new LargeNumber(0L);
+            return ZERO;
         }
         if (this.zero())
         {
-            return new LargeNumber(num);
+            return num;
         }
         else if (num.zero())
         {
-            return new LargeNumber(this);
+            return this;
         }
         byte[] result = new byte[Math.max(this.value.length, num.value.length) + 1];
         add(this.value, num.value, result);
@@ -166,15 +168,15 @@ public final class LargeNumber
     	//Generic checks
         if (this.zero() && num.zero())
         {
-            return new LargeNumber(0L);
+            return ZERO;
         }
         if (this.zero())
         {
-            return new LargeNumber(num);
+            return num;
         }
         else if (num.zero())
         {
-            return new LargeNumber(this);
+            return this;
         }
         byte[] result = new byte[Math.max(this.value.length, num.value.length)];
         subtract(this.value, num.value, result);
@@ -186,15 +188,15 @@ public final class LargeNumber
     	//Generic checks
         if (this.zero() || num.zero())
         {
-            return new LargeNumber(0L);
+            return ZERO;
         }
         if (this.one())
         {
-            return new LargeNumber(num);
+            return num;
         }
         else if (num.one())
         {
-            return new LargeNumber(this);
+            return this;
         }
         byte[] result = new byte[(Math.max(this.value.length, num.value.length) * 2)]; //Numbers are expected to double in size (1b * 1b = 2b, 2b * 2b = 4b, etc.)
         multiply(this.value, num.value, result);
@@ -208,9 +210,9 @@ public final class LargeNumber
         {
             if (mod != null)
             {
-                mod[0] = new LargeNumber(0L);
+                mod[0] = ZERO;
             }
-            return new LargeNumber(0L);
+            return ZERO;
         }
         else if (num.zero())
         {
@@ -221,9 +223,9 @@ public final class LargeNumber
             if (mod != null)
             {
             	//If a modulus result exists then set to zero, no remainder exists for a divide by one operation
-                mod[0] = new LargeNumber(0L);
+                mod[0] = ZERO;
             }
-            return new LargeNumber(this);
+            return this;
         }
         byte[] result = new byte[this.value.length];
         byte[] mresult = mod != null ? new byte[this.value.length] : null;
@@ -255,7 +257,7 @@ public final class LargeNumber
     {
     	if(this.zero() || num.zero())
     	{
-    		return new LargeNumber(0L);
+    		return ZERO;
     	}
     	byte[] result = new byte[this.value.length];
         and(this.value, num.value, result);
@@ -404,7 +406,7 @@ public final class LargeNumber
             {
             	//Not that efficient but works without problems
                 LargeNumber radRef = new LargeNumber((long)radix);
-                LargeNumber number = new LargeNumber(this);
+                LargeNumber number = this;
                 LargeNumber[] mod = new LargeNumber[1];
                 char c;
                 while(number.compare(radRef) >= 0)

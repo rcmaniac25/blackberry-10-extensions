@@ -18,7 +18,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //---------------------------------------------------------------------------------
-// The "format" function is from BBing (Bing for BlackBerry) and is licensed under MSPL.
+// The "format_java" function is from BBing (Bing for BlackBerry) and is licensed under MSPL.
 //---------------------------------------------------------------------------------
 //
 // Created 2008
@@ -756,7 +756,9 @@ public final class StringUtilities
 		}
 		else
 		{
-			//Formatting such as ##.### is not supported because it would be a pain in the butt to implement, I already went above and beyond for actually writing a format function
+			//TODO: Rewrite to use PrintUtility (##.### formating)
+			PrintUtility.FormatElement form = PrintUtility.FormatElement.getFormatter("%f"); //XXX
+			
 			return Double.toString(dob);
 		}
 	}
@@ -1115,7 +1117,7 @@ public final class StringUtilities
 		
 		public void write(int b) throws IOException
 		{
-			write(new byte[]{(byte)b});
+			write(new byte[]{(byte)b}, 0, 1);
 		}
 		
 		public void write(byte[] b, int off, int len) throws IOException

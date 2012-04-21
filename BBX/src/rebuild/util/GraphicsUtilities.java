@@ -360,18 +360,15 @@ public final class GraphicsUtilities
     public static boolean saveImage(String file, Image map, int format)
     {
     	boolean saved = false;
-    	javax.microedition.io.file.FileConnection fil;
+    	javax.microedition.io.file.FileConnection fil = null;
     	try
     	{
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ_WRITE);
-    		if(!fil.exists())
-    		{
-    			if(!File.ensureCreation(fil.getURL()))
-    			{
-    				fil.close();
-    				return saved;
-    			}
-    		}
+    		if(!File.ensureCreation(fil.getURL()))
+			{
+				fil.close();
+				return saved;
+			}
     		java.io.OutputStream out = fil.openOutputStream();
     		try
     		{
@@ -386,11 +383,23 @@ public final class GraphicsUtilities
     		{
     			out.close();
     		}
-    		fil.close();
     	}
     	catch(Exception e)
     	{
     		saved = false;
+    	}
+    	finally
+    	{
+    		if(fil != null)
+    		{
+	    		try
+	    		{
+	    			fil.close();
+	    		}
+	    		catch(Exception e)
+	    		{
+	    		}
+    		}
     	}
     	return saved;
     }
@@ -426,18 +435,15 @@ public final class GraphicsUtilities
     public static boolean saveBitmap(String file, Bitmap map, int format)
     {
     	boolean saved = false;
-    	javax.microedition.io.file.FileConnection fil;
+    	javax.microedition.io.file.FileConnection fil = null;
     	try
     	{
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ_WRITE);
-    		if(!fil.exists())
-    		{
-    			if(!File.ensureCreation(fil.getURL()))
-    			{
-    				fil.close();
-    				return saved;
-    			}
-    		}
+    		if(!File.ensureCreation(fil.getURL()))
+			{
+				fil.close();
+				return saved;
+			}
     		java.io.OutputStream out = fil.openOutputStream();
     		try
     		{
@@ -452,11 +458,23 @@ public final class GraphicsUtilities
     		{
     			out.close();
     		}
-    		fil.close();
     	}
     	catch(Exception e)
     	{
     		saved = false;
+    	}
+    	finally
+    	{
+    		if(fil != null)
+    		{
+	    		try
+	    		{
+	    			fil.close();
+	    		}
+	    		catch(Exception e)
+	    		{
+	    		}
+    		}
     	}
     	return saved;
     }
@@ -477,8 +495,7 @@ public final class GraphicsUtilities
     	{
     		throw new NullPointerException("map");
     	}
-    	EncodedImage e = bitmapToEncodedImage(map, true, format);
-    	saveEncodedImage(out, e);
+    	saveEncodedImage(out, bitmapToEncodedImage(map, true, format));
     }
     
     /**
@@ -490,18 +507,15 @@ public final class GraphicsUtilities
     public static boolean saveEncodedImage(String file, EncodedImage map)
     {
     	boolean saved = false;
-    	javax.microedition.io.file.FileConnection fil;
+    	javax.microedition.io.file.FileConnection fil = null;
     	try
     	{
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ_WRITE);
-    		if(!fil.exists())
-    		{
-    			if(!File.ensureCreation(fil.getURL()))
-    			{
-    				fil.close();
-    				return saved;
-    			}
-    		}
+    		if(!File.ensureCreation(fil.getURL()))
+			{
+				fil.close();
+				return saved;
+			}
     		java.io.OutputStream out = fil.openOutputStream();
     		try
     		{
@@ -516,11 +530,23 @@ public final class GraphicsUtilities
     		{
     			out.close();
     		}
-    		fil.close();
     	}
     	catch(Exception e)
     	{
     		saved = false;
+    	}
+    	finally
+    	{
+    		if(fil != null)
+    		{
+    			try
+    			{
+    				fil.close();
+    			}
+    			catch(Exception e)
+    			{
+    			}
+    		}
     	}
     	return saved;
     }
@@ -556,7 +582,7 @@ public final class GraphicsUtilities
     public static Image loadImage(String file)
     {
     	Image map = null;
-    	javax.microedition.io.file.FileConnection fil;
+    	javax.microedition.io.file.FileConnection fil = null;
     	try
     	{
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ);
@@ -576,10 +602,22 @@ public final class GraphicsUtilities
     		{
     			in.close();
     		}
-    		fil.close();
     	}
     	catch(Exception e)
     	{
+    	}
+    	finally
+    	{
+    		if(fil != null)
+    		{
+    			try
+    			{
+    				fil.close();
+    			}
+    			catch(Exception e)
+    			{
+    			}
+    		}
     	}
     	return map;
     }
@@ -609,7 +647,7 @@ public final class GraphicsUtilities
     public static Bitmap loadBitmap(String file)
     {
     	Bitmap map = null;
-    	javax.microedition.io.file.FileConnection fil;
+    	javax.microedition.io.file.FileConnection fil = null;
     	try
     	{
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ);
@@ -629,10 +667,22 @@ public final class GraphicsUtilities
     		{
     			in.close();
     		}
-    		fil.close();
     	}
     	catch(Exception e)
     	{
+    	}
+    	finally
+    	{
+    		if(fil != null)
+    		{
+    			try
+    			{
+    				fil.close();
+    			}
+    			catch(Exception e)
+    			{
+    			}
+    		}
     	}
     	return map;
     }
@@ -655,7 +705,7 @@ public final class GraphicsUtilities
     public static EncodedImage loadEncodedImage(String file)
     {
     	EncodedImage map = null;
-    	javax.microedition.io.file.FileConnection fil;
+    	javax.microedition.io.file.FileConnection fil = null;
     	try
     	{
     		fil = (javax.microedition.io.file.FileConnection)javax.microedition.io.Connector.open(file, javax.microedition.io.Connector.READ);
@@ -675,10 +725,22 @@ public final class GraphicsUtilities
     		{
     			in.close();
     		}
-    		fil.close();
     	}
     	catch(Exception e)
     	{
+    	}
+    	finally
+    	{
+    		if(fil != null)
+    		{
+    			try
+    			{
+    				fil.close();
+    			}
+    			catch(Exception e)
+    			{
+    			}
+    		}
     	}
     	return map;
     }

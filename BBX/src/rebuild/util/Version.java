@@ -87,16 +87,14 @@ public final class Version implements Comparable
         {
         	throw new IllegalArgumentException(Resources.getString(BBXResource.ARGUMENT_VERSIONOUTOFRANGE));
         }
-        length -= 2;
-        if (length > 0)
+        if (length > 2)
         {
         	this._Build = Integer.parseInt(strArray[2]);
             if (this._Build < 0)
             {
             	throw new IllegalArgumentException(Resources.getString(BBXResource.ARGUMENT_VERSIONOUTOFRANGE));
             }
-            length--;
-            if (length > 0)
+            if (length > 3)
             {
             	this._Revision = Integer.parseInt(strArray[3]);
                 if (this._Revision < 0)

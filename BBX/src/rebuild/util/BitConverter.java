@@ -34,6 +34,7 @@ import java.io.IOException;
 
 import rebuild.BBXResource;
 import rebuild.Resources;
+import rebuild.util.ref.*;
 
 /**
  * Data type converter, byte order is Little Endian.
@@ -41,6 +42,45 @@ import rebuild.Resources;
  */
 public final class BitConverter
 {
+	public static byte[] getBytes(RefNumber value)
+	{
+		if(value instanceof RefByte || value instanceof RefUByte)
+		{
+			return new byte[]{(value instanceof RefByte) ? ((RefByte)value).byteValue() : ((RefUByte)value).byteValue()};
+		}
+		else if(value instanceof RefShort || value instanceof RefUShort)
+		{
+			return getBytes((value instanceof RefShort) ? ((RefShort)value).shortValue() : ((RefUShort)value).shortValue());
+		}
+		else if(value instanceof RefInteger || value instanceof RefUInteger)
+		{
+			return getBytes((value instanceof RefInteger) ? ((RefInteger)value).intValue() : ((RefUInteger)value).intValue());
+		}
+		else if(value instanceof RefLong || value instanceof RefULong)
+		{
+			return getBytes((value instanceof RefLong) ? ((RefLong)value).longValue() : ((RefULong)value).longValue());
+		}
+		else if(value instanceof RefFloat)
+		{
+			return getBytes(((RefFloat)value).floatValue());
+		}
+		else if(value instanceof RefDouble)
+		{
+			return getBytes(((RefDouble)value).doubleValue());
+		}
+		return null;
+	}
+	
+	public static byte[] getBytes(RefCharacter value)
+	{
+		return getBytes(value.charValue());
+	}
+	
+	public static byte[] getBytes(Byte value)
+	{
+		return new byte[]{value.byteValue()};
+	}
+	
 	public static byte[] getBytes(Short value)
 	{
 		return getBytes(value.shortValue());
@@ -163,6 +203,16 @@ public final class BitConverter
 		return new Short(toInt16(value, startIndex));
 	}
 	
+	public static RefShort toRefShort(byte[] value, int startIndex)
+	{
+		return new RefShort(toInt16(value, startIndex));
+	}
+	
+	public static RefUShort toRefUShort(byte[] value, int startIndex)
+	{
+		return new RefUShort(toInt16(value, startIndex));
+	}
+	
 	public static short toInt16(byte[] value, int startIndex)
 	{
 		argumentCheck(value, startIndex, 2);
@@ -186,6 +236,16 @@ public final class BitConverter
 		return new Integer(toInt32(value, startIndex));
 	}
 	
+	public static RefInteger toRefInteger(byte[] value, int startIndex)
+	{
+		return new RefInteger(toInt32(value, startIndex));
+	}
+	
+	public static RefUInteger toRefUInteger(byte[] value, int startIndex)
+	{
+		return new RefUInteger(toInt32(value, startIndex));
+	}
+	
 	public static int toInt32(byte[] value, int startIndex)
 	{
 		argumentCheck(value, startIndex, 4);
@@ -207,6 +267,16 @@ public final class BitConverter
 	public static Long toLong(byte[] value, int startIndex)
 	{
 		return new Long(toInt64(value, startIndex));
+	}
+	
+	public static RefLong toRefLong(byte[] value, int startIndex)
+	{
+		return new RefLong(toInt64(value, startIndex));
+	}
+	
+	public static RefULong toRefULong(byte[] value, int startIndex)
+	{
+		return new RefULong(toInt64(value, startIndex));
 	}
 	
 	public static long toInt64(byte[] value, int startIndex)
@@ -234,6 +304,11 @@ public final class BitConverter
 		return new Character((char)toInt16(value, startIndex));
 	}
 	
+	public static RefCharacter toRefCharacter(byte[] value, int startIndex)
+	{
+		return new RefCharacter((char)toInt16(value, startIndex));
+	}
+	
 	public static char toChar(byte[] value, int startIndex)
 	{
 		return (char)toInt16(value, startIndex);
@@ -244,6 +319,11 @@ public final class BitConverter
 		return new Float(Float.intBitsToFloat(toInt32(value, startIndex)));
 	}
 	
+	public static RefFloat toRefFloat(byte[] value, int startIndex)
+	{
+		return new RefFloat(Float.intBitsToFloat(toInt32(value, startIndex)));
+	}
+	
 	public static float toFloat(byte[] value, int startIndex)
 	{
 		return Float.intBitsToFloat(toInt32(value, startIndex));
@@ -252,6 +332,11 @@ public final class BitConverter
 	public static Double toDoubleObject(byte[] value, int startIndex)
 	{
 		return new Double(Double.longBitsToDouble(toInt64(value, startIndex)));
+	}
+	
+	public static RefDouble toRefDouble(byte[] value, int startIndex)
+	{
+		return new RefDouble(Double.longBitsToDouble(toInt64(value, startIndex)));
 	}
 	
 	public static double toDouble(byte[] value, int startIndex)

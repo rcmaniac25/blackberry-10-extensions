@@ -1,8 +1,12 @@
 --TODO:
-Review code to look for anything that could go wrong
--util (except "ref")
-
+Research:
+-Multiline suggestion field
+-Multiline autocomplete
+-UI builder (text based first, GUI later. Could it be used for BB10?)
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
+Get rid of "lock" and "tempValue" from GraphicsUtilities
+Figure out a better way to do the random values within Utilities.
+Look over Path to update/modify getSystemPath so it will work correctly and clean up other functions so they use try/catch/finally
 
 Modify PrintUtility so that it supports "ref" functions
 Add remaining NIO classes (make duplicate of native NIO)
@@ -10,17 +14,21 @@ Finish FilePicker
 Do the todos in GestureField
 Rewrite the monstrosity which is CustomButtonField (it was the first field I ever wrote and it shows)
 
-Look over Path to update/modify getSystemPath so it will work correctly and clean up other functions so they use try/catch/finally
 Look over following TIFF tags to determine how values with the high bit set should be handled:
 -ImageHeightTag
 -ImageWidthTag
 -RowsPerStripTag (additional, think through getStripsPerImage)
 Look over all tags to determine if there are any areas of ambiguity or ways that an invalid value could be passed in (such as wanting the value 0x80000000, which wouldn't work because Java uses signed numbers only)
+Look over format_java to see if it follows documentation correctly (http://docs.oracle.com/javase/7/docs/api/java/text/MessageFormat.html)
+Implement proper ##.### floating point handling within format_java.
+Research implementing the choice element in format_java.
 
 Rewrite WBMPEncoder so it produces the correct image format (http://en.wikipedia.org/wiki/Wireless_Application_Protocol_Bitmap_Format)
 Create GIF and BMP Encoders
 Modify PrintUtility so that the print formats are extendable (use StringUtilities as the front end, PrintUtility as the back end)
 Work on TIFF encoding
+
+Make sure printf is fully implemented and to standards
 
 --DEFINES:
 NO_SIGNING - REMOVES functionality that requires signing. This does not cover the LARGENUMBER_USE_NATIVE_BIGINT define.
