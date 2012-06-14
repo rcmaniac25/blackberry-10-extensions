@@ -1,0 +1,16 @@
+--TODO:
+Make library more... an actual library. It currently is just sample code that was used for a forum post.
+
+--DEFINES:
+NO_SIGNING - REMOVES or replaces functionality that requires signing.
+NO_FORMATTERS - Don't use any of the built in text formatting functions and classes.
+
+--BACKGROUND:
+Originally written for http://supportforums.blackberry.com/t5/Java-Development/Save-set-of-images-to-pdf-file-from-Java-App/td-p/1741165
+
+@peter_strange asked me to anwser the post (it seems that because of my other unfinished library, a port of PDF Renderer, I am being viewed as knowledgable on PDF). I said what I knew
+then wanted to see if I could make a quick mock up of a program. I did in a few hours and an ample amount of reading the PDF standard. Instead of simply posting up the code in the forum,
+I decided to actually make a library for it.
+
+It was originally written in C# and ported to BlackBerry. The original C# code is located in the Other folder.
+The code written for the forum post is also located in the Other folder.

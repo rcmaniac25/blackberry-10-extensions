@@ -1,7 +1,7 @@
 --TODO:
 Research:
--Multiline suggestion field
--Multiline autocomplete
+-Multiline suggestion field (shows possible words of what you might want)
+-Multiline autocomplete (corrects misspellings and special cases such as youre to you're)
 -UI builder (text based first, GUI later. Could it be used for BB10?)
 Update TODO and NOTES with stuff from RebuildLib for use in BBX
 Get rid of "lock" and "tempValue" from GraphicsUtilities
@@ -13,6 +13,7 @@ Add remaining NIO classes (make duplicate of native NIO)
 Finish FilePicker
 Do the todos in GestureField
 Rewrite the monstrosity which is CustomButtonField (it was the first field I ever wrote and it shows)
+Add concurrent classes (see java.util.concurrent for classes to bring over, look at azure lib for the ones I already made)
 
 Look over following TIFF tags to determine how values with the high bit set should be handled:
 -ImageHeightTag
@@ -23,6 +24,7 @@ Look over format_java to see if it follows documentation correctly (http://docs.
 Implement proper ##.### floating point handling within format_java.
 Research implementing the choice element in format_java.
 
+Work on PDF portion of library.
 Rewrite WBMPEncoder so it produces the correct image format (http://en.wikipedia.org/wiki/Wireless_Application_Protocol_Bitmap_Format)
 Create GIF and BMP Encoders
 Modify PrintUtility so that the print formats are extendable (use StringUtilities as the front end, PrintUtility as the back end)
@@ -31,9 +33,10 @@ Work on TIFF encoding
 Make sure printf is fully implemented and to standards
 
 --DEFINES:
-NO_SIGNING - REMOVES functionality that requires signing. This does not cover the LARGENUMBER_USE_NATIVE_BIGINT define.
+NO_SIGNING - REMOVES or replaces functionality that requires signing. This does not cover the LARGENUMBER_USE_NATIVE_BIGINT define.
 BIT_CONVERTER_USE_IO - Allow the use of the native IO functions to do the actual conversion of primitives to bytes (with manual conversion happening otherwise, or if the IO conversion fails)
 LARGENUMBER_USE_NATIVE_BIGINT - BlackBerry's Crypto system has built in Large Number support. It requires signing but could be faster since it is native.
+NO_FORMATTERS - Don't use any of the built in text formatting functions and classes.
 
 --NOTES:
 -Some previous projects I worked on use the same code as this project or has "contributed" code to this project. Changes in names are purely for the project, licenses should remain the same.
