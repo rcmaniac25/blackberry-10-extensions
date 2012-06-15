@@ -32,9 +32,13 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+//#ifndef NO_FORMATTERS
 import rebuild.util.text.StringUtilities;
+//#endif
 
+//#ifndef NO_SIGNING
 import net.rim.device.api.crypto.MD5Digest;
+//#endif
 //#ifdef NO_FORMATTERS
 import net.rim.device.api.util.Arrays;
 //#endif
@@ -266,7 +270,7 @@ public final class PDF
 //#ifdef NO_FORMATTERS
         xrefStream.write(PDFWriters.encodeString("0 " + (this.objects.size() + 1) + "\n"));
 //#else
-        xrefStream.write(PDFWriters.encodeString(StringUtilities.format_printf("0 %d\n", new Integer(this.objects.size() + 1))));
+        xrefStream.write(PDFWriters.encodeString(StringUtilities.stripNullChar(StringUtilities.format_printf("0 %d\n", new Integer(this.objects.size() + 1)))));
 //#endif
         
         if (freeObjects.size() > 0)
@@ -299,7 +303,7 @@ public final class PDF
                     
                     xrefStream.write(PDFWriters.encodeString(sb.toString(), "US-ASCII"));
 //#else
-                    xrefStream.write(PDFWriters.encodeString(StringUtilities.format_printf("%010d 65536 f \n", new Integer(obj.number)), "US-ASCII"));
+                    xrefStream.write(PDFWriters.encodeString(StringUtilities.stripNullChar(StringUtilities.format_printf("%010d 65536 f \n", new Integer(obj.number))), "US-ASCII"));
 //#endif
                     break;
                 }
@@ -352,7 +356,7 @@ public final class PDF
                             }
                             sb.append(value);
 //#else
-                            sb.append(StringUtilities.format_printf("%010d", new Integer(((PDFObject)this.objects.elementAt(i)).number)));
+                            sb.append(StringUtilities.stripNullChar(StringUtilities.format_printf("%010d", new Integer(((PDFObject)this.objects.elementAt(i)).number))));
 //#endif
                             break;
                         }
@@ -381,7 +385,7 @@ public final class PDF
                 }
                 sb.append(value);
 //#else
-                sb.append(StringUtilities.format_printf("%010d", new Long(objectOffset)));
+                sb.append(StringUtilities.stripNullChar(StringUtilities.format_printf("%010d", new Long(objectOffset))));
 //#endif
             }
             
@@ -413,7 +417,7 @@ public final class PDF
             //End of line
             sb.append(" \n");
 //#else
-            sb.append(StringUtilities.format_printf(" %05d %c \n", new Integer(obj.revision), new Character(free ? 'f' : 'n')));
+            sb.append(StringUtilities.stripNullChar(StringUtilities.format_printf(" %05d %c \n", new Integer(obj.revision), new Character(free ? 'f' : 'n'))));
 //#endif
             
             //Write the value

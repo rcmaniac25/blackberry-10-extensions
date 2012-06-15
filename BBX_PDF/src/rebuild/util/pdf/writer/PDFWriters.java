@@ -1,3 +1,5 @@
+//#preprocessor
+
 //---------------------------------------------------------------------------------
 //
 // BlackBerry Extensions
@@ -27,6 +29,10 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+//#ifndef NO_FORMATTERS
+import rebuild.util.text.StringUtilities;
+//#endif
 
 import net.rim.device.api.util.Arrays;
 
@@ -353,6 +359,7 @@ final class PDFWriters
 	public static long WriteNumber(OutputStream s, Object value) throws IOException
     {
         byte[] dat = null;
+//#ifdef NO_FORMATTERS
         if (value instanceof Integer || value instanceof Long || value instanceof Float || value instanceof Double)
         {
         	//Can't really format Float and Double, so just write it out and cross fingers
@@ -364,6 +371,26 @@ final class PDFWriters
         		s.write(dat);
         	}
         }
+//#else
+        if(value instanceof Integer || value instanceof Long)
+        {
+        	Integer v = value instanceof Integer ? (Integer)value : new Integer((int)((Long)value).longValue());
+        	
+        	//Easy
+        	dat = encodeString(v.toString());
+    		s.write(dat);
+        }
+        else if(value instanceof Float || value instanceof Double)
+        {
+        	Float v = value instanceof Float ? (Float)value : new Float(((Double)value).floatValue());
+        	if(!(v.isInfinite() || v.isNaN()))
+        	{
+        		//More complex but not hard with printf
+        		dat = encodeString(StringUtilities.stripNullChar(StringUtilities.format_printf("%f", v)));
+        		s.write(dat);
+        	}
+        }
+//#endif
         return dat != null ? dat.length : -1;
     }
 	

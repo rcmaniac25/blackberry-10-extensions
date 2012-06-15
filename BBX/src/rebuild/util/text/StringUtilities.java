@@ -820,6 +820,23 @@ public final class StringUtilities
 	}
 	
 	/**
+	 * Utility function primarily made for use with printf functions to remove the null char that is appended at the end of each String.
+	 * This function simply performs an indexOf operation and produces a substring if a null char is found.
+	 * @param string The String to remove the null char.
+	 * @return The String stripped of the null char.
+	 * @since BBX 1.3.0
+	 */
+	public static String stripNullChar(String string)
+	{
+		int nullChar = string.indexOf('\0');
+		if(nullChar >= 0)
+		{
+			return string.substring(0, nullChar);
+		}
+		return string;
+	}
+	
+	/**
      * Appends a specified number of copies of the string representation of a Unicode character to the end of the StringBuffer.
      * @param buf The StringBuffer to append the chars to.
      * @param value The character to append.

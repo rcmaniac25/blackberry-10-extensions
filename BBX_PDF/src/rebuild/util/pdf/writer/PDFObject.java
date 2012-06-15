@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Hashtable;
 
+//#ifndef NO_FORMATTERS
 import rebuild.util.text.StringUtilities;
+//#endif
 
 /**
  * Represents a distinct PDF Object within a PDF.
@@ -82,7 +84,7 @@ public final class PDFObject
 //#ifdef NO_FORMATTERS
         byte[] buffer = PDFWriters.encodeString("" + pdfobj.number + " " + pdfobj.revision + " R");
 //#else
-        byte[] buffer = PDFWriters.encodeString(StringUtilities.format_printf("%d %d R", new Integer(pdfobj.number), new Integer(pdfobj.revision)));
+        byte[] buffer = PDFWriters.encodeString(StringUtilities.stripNullChar(StringUtilities.format_printf("%d %d R", new Integer(pdfobj.number), new Integer(pdfobj.revision))));
 //#endif
         s.write(buffer);
         return buffer.length;
@@ -98,7 +100,7 @@ public final class PDFObject
 //#ifdef NO_FORMATTERS
         mem.write(PDFWriters.encodeString("" + this.number + " " + this.revision + " obj"));
 //#else
-        mem.write(PDFWriters.encodeString(StringUtilities.format_printf("%d %d obj", new Integer(this.number), new Integer(this.revision))));
+        mem.write(PDFWriters.encodeString(StringUtilities.stripNullChar(StringUtilities.format_printf("%d %d obj", new Integer(this.number), new Integer(this.revision)))));
 //#endif
         mem.write(newline);
         
