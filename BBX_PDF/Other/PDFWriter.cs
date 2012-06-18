@@ -667,7 +667,7 @@ namespace TestApp
                 StreamWriter sw = new StreamWriter(mem, Encoding.ASCII);
                 {
                     sw.WriteLine("q% Save graphics state");
-                    sw.WriteLine("1 0 0 1 {0} {1} cm% Translate to ({0},{1})", offX[i], offY[i]);
+                    sw.WriteLine("{0} 0 0 {1} {2} {3} cm% Translate to ({2},{3})", images[i].GetWidth(), images[i].GetHeight(), offX[i], offY[i]);
                     sw.WriteLine("/Im1 Do% Paint image");
                     sw.WriteLine("Q% Restore graphics state");
                     sw.Flush();

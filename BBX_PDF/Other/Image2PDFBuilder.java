@@ -97,8 +97,9 @@ public class Image2PDFBuilder
             	ByteArrayOutputStream mem = new ByteArrayOutputStream();
             	StringBuffer sb = new StringBuffer();
                 {
+                	Bitmap bmp = (Bitmap)images.elementAt(i);
                 	sb.append("q% Save graphics state\n");
-                	sb.append("1 0 0 1 " + offX[i] + " " + offY[i] + " cm% Translate to (" + offX[i] + "," + offY[i] + ")\n");
+                	sb.append("" + bmp.getWidth() + " 0 0 " + bmp.getHeight() + " " + offX[i] + " " + offY[i] + " cm% Translate to (" + offX[i] + "," + offY[i] + ")\n");
                 	sb.append("/Im1 Do% Paint image\n");
                 	sb.append("Q% Restore graphics state\n");
                 	
