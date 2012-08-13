@@ -2,6 +2,7 @@ TEMPLATE = lib
 TARGET = rebuildui
 
 CONFIG += qt warn_on debug_and_release cascades
+LIBS += -lscreen
 
 INCLUDEPATH += ../src
 SOURCES += ../src/*.cpp

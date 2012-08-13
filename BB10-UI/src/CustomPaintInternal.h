@@ -25,6 +25,7 @@
 #include <math.h>
 #include <pthread.h>
 
+#include <bb/cascades/core/touchpropagation.h>
 #include <bb/cascades/ForeignWindow>
 #include <bb/cascades/LayoutUpdateHandler>
 
@@ -64,8 +65,12 @@ namespace rebuild
 				{
 					ForeignWindow* fw = fwindow.data();
 
+					//Generic setup
 					fw->setWindowGroup(ForeignWindow::mainWindowGroupId());
 					fw->setWindowId("CustomPaintID");
+
+					//The ForeignWindow will never handle anything itself anyway, save the internal system the trouble
+					//fw->setTouchPropagationMode(bb::cascades::TouchPropagationMode::Type::None); //XXX Not working
 				}
 
 				virtual ~CustomPaintPrivate()

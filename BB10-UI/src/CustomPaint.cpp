@@ -33,13 +33,16 @@ CustomPaint::CustomPaint(bb::cascades::Container* parent) : bb::cascades::Custom
 	if(d->valid)
 	{
 		//Dev-accessible window setup
-		setupPaintWindow(d->window);
+		this->setupPaintWindow(d->window);
 
 		//Setup signals/slots
 		d->setupSignalsSlots();
 
 		//Set the window as root
 		setRoot(d->fwindow.data());
+
+		//Paint the initial window
+		this->paint(d->window);
 	}
 }
 
@@ -48,7 +51,7 @@ CustomPaint::~CustomPaint()
 	Q_D(CustomPaint);
 
 	//Dev-accessible window cleanup
-	cleanupPaintWindow(d->window);
+	this->cleanupPaintWindow(d->window);
 
 	//Cleanup the window
 	d->cleanupWindow();
@@ -143,7 +146,7 @@ void CustomPaint::invalidate(int x, int y, int width, int height)
 					rect[3] = height + y;
 
 					//Invoke paint signal
-					paint(d->window);
+					this->paint(d->window);
 
 					//Invalidate
 					screen_post_window(d->window, buffers[0], 1, rect, 0);
