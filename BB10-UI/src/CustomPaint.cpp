@@ -66,6 +66,10 @@ void CustomPaint::cleanupPaintWindow(screen_window_t)
 {
 }
 
+void CustomPaint::layout(int, int)
+{
+}
+
 /*
  * Invalidate functions
  */
@@ -175,6 +179,11 @@ CustomPaint::Usage CustomPaint::windowUsage() const
 	}
 
 	return static_cast<CustomPaint::Usage>(usage);
+}
+
+screen_context_t CustomPaint::windowContext() const
+{
+	return d_func()->context;
 }
 
 void CustomPaint::setWindowGroup(const QString &windowGroup)

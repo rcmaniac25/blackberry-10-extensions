@@ -80,9 +80,12 @@ namespace rebuild
 				void setWindowUsage(Usage usage);
 
 			protected:
+				screen_context_t windowContext() const;
+
 				virtual void setupPaintWindow(screen_window_t window);
 				virtual void paint(screen_window_t window);
 				virtual void cleanupPaintWindow(screen_window_t window);
+				virtual void layout(int width, int height);
 
 			Q_SIGNALS:
 				void windowGroupChanged(const QString& windowGroup);

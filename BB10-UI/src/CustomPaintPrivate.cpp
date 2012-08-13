@@ -72,6 +72,18 @@ void CustomPaintPrivate::setupWindow()
 	//Create the mutex
 	pthread_mutex_init(&mutex, NULL);
 
+	int size[2];
+	if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0)
+	{
+		//Lock a mutex so we don't paint and resize at the same time
+		pthread_mutex_lock(&mutex);
+
+		//Start the layout
+		cp->layout(size[SCREEN_WINDOW_HORZ], size[SCREEN_WINDOW_VERT]);
+
+		pthread_mutex_unlock(&mutex);
+	}
+
 	valid = true;
 }
 
@@ -132,13 +144,17 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 				screen_set_window_property_iv(window, SCREEN_PROPERTY_SOURCE_SIZE, size);
 
 				//Create the new buffers
-				screen_create_window_buffers(window, 1);
+				if(screen_create_window_buffers(window, 1) == 0)
+				{
+					//Re-layout
+					cp->layout(size[SCREEN_WINDOW_HORZ], size[SCREEN_WINDOW_VERT]);
+
+					//Invalidate window
+					cp->invalidate();
+				}
 			}
 
 			pthread_mutex_unlock(&mutex);
-
-			//Invalidate window
-			cp->invalidate();
 		}
 	}
 }
