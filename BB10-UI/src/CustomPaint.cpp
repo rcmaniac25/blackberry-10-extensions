@@ -17,186 +17,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "../include/CustomPaint.h"
-
-#include <math.h>
-#include <pthread.h>
-
-#include <bb/cascades/ForeignWindow>
-#include <bb/cascades/LayoutUpdateHandler>
-
-using namespace bb::cascades;
-using namespace rebuild::ui::component;
-
-namespace rebuild
-{
-	namespace ui
-	{
-		namespace component
-		{
-#define SCREEN_WINDOW_HORZ 0
-#define SCREEN_WINDOW_VERT 1
-#define INVALIDATE_MAX_SIZE 0x7FFFFFFF
-#define ZDEPTH_DEPTH_MIN 0x80000000
-
-			/*
-			 * CustomPaintPrivate
-			 */
-
-			class CustomPaintPrivate : QObject
-			{
-				Q_OBJECT
-
-			public:
-				const QScopedPointer<ForeignWindow> fwindow;
-
-				screen_context_t context;
-				screen_window_t window;
-
-				bool valid;
-				pthread_mutex_t mutex;
-				CustomPaint* cp;
-
-				CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), cp(customPaint)
-				{
-					ForeignWindow* fw = fwindow.data();
-
-					fw->setWindowGroup(ForeignWindow::mainWindowGroupId());
-					fw->setWindowId("CustomPaintID");
-				}
-
-				virtual ~CustomPaintPrivate()
-				{
-				}
-
-				void setupWindow()
-				{
-					valid = false;
-					context = NULL;
-					window = NULL;
-
-					QByteArray groupArr = fwindow->windowGroup().toAscii();
-					QByteArray idArr = fwindow->windowId().toAscii();
-
-					//Create the screen context
-					if(screen_create_context(&context, SCREEN_APPLICATION_CONTEXT) != 0)
-					{
-						return;
-					}
-
-					//Create the window
-					if(screen_create_window_type(&window, context, SCREEN_CHILD_WINDOW) != 0)
-					{
-						screen_destroy_context(context);
-						context = NULL;
-						return;
-					}
-					fwindow.data()->setWindowHandle((unsigned long)window);
-
-					//Setup group and ID
-					if(screen_join_window_group(window, groupArr.constData()) != 0)
-					{
-						cleanupWindow();
-						return;
-					}
-					if(screen_set_window_property_cv(window, SCREEN_PROPERTY_ID_STRING, idArr.length(), idArr.constData()) != 0)
-					{
-						cleanupWindow();
-						return;
-					}
-
-					//Set the ZOrder of the window (negative so it is below everything else)
-					int z = ZDEPTH_DEPTH_MIN;
-					if(screen_set_window_property_iv(window, SCREEN_PROPERTY_ZORDER, &z) != 0)
-					{
-						cleanupWindow();
-						return;
-					}
-
-					//Last we need to do is create the buffer
-					if(screen_create_window_buffers(window, 1) != 0)
-					{
-						return;
-					}
-
-					//Create the mutex
-					pthread_mutex_init(&mutex, NULL);
-
-					valid = true;
-				}
-
-				void cleanupWindow()
-				{
-					//Cleanup window
-					screen_destroy_window(window);
-					fwindow.data()->setWindowHandle(0);
-
-					//Cleanup context
-					screen_destroy_context(context);
-
-					//Cleanup the mutex
-					pthread_mutex_destroy(&mutex);
-
-					valid = false;
-				}
-
-				void setupSignalsSlots()
-				{
-					//Layout
-					LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)));
-
-					//TODO: Any other signals that should be handle?
-				}
-
-			public slots:
-				void layoutHandlerChange(const QRectF& component)
-				{
-					int size[2];
-
-					if(valid)
-					{
-						//Adjust position if we should
-						if(screen_get_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0 &&
-								(size[SCREEN_WINDOW_HORZ] != component.x() || size[SCREEN_WINDOW_VERT] != component.y()))
-						{
-							size[SCREEN_WINDOW_HORZ] = (int)floorf(component.x());
-							size[SCREEN_WINDOW_VERT] = (int)floorf(component.y());
-
-							screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, size);
-						}
-
-						//Adjust size if we should
-						if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0 &&
-								(size[SCREEN_WINDOW_HORZ] != component.width() || size[SCREEN_WINDOW_VERT] != component.height()))
-						{
-							size[SCREEN_WINDOW_HORZ] = (int)floorf(component.width());
-							size[SCREEN_WINDOW_VERT] = (int)floorf(component.height());
-
-							//Lock a mutex so we don't paint and resize at the same time
-							pthread_mutex_lock(&mutex);
-
-							//Destroy the old window buffers
-							if(screen_destroy_window_buffers(window) == 0)
-							{
-								//Resize the buffers
-								screen_set_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size);
-								screen_set_window_property_iv(window, SCREEN_PROPERTY_SOURCE_SIZE, size);
-
-								//Create the new buffers
-								screen_create_window_buffers(window, 1);
-							}
-
-							pthread_mutex_unlock(&mutex);
-
-							//Invalidate window
-							cp->invalidate();
-						}
-					}
-				}
-			};
-		}
-	}
-}
+#include "CustomPaintInternal.h"
 
 /*
  * CustomPaint functions
@@ -211,6 +32,9 @@ CustomPaint::CustomPaint(bb::cascades::Container* parent) : bb::cascades::Custom
 
 	if(d->valid)
 	{
+		//Dev-accessible window setup
+		setupPaintWindow(d->window);
+
 		//Setup signals/slots
 		d->setupSignalsSlots();
 
@@ -223,10 +47,22 @@ CustomPaint::~CustomPaint()
 {
 	Q_D(CustomPaint);
 
+	//Dev-accessible window cleanup
+	cleanupPaintWindow(d->window);
+
+	//Cleanup the window
 	d->cleanupWindow();
 }
 
+void CustomPaint::setupPaintWindow(screen_window_t)
+{
+}
+
 void CustomPaint::paint(screen_window_t)
+{
+}
+
+void CustomPaint::cleanupPaintWindow(screen_window_t)
 {
 }
 
@@ -329,7 +165,7 @@ QString CustomPaint::windowId() const
 	return d_func()->fwindow->windowId();
 }
 
-int CustomPaint::windowUsage() const
+CustomPaint::Usage CustomPaint::windowUsage() const
 {
 	int usage;
 
@@ -338,7 +174,7 @@ int CustomPaint::windowUsage() const
 		usage = 0;
 	}
 
-	return usage;
+	return static_cast<CustomPaint::Usage>(usage);
 }
 
 void CustomPaint::setWindowGroup(const QString &windowGroup)
@@ -359,11 +195,12 @@ void CustomPaint::setWindowId(const QString &windowId)
 	emit windowIdChanged(windowId);
 }
 
-void CustomPaint::setWindowUsage(int usage)
+void CustomPaint::setWindowUsage(CustomPaint::Usage usage)
 {
 	Q_D(CustomPaint);
 
-	if(screen_set_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &usage) == 0)
+	int sUse = static_cast<int>(usage);
+	if(screen_set_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &sUse) == 0) //XXX Does this require a recreation of the buffers?
 	{
 		emit windowUsageChanged(usage);
 	}

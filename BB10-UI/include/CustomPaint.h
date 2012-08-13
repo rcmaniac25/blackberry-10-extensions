@@ -38,12 +38,27 @@ namespace rebuild
 			{
 			private:
 				Q_OBJECT
+				Q_FLAGS(Usage)
 
 				Q_PROPERTY(QString windowGroup READ windowGroup WRITE setWindowGroup NOTIFY windowGroupChanged FINAL)
 				Q_PROPERTY(QString windowId READ windowId WRITE setWindowId NOTIFY windowIdChanged FINAL)
-				Q_PROPERTY(int windowUsage READ windowUsage WRITE setWindowUsage NOTIFY windowUsageChanged DESIGNABLE false SCRIPTABLE false FINAL)
+				Q_PROPERTY(CustomPaint::Usage windowUsage READ windowUsage WRITE setWindowUsage NOTIFY windowUsageChanged FINAL)
 
 			public:
+				enum Usage
+				{
+					Read = SCREEN_USAGE_READ,
+					Write = SCREEN_USAGE_WRITE,
+					Native = SCREEN_USAGE_NATIVE,
+					OpenGL_ES1 = SCREEN_USAGE_OPENGL_ES1,
+					OpenGL_ES2 = SCREEN_USAGE_OPENGL_ES2,
+					OpenVG = SCREEN_USAGE_OPENVG,
+					Video = SCREEN_USAGE_VIDEO,
+					Capture = SCREEN_USAGE_CAPTURE,
+					Rotation = SCREEN_USAGE_ROTATION,
+					Overlay = SCREEN_USAGE_OVERLAY
+				};
+
 				explicit CustomPaint(bb::cascades::Container* parent = NULL);
 
 				virtual ~CustomPaint();
@@ -58,18 +73,21 @@ namespace rebuild
 
 				QString windowGroup() const;
 				QString windowId() const;
-				int windowUsage() const;
+				Usage windowUsage() const;
 
 				void setWindowGroup(const QString &windowGroup);
 				void setWindowId(const QString &windowId);
-				void setWindowUsage(int usage);
+				void setWindowUsage(Usage usage);
 
+			protected:
+				virtual void setupPaintWindow(screen_window_t window);
 				virtual void paint(screen_window_t window);
+				virtual void cleanupPaintWindow(screen_window_t window);
 
 			Q_SIGNALS:
 				void windowGroupChanged(const QString& windowGroup);
 				void windowIdChanged(const QString& windowId);
-				void windowUsageChanged(int usage);
+				void windowUsageChanged(Usage usage);
 
 			private:
 				/*! @cond PRIVATE */
