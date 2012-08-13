@@ -1,0 +1,11 @@
+#ignore file for Eclipse
+
+# use glob syntax
+syntax: glob
+
+# ignore files
+*.so
+*.o
+arm
+x86
+.settings

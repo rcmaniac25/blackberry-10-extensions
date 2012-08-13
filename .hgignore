@@ -4,6 +4,7 @@
 syntax: glob
 
 # ignore files
+.hg
 .locale_interfaces
 .preprocessed
 .settings
@@ -11,3 +12,5 @@ bin
 deliverables
 doc
 copy.bat
+x86
+arm
