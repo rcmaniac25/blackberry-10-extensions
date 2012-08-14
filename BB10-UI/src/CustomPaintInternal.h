@@ -87,6 +87,7 @@ namespace rebuild
 				}
 
 				void setupWindow();
+				bool rebuildBuffers(int* size);
 
 				void cleanupWindow();
 

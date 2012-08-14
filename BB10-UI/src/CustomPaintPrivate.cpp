@@ -87,6 +87,42 @@ void CustomPaintPrivate::setupWindow()
 	valid = true;
 }
 
+bool CustomPaintPrivate::rebuildBuffers(int* size)
+{
+	bool ret = false;
+	if(valid)
+	{
+		//Lock a mutex so we don't paint and resize at the same time
+		pthread_mutex_lock(&mutex);
+
+		//Destroy the old window buffers
+		if(screen_destroy_window_buffers(window) == 0)
+		{
+			if(size != NULL)
+			{
+				//Resize the buffers
+				screen_set_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size);
+				screen_set_window_property_iv(window, SCREEN_PROPERTY_SOURCE_SIZE, size);
+			}
+
+			//Create the new buffers
+			if(screen_create_window_buffers(window, 1) == 0)
+			{
+				if(size != NULL)
+				{
+					//Re-layout
+					cp->layout(size[SCREEN_WINDOW_HORZ], size[SCREEN_WINDOW_VERT]);
+				}
+
+				ret = true;
+			}
+		}
+
+		pthread_mutex_unlock(&mutex);
+	}
+	return ret;
+}
+
 void CustomPaintPrivate::cleanupWindow()
 {
 	//Cleanup window
@@ -112,6 +148,7 @@ void CustomPaintPrivate::setupSignalsSlots()
 
 void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 {
+	bool invalidate = false;
 	int size[2];
 
 	if(valid)
@@ -123,7 +160,7 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.x());
 			size[SCREEN_WINDOW_VERT] = (int)floorf(component.y());
 
-			screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, size);
+			invalidate = screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0;
 		}
 
 		//Adjust size if we should
@@ -133,28 +170,13 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.width());
 			size[SCREEN_WINDOW_VERT] = (int)floorf(component.height());
 
-			//Lock a mutex so we don't paint and resize at the same time
-			pthread_mutex_lock(&mutex);
+			//Rebuild the actual buffers
+			invalidate = rebuildBuffers(size);
+		}
 
-			//Destroy the old window buffers
-			if(screen_destroy_window_buffers(window) == 0)
-			{
-				//Resize the buffers
-				screen_set_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size);
-				screen_set_window_property_iv(window, SCREEN_PROPERTY_SOURCE_SIZE, size);
-
-				//Create the new buffers
-				if(screen_create_window_buffers(window, 1) == 0)
-				{
-					//Re-layout
-					cp->layout(size[SCREEN_WINDOW_HORZ], size[SCREEN_WINDOW_VERT]);
-
-					//Invalidate window
-					cp->invalidate();
-				}
-			}
-
-			pthread_mutex_unlock(&mutex);
+		if(invalidate)
+		{
+			cp->invalidate();
 		}
 	}
 }

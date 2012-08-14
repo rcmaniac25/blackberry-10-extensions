@@ -44,6 +44,8 @@ namespace rebuild
 				Q_PROPERTY(QString windowId READ windowId WRITE setWindowId NOTIFY windowIdChanged FINAL)
 				Q_PROPERTY(CustomPaint::Usage windowUsage READ windowUsage WRITE setWindowUsage NOTIFY windowUsageChanged FINAL)
 				Q_PROPERTY(bool createdSuccessfully READ createdSuccessfully FINAL)
+				Q_PROPERTY(int width READ width FINAL)
+				Q_PROPERTY(int height READ height FINAL)
 
 			public:
 				enum Usage
@@ -66,7 +68,19 @@ namespace rebuild
 
 				virtual ~CustomPaint();
 
-				Q_INVOKABLE void invalidate();
+				QString windowGroup() const;
+				QString windowId() const;
+				Usage windowUsage() const;
+				bool createdSuccessfully() const;
+				int width() const;
+				int height() const;
+
+				void setWindowGroup(const QString &windowGroup);
+				void setWindowId(const QString &windowId);
+				void setWindowUsage(Usage usage);
+
+			protected:
+				void invalidate();
 				void invalidate(const QRect* size);
 				void invalidate(const QRect& size);
 				void invalidate(const QRectF* size);
@@ -74,16 +88,6 @@ namespace rebuild
 				void invalidate(float x, float y, float width, float height);
 				void invalidate(int x, int y, int width, int height);
 
-				QString windowGroup() const;
-				QString windowId() const;
-				Usage windowUsage() const;
-				bool createdSuccessfully() const;
-
-				void setWindowGroup(const QString &windowGroup);
-				void setWindowId(const QString &windowId);
-				void setWindowUsage(Usage usage);
-
-			protected:
 				screen_context_t windowContext() const;
 
 				virtual void setupPaintWindow(screen_window_t window);

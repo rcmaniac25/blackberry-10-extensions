@@ -193,6 +193,28 @@ bool CustomPaint::createdSuccessfully() const
 	return d_func()->valid;
 }
 
+int CustomPaint::width() const
+{
+	int size[2];
+
+	if(screen_get_window_property_iv(d_func()->window, SCREEN_PROPERTY_BUFFER_SIZE, size) != 0)
+	{
+		size[SCREEN_WINDOW_HORZ] = 0;
+	}
+	return size[SCREEN_WINDOW_HORZ];
+}
+
+int CustomPaint::height() const
+{
+	int size[2];
+
+	if(screen_get_window_property_iv(d_func()->window, SCREEN_PROPERTY_BUFFER_SIZE, size) != 0)
+	{
+		size[SCREEN_WINDOW_VERT] = 0;
+	}
+	return size[SCREEN_WINDOW_VERT];
+}
+
 screen_context_t CustomPaint::windowContext() const
 {
 	return d_func()->context;
@@ -202,18 +224,34 @@ void CustomPaint::setWindowGroup(const QString &windowGroup)
 {
 	Q_D(CustomPaint);
 
-	d->fwindow->setWindowGroup(windowGroup);
+	const QString& group = d->fwindow->windowGroup();
+	if(group != windowGroup && screen_leave_window_group(d->window) == 0)
+	{
+		d->fwindow->setWindowGroup(windowGroup);
 
-	emit windowGroupChanged(windowGroup);
+		QByteArray groupArr = windowGroup.toAscii();
+		if(screen_join_window_group(d->window, groupArr.constData()) != 0)
+		{
+			emit windowGroupChanged(windowGroup);
+		}
+	}
 }
 
 void CustomPaint::setWindowId(const QString &windowId)
 {
 	Q_D(CustomPaint);
 
-	d->fwindow->setWindowId(windowId);
+	const QString& id = d->fwindow->windowId();
+	if(id != windowId)
+	{
+		d->fwindow->setWindowId(windowId);
 
-	emit windowIdChanged(windowId);
+		QByteArray idArr = windowId.toAscii();
+		if(screen_set_window_property_cv(d->window, SCREEN_PROPERTY_ID_STRING, idArr.length(), idArr.constData()) == 0)
+		{
+			emit windowIdChanged(windowId);
+		}
+	}
 }
 
 void CustomPaint::setWindowUsage(CustomPaint::Usage usage)
@@ -221,8 +259,23 @@ void CustomPaint::setWindowUsage(CustomPaint::Usage usage)
 	Q_D(CustomPaint);
 
 	int sUse = static_cast<int>(usage);
-	if(screen_set_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &sUse) == 0) //XXX Does this require a recreation of the buffers?
+	int pUse;
+
+	//Make sure we aren't doing unneeded buffer recreation
+	if(screen_get_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &pUse) == 0 && pUse != sUse)
 	{
-		emit windowUsageChanged(usage);
+		//Set the usage property
+		if(screen_set_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &sUse) == 0)
+		{
+			//Rebuild the buffers
+			if(d->rebuildBuffers(NULL))
+			{
+				//We can signal the change now
+				emit windowUsageChanged(usage);
+
+				//We also want to repaint
+				invalidate();
+			}
+		}
 	}
 }
