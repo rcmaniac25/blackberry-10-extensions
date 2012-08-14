@@ -40,8 +40,3 @@ suredelete.commands = $(DEL_FILE) $${MOC_DIR}/*; $(DEL_FILE) $${RCC_DIR}/*; $(DE
 suredelete.depends = distclean
 
 QMAKE_EXTRA_TARGETS += suredelete
-
-TRANSLATIONS = \
-    $${TARGET}_es.ts \
-    $${TARGET}.ts
-

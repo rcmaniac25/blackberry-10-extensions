@@ -85,9 +85,9 @@ namespace rebuild
 				screen_context_t windowContext() const;
 
 				virtual void setupPaintWindow(screen_window_t window);
-				virtual void paint(screen_window_t window);
+				virtual void paint(screen_window_t window) = 0;
 				virtual void cleanupPaintWindow(screen_window_t window);
-				virtual void layout(int width, int height);
+				virtual void layout(int width, int height) = 0;
 				virtual void controlCreated(bool createdSuccessfully);
 
 			Q_SIGNALS:

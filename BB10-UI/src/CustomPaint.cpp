@@ -44,15 +44,7 @@ void CustomPaint::setupPaintWindow(screen_window_t)
 {
 }
 
-void CustomPaint::paint(screen_window_t)
-{
-}
-
 void CustomPaint::cleanupPaintWindow(screen_window_t)
-{
-}
-
-void CustomPaint::layout(int, int)
 {
 }
 
