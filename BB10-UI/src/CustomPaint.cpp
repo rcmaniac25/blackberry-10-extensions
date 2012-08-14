@@ -19,31 +19,14 @@
 
 #include "CustomPaintInternal.h"
 
+#include <Qt>
+
 /*
  * CustomPaint functions
  */
 
 CustomPaint::CustomPaint(bb::cascades::Container* parent) : bb::cascades::CustomControl(parent), d_ptr(new CustomPaintPrivate(this))
 {
-	Q_D(CustomPaint);
-
-	//Setup the window
-	d->setupWindow();
-
-	if(d->valid)
-	{
-		//Dev-accessible window setup
-		this->setupPaintWindow(d->window);
-
-		//Setup signals/slots
-		d->setupSignalsSlots();
-
-		//Set the window as root
-		setRoot(d->fwindow.data());
-
-		//Paint the initial window
-		this->paint(d->window);
-	}
 }
 
 CustomPaint::~CustomPaint()
@@ -70,6 +53,10 @@ void CustomPaint::cleanupPaintWindow(screen_window_t)
 }
 
 void CustomPaint::layout(int, int)
+{
+}
+
+void CustomPaint::controlCreated(bool)
 {
 }
 
@@ -182,6 +169,11 @@ CustomPaint::Usage CustomPaint::windowUsage() const
 	}
 
 	return static_cast<CustomPaint::Usage>(usage);
+}
+
+bool CustomPaint::createdSuccessfully() const
+{
+	return d_func()->valid;
 }
 
 screen_context_t CustomPaint::windowContext() const

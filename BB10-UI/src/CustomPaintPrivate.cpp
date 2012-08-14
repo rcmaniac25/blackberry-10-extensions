@@ -158,3 +158,27 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 		}
 	}
 }
+
+void CustomPaintPrivate::onCreate()
+{
+	//Setup the window
+	setupWindow();
+
+	if(valid)
+	{
+		//Dev-accessible window setup
+		cp->setupPaintWindow(window);
+
+		//Setup signals/slots
+		this->setupSignalsSlots();
+
+		//Set the window as root
+		cp->setRoot(fwindow.data());
+
+		//Invalidate the window
+		cp->invalidate();
+	}
+
+	//Invoke creation function
+	cp->controlCreated(valid);
+}

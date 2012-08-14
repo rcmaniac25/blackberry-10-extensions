@@ -43,6 +43,7 @@ namespace rebuild
 				Q_PROPERTY(QString windowGroup READ windowGroup WRITE setWindowGroup NOTIFY windowGroupChanged FINAL)
 				Q_PROPERTY(QString windowId READ windowId WRITE setWindowId NOTIFY windowIdChanged FINAL)
 				Q_PROPERTY(CustomPaint::Usage windowUsage READ windowUsage WRITE setWindowUsage NOTIFY windowUsageChanged FINAL)
+				Q_PROPERTY(bool createdSuccessfully READ createdSuccessfully FINAL)
 
 			public:
 				enum Usage
@@ -74,6 +75,7 @@ namespace rebuild
 				QString windowGroup() const;
 				QString windowId() const;
 				Usage windowUsage() const;
+				bool createdSuccessfully() const;
 
 				void setWindowGroup(const QString &windowGroup);
 				void setWindowId(const QString &windowId);
@@ -86,6 +88,7 @@ namespace rebuild
 				virtual void paint(screen_window_t window);
 				virtual void cleanupPaintWindow(screen_window_t window);
 				virtual void layout(int width, int height);
+				virtual void controlCreated(bool createdSuccessfully);
 
 			Q_SIGNALS:
 				void windowGroupChanged(const QString& windowGroup);

@@ -50,6 +50,7 @@ namespace rebuild
 			class CustomPaintPrivate : QObject
 			{
 				Q_OBJECT
+				friend class CustomPaint;
 
 			public:
 				const QScopedPointer<ForeignWindow> fwindow;
@@ -63,6 +64,10 @@ namespace rebuild
 
 				CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), cp(customPaint)
 				{
+					//Setup for creation
+					QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()));
+
+					//Setup the ForeignWindow
 					ForeignWindow* fw = fwindow.data();
 
 					//Generic setup
@@ -70,7 +75,7 @@ namespace rebuild
 					fw->setWindowId("CustomPaintID");
 
 					//The ForeignWindow will never handle anything itself anyway, save the internal system the trouble
-					//fw->setTouchPropagationMode(bb::cascades::TouchPropagationMode::Type::None); //XXX Not working
+					fw->setTouchPropagationMode(TouchPropagationMode::None);
 				}
 
 				virtual ~CustomPaintPrivate()
@@ -85,6 +90,7 @@ namespace rebuild
 
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
+				void onCreate();
 			};
 		}
 	}
