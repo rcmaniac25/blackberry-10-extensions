@@ -59,11 +59,15 @@ namespace rebuild
 				screen_window_t window;
 
 				bool valid;
+				CustomPaint::cleanupPaintWindowCallback cleanupFunc;
 				pthread_mutex_t mutex;
 				CustomPaint* cp;
 
 				CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), cp(customPaint)
 				{
+					//Explicit setup for ease of mind
+					cleanupFunc = NULL;
+
 					//Setup for creation
 					QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()));
 

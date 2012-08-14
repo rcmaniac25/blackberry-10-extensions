@@ -34,7 +34,10 @@ CustomPaint::~CustomPaint()
 	Q_D(CustomPaint);
 
 	//Dev-accessible window cleanup
-	this->cleanupPaintWindow(d->window);
+	if(d->cleanupFunc)
+	{
+		d->cleanupFunc(d->window);
+	}
 
 	//Cleanup the window
 	d->cleanupWindow();
@@ -44,12 +47,34 @@ void CustomPaint::setupPaintWindow(screen_window_t)
 {
 }
 
-void CustomPaint::cleanupPaintWindow(screen_window_t)
+void CustomPaint::controlCreated(bool)
 {
 }
 
-void CustomPaint::controlCreated(bool)
+bool CustomPaint::registerCleanup(cleanupPaintWindowCallback cleanupFunc)
 {
+	Q_D(CustomPaint);
+
+	if(!d->cleanupFunc)
+	{
+		d->cleanupFunc = cleanupFunc;
+	}
+	return d->cleanupFunc != NULL;
+}
+
+bool CustomPaint::unregisterCleanup(cleanupPaintWindowCallback cleanupFunc)
+{
+	Q_D(CustomPaint);
+
+	if(d->cleanupFunc)
+	{
+		if(d->cleanupFunc == cleanupFunc)
+		{
+			d->cleanupFunc = NULL;
+		}
+	}
+
+	return d->cleanupFunc == NULL;
 }
 
 /*

@@ -60,6 +60,8 @@ namespace rebuild
 					Overlay = SCREEN_USAGE_OVERLAY
 				};
 
+				typedef void (*cleanupPaintWindowCallback)(screen_window_t window); //XXX Using this causes warnings and requires a cast. Figure out how to prevent that.
+
 				explicit CustomPaint(bb::cascades::Container* parent = NULL);
 
 				virtual ~CustomPaint();
@@ -86,9 +88,11 @@ namespace rebuild
 
 				virtual void setupPaintWindow(screen_window_t window);
 				virtual void paint(screen_window_t window) = 0;
-				virtual void cleanupPaintWindow(screen_window_t window);
 				virtual void layout(int width, int height) = 0;
 				virtual void controlCreated(bool createdSuccessfully);
+
+				bool registerCleanup(cleanupPaintWindowCallback cleanupFunc);
+				bool unregisterCleanup(cleanupPaintWindowCallback cleanupFunc);
 
 			Q_SIGNALS:
 				void windowGroupChanged(const QString& windowGroup);
