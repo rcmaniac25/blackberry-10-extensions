@@ -19,6 +19,29 @@
 
 #include "CustomPaintInternal.h"
 
+CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), cp(customPaint)
+{
+	//Explicit setup for ease of mind
+	cleanupFunc = NULL;
+
+	//Setup for creation
+	QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()));
+
+	//Setup the ForeignWindow
+	ForeignWindow* fw = fwindow.data();
+
+	//Generic setup
+	fw->setWindowGroup(ForeignWindow::mainWindowGroupId());
+	fw->setWindowId("CustomPaintID");
+
+	//The ForeignWindow will never handle anything itself anyway, save the internal system the trouble
+	fw->setTouchPropagationMode(TouchPropagationMode::None);
+}
+
+CustomPaintPrivate::~CustomPaintPrivate()
+{
+}
+
 void CustomPaintPrivate::setupWindow()
 {
 	valid = false;

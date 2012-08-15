@@ -20,7 +20,7 @@
 #ifndef CUSTOM_PAINT_INTERNAL_H_
 #define CUSTOM_PAINT_INTERNAL_H_
 
-#include "../include/CustomPaint.h"
+#include "../include/CustomPaintOpenGL.h"
 
 #include <math.h>
 #include <pthread.h>
@@ -47,7 +47,7 @@ namespace rebuild
 			 * CustomPaintPrivate
 			 */
 
-			class CustomPaintPrivate : QObject
+			class CustomPaintPrivate : public QObject
 			{
 				Q_OBJECT
 				friend class CustomPaint;
@@ -63,28 +63,9 @@ namespace rebuild
 				pthread_mutex_t mutex;
 				CustomPaint* cp;
 
-				CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), cp(customPaint)
-				{
-					//Explicit setup for ease of mind
-					cleanupFunc = NULL;
+				CustomPaintPrivate(CustomPaint* customPaint);
 
-					//Setup for creation
-					QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()));
-
-					//Setup the ForeignWindow
-					ForeignWindow* fw = fwindow.data();
-
-					//Generic setup
-					fw->setWindowGroup(ForeignWindow::mainWindowGroupId());
-					fw->setWindowId("CustomPaintID");
-
-					//The ForeignWindow will never handle anything itself anyway, save the internal system the trouble
-					fw->setTouchPropagationMode(TouchPropagationMode::None);
-				}
-
-				virtual ~CustomPaintPrivate()
-				{
-				}
+				virtual ~CustomPaintPrivate();
 
 				void setupWindow();
 				bool rebuildBuffers(int* size);
@@ -96,6 +77,46 @@ namespace rebuild
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
 				void onCreate();
+			};
+
+			/*
+			 * CustomPaintOpenGLImpl
+			 */
+
+			class CustomPaintOpenGLImpl : public QObject
+			{
+				Q_OBJECT
+
+			public:
+				CustomPaintOpenGLImpl();
+
+				virtual ~CustomPaintOpenGLImpl();
+
+				static CustomPaintOpenGLImpl* generate(CustomPaintOpenGL::Version ver);
+
+				//TODO
+			};
+
+			/*
+			 * CustomPaintOpenGLPrivate
+			 */
+
+			class CustomPaintOpenGLPrivate : public QObject
+			{
+				Q_OBJECT
+				friend class CustomPaintOpenGL;
+
+			public:
+				CustomPaintOpenGL::Version ver;
+
+				CustomPaintOpenGLImpl* impl;
+				CustomPaintOpenGL* cp;
+
+				CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL);
+
+				virtual ~CustomPaintOpenGLPrivate();
+
+				bool changeVersion(CustomPaintOpenGL::Version ver);
 			};
 		}
 	}
