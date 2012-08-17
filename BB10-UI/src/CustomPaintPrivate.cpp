@@ -186,7 +186,7 @@ void CustomPaintPrivate::cleanupWindow()
 	valid = false;
 }
 
-bool CustomPaintPrivate::allowScreenUsageToChange()
+bool CustomPaintPrivate::allowScreenUsageToChange() const
 {
 	return true;
 }
@@ -195,8 +195,6 @@ void CustomPaintPrivate::setupSignalsSlots()
 {
 	//Layout
 	LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)));
-
-	//TODO: Any other signals that should be handle?
 }
 
 void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
@@ -231,6 +229,46 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 		{
 			cp->invalidate();
 		}
+	}
+}
+
+void CustomPaintPrivate::invalidate(int x, int y, int width, int height)
+{
+	int rect[4];
+	screen_buffer_t buffers[1];
+
+	//Get size
+	if(valid)
+	{
+		//Lock a mutex so we don't paint and resize at the same time
+		pthread_mutex_lock(&mutex);
+
+		if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, rect) == 0)
+		{
+			//Get min size (if possible)
+			if(fminf(width, rect[SCREEN_WINDOW_HORZ]) >= 0 && fminf(height, rect[SCREEN_WINDOW_VERT]) >= 0)
+			{
+				width = (int)fminf(width, rect[SCREEN_WINDOW_HORZ]);
+				height = (int)fminf(height, rect[SCREEN_WINDOW_VERT]);
+
+				//Get the screen values
+				if(screen_get_window_property_pv(window, SCREEN_PROPERTY_RENDER_BUFFERS, (void **)buffers) == 0)
+				{
+					rect[0] = x;
+					rect[1] = y;
+					rect[2] = width + x;
+					rect[3] = height + y;
+
+					//Invoke paint signal
+					this->invokePaint(rect);
+
+					//Invalidate
+					this->swapBuffers(buffers[0], rect);
+				}
+			}
+		}
+
+		pthread_mutex_destroy(&mutex);
 	}
 }
 

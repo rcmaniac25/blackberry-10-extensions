@@ -67,6 +67,7 @@ namespace rebuild
 			private:
 				/*! @cond PRIVATE */
 				Q_DISABLE_COPY(CustomPaintOpenGL)
+				friend class CustomPaintOpenGLPrivate;
 				/*! @endcond */
 			};
 		}

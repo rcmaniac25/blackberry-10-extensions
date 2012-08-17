@@ -43,6 +43,7 @@ namespace rebuild
 				Q_PROPERTY(QString windowGroup READ windowGroup WRITE setWindowGroup NOTIFY windowGroupChanged FINAL)
 				Q_PROPERTY(QString windowId READ windowId WRITE setWindowId NOTIFY windowIdChanged FINAL)
 				Q_PROPERTY(CustomPaint::Usage windowUsage READ windowUsage WRITE setWindowUsage NOTIFY windowUsageChanged FINAL)
+				Q_PROPERTY(bool canChangeWindowUsage READ canChangeWindowUsage FINAL)
 				Q_PROPERTY(bool createdSuccessfully READ createdSuccessfully FINAL)
 				Q_PROPERTY(int width READ width FINAL)
 				Q_PROPERTY(int height READ height FINAL)
@@ -71,6 +72,7 @@ namespace rebuild
 				QString windowGroup() const;
 				QString windowId() const;
 				Usage windowUsage() const;
+				bool canChangeWindowUsage() const;
 				bool createdSuccessfully() const;
 				int width() const;
 				int height() const;

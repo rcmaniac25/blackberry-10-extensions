@@ -72,37 +72,18 @@ namespace rebuild
 				bool rebuildBuffers(int* size);
 
 				virtual void invokeCleanupCallback();
-				void cleanupWindow();
+				virtual void cleanupWindow();
 
-				void setupSignalsSlots();
-				virtual bool allowScreenUsageToChange();
+				virtual void setupSignalsSlots();
+				virtual bool allowScreenUsageToChange() const;
 
+				virtual void invalidate(int x, int y, int width, int height);
 				virtual void invokePaint(int* rect);
 				virtual void swapBuffers(screen_buffer_t buffer, int* rect);
 
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
 				void onCreate();
-			};
-
-			/*
-			 * CustomPaintOpenGLImpl
-			 */
-
-			class CustomPaintOpenGLImpl : public QObject
-			{
-				Q_OBJECT
-
-			public:
-				CustomPaintOpenGLImpl();
-
-				virtual ~CustomPaintOpenGLImpl();
-
-				static CustomPaintOpenGLImpl* generate(CustomPaintOpenGL::Version ver);
-
-				virtual int getScreenUsage() = 0;
-
-				//TODO
 			};
 
 			/*
@@ -119,19 +100,21 @@ namespace rebuild
 
 				EGLDisplay eglDisp;
 				EGLSurface eglSurf;
+				EGLContext eglCtx;
 
-				CustomPaintOpenGLImpl* impl;
-				CustomPaintOpenGL* cp;
-
-				CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL);
+				CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaint);
 
 				virtual ~CustomPaintOpenGLPrivate();
 
 				bool changeVersion(CustomPaintOpenGL::Version ver);
 
-				bool allowScreenUsageToChange();
+				bool allowScreenUsageToChange() const;
 				virtual void privateWindowSetup();
 
+				void cleanupWindow();
+
+				void invalidate(int x, int y, int width, int height);
+				void invokePaint(int* rect);
 				void swapBuffers(screen_buffer_t buffer, int* rect);
 			};
 		}

@@ -57,5 +57,4 @@ EGLSurface CustomPaintOpenGL::getEGLSurface() const
 
 void CustomPaintOpenGL::paint(screen_window_t)
 {
-	//TODO
 }

@@ -37,8 +37,10 @@ CustomPaint::~CustomPaint()
 {
 	Q_D(CustomPaint);
 
+	//!!!!These are virtual functions, so be careful, though, being a variable, it gets destroyed later!!!!!!
+
 	//Dev-accessible window cleanup
-	d->invokeCleanupCallback(); //!!!!This is a virtual function, so be careful!!!!!!
+	d->invokeCleanupCallback();
 
 	//Cleanup the window
 	d->cleanupWindow();
@@ -124,43 +126,9 @@ void CustomPaint::invalidate(float x, float y, float width, float height)
 
 void CustomPaint::invalidate(int x, int y, int width, int height)
 {
-	int rect[4];
-	screen_buffer_t buffers[1];
 	Q_D(CustomPaint);
 
-	//Get size
-	if(d->valid)
-	{
-		//Lock a mutex so we don't paint and resize at the same time
-		pthread_mutex_lock(&d->mutex);
-
-		if(screen_get_window_property_iv(d->window, SCREEN_PROPERTY_BUFFER_SIZE, rect) == 0)
-		{
-			//Get min size (if possible)
-			if(fminf(width, rect[SCREEN_WINDOW_HORZ]) >= 0 && fminf(height, rect[SCREEN_WINDOW_VERT]) >= 0)
-			{
-				width = (int)fminf(width, rect[SCREEN_WINDOW_HORZ]);
-				height = (int)fminf(height, rect[SCREEN_WINDOW_VERT]);
-
-				//Get the screen values
-				if(screen_get_window_property_pv(d->window, SCREEN_PROPERTY_RENDER_BUFFERS, (void **)buffers) == 0)
-				{
-					rect[0] = x;
-					rect[1] = y;
-					rect[2] = width + x;
-					rect[3] = height + y;
-
-					//Invoke paint signal
-					d->invokePaint(rect);
-
-					//Invalidate
-					d->swapBuffers(buffers[0], rect);
-				}
-			}
-		}
-
-		pthread_mutex_destroy(&d->mutex);
-	}
+	d->invalidate(x, y, width, height);
 }
 
 /*
@@ -187,6 +155,11 @@ CustomPaint::Usage CustomPaint::windowUsage() const
 	}
 
 	return static_cast<CustomPaint::Usage>(usage);
+}
+
+bool CustomPaint::canChangeWindowUsage() const
+{
+	return d_func()->allowScreenUsageToChange();
 }
 
 bool CustomPaint::createdSuccessfully() const

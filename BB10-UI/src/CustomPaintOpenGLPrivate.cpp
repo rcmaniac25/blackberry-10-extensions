@@ -19,75 +19,100 @@
 
 #include "CustomPaintInternal.h"
 
-#include "CustomPaintOpenGLImpl.h"
+#define CP_GL static_cast<CustomPaintOpenGL*>(cp)
 
 //Private
 
 CustomPaintOpenGLPrivate::CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL) : CustomPaintPrivate(customPaintGL),
-	cp(customPaintGL), ver(CustomPaintOpenGL::V11), impl(CustomPaintOpenGLImpl::generate(CustomPaintOpenGL::V11))
+	ver(CustomPaintOpenGL::V11), eglDisp(EGL_NO_DISPLAY), eglSurf(EGL_NO_SURFACE), eglCtx(EGL_NO_CONTEXT)
 {
 }
 
 CustomPaintOpenGLPrivate::~CustomPaintOpenGLPrivate()
 {
-	if(impl)
-	{
-		delete impl;
-		impl = NULL;
-	}
 }
 
 bool CustomPaintOpenGLPrivate::changeVersion(CustomPaintOpenGL::Version nVer)
 {
-	bool ret = false;
-	CustomPaintOpenGLImpl* nImpl = CustomPaintOpenGLImpl::generate(ver);
-
-	if(nImpl)
-	{
-		if(impl)
-		{
-			delete impl;
-		}
-		impl = nImpl;
-		ver = nVer;
-		ret = true;
-	}
-	return ret;
+	//TODO: screen usage changes and EGL context changes
+	return false;
 }
 
-bool CustomPaintOpenGLPrivate::allowScreenUsageToChange()
+bool CustomPaintOpenGLPrivate::allowScreenUsageToChange() const
 {
 	return false;
 }
 
 void CustomPaintOpenGLPrivate::privateWindowSetup()
 {
-	setupWindow(SCREEN_USAGE_OPENGL_ES1 | SCREEN_USAGE_ROTATION);
-}
-
-void CustomPaintOpenGLPrivate::swapBuffers(screen_buffer_t buffer, int* rect)
-{
-	eglSwapBuffers(eglDisp, eglSurf);
-}
-
-//Impl
-
-CustomPaintOpenGLImpl::CustomPaintOpenGLImpl()
-{
-}
-
-CustomPaintOpenGLImpl::~CustomPaintOpenGLImpl()
-{
-}
-
-CustomPaintOpenGLImpl* CustomPaintOpenGLImpl::generate(CustomPaintOpenGL::Version ver)
-{
+	int usage = 0;
 	switch(ver)
 	{
 		case CustomPaintOpenGL::V11:
-			return new CustomPaintOpenGLImpl_V11();
+			usage = SCREEN_USAGE_OPENGL_ES1 | SCREEN_USAGE_ROTATION;
+			break;
 		case CustomPaintOpenGL::V20:
-			return new CustomPaintOpenGLImpl_V20();
+			usage = SCREEN_USAGE_OPENGL_ES2 | SCREEN_USAGE_ROTATION;
+			break;
 	}
-	return NULL;
+	setupWindow(usage);
+}
+
+void CustomPaintOpenGLPrivate::cleanupWindow()
+{
+	//EGL Cleanup
+	if (eglDisp != EGL_NO_DISPLAY)
+	{
+		eglMakeCurrent(eglDisp, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+		if (eglSurf != EGL_NO_SURFACE) {
+			eglDestroySurface(eglDisp, eglSurf);
+			eglSurf = EGL_NO_SURFACE;
+		}
+		if (eglCtx != EGL_NO_CONTEXT) {
+			eglDestroyContext(eglDisp, eglCtx);
+			eglCtx = EGL_NO_CONTEXT;
+		}
+		eglTerminate(eglDisp);
+		eglDisp = EGL_NO_DISPLAY;
+	}
+	eglReleaseThread();
+
+	//Normal cleanup
+	CustomPaintPrivate::cleanupWindow();
+}
+
+void CustomPaintOpenGLPrivate::invokePaint(int*)
+{
+	pthread_mutex_lock(&mutex);
+
+	eglMakeCurrent(eglDisp, eglSurf, eglSurf, eglCtx);
+
+	CP_GL->paint();
+
+	pthread_mutex_destroy(&mutex);
+}
+
+void CustomPaintOpenGLPrivate::invalidate(int, int, int, int)
+{
+	//This is unneeded but exists for speed boost
+
+	if(valid)
+	{
+		pthread_mutex_lock(&mutex);
+
+		eglMakeCurrent(eglDisp, eglSurf, eglSurf, eglCtx);
+
+		//Invoke paint signal
+		CP_GL->paint();
+
+		//Invalidate
+		eglSwapBuffers(eglDisp, eglSurf);
+
+		pthread_mutex_destroy(&mutex);
+	}
+}
+
+void CustomPaintOpenGLPrivate::swapBuffers(screen_buffer_t, int*)
+{
+	eglSwapBuffers(eglDisp, eglSurf);
 }
