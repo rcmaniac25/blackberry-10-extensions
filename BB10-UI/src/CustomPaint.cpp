@@ -29,15 +29,16 @@ CustomPaint::CustomPaint(bb::cascades::Container* parent) : bb::cascades::Custom
 {
 }
 
+CustomPaint::CustomPaint(bb::cascades::Container* parent, CustomPaintPrivate* cpp) : bb::cascades::CustomControl(parent), d_ptr(cpp)
+{
+}
+
 CustomPaint::~CustomPaint()
 {
 	Q_D(CustomPaint);
 
 	//Dev-accessible window cleanup
-	if(d->cleanupFunc)
-	{
-		d->cleanupFunc(d->window);
-	}
+	d->invokeCleanupCallback(); //!!!!This is a virtual function, so be careful!!!!!!
 
 	//Cleanup the window
 	d->cleanupWindow();
@@ -150,10 +151,10 @@ void CustomPaint::invalidate(int x, int y, int width, int height)
 					rect[3] = height + y;
 
 					//Invoke paint signal
-					this->paint(d->window);
+					d->invokePaint(rect);
 
 					//Invalidate
-					screen_post_window(d->window, buffers[0], 1, rect, 0);
+					d->swapBuffers(buffers[0], rect);
 				}
 			}
 		}
@@ -262,7 +263,7 @@ void CustomPaint::setWindowUsage(CustomPaint::Usage usage)
 	int pUse;
 
 	//Make sure we aren't doing unneeded buffer recreation
-	if(screen_get_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &pUse) == 0 && pUse != sUse)
+	if(d->allowScreenUsageToChange() && screen_get_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &pUse) == 0 && pUse != sUse)
 	{
 		//Set the usage property
 		if(screen_set_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &sUse) == 0)

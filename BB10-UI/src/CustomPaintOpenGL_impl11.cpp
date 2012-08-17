@@ -26,3 +26,8 @@ CustomPaintOpenGLImpl_V11::CustomPaintOpenGLImpl_V11()
 CustomPaintOpenGLImpl_V11::~CustomPaintOpenGLImpl_V11()
 {
 }
+
+int CustomPaintOpenGLImpl_V11::getScreenUsage()
+{
+	return SCREEN_USAGE_OPENGL_ES1 | SCREEN_USAGE_ROTATION;
+}

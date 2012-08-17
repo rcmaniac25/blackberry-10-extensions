@@ -37,6 +37,8 @@ namespace rebuild
 
 				virtual ~CustomPaintOpenGLImpl_V11();
 
+				int getScreenUsage();
+
 				//TODO
 			};
 
@@ -48,6 +50,8 @@ namespace rebuild
 				CustomPaintOpenGLImpl_V20();
 
 				virtual ~CustomPaintOpenGLImpl_V20();
+
+				int getScreenUsage();
 
 				//TODO
 			};

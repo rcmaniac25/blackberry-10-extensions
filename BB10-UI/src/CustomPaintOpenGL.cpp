@@ -19,7 +19,10 @@
 
 #include "CustomPaintInternal.h"
 
-CustomPaintOpenGL::CustomPaintOpenGL(bb::cascades::Container* parent) : rebuild::ui::component::CustomPaint(parent), d_ptr(new CustomPaintOpenGLPrivate(this))
+#define CONST_GL_D static_cast<const CustomPaintOpenGLPrivate*>(d_func())
+#define GL_D static_cast<CustomPaintOpenGLPrivate*>(d)
+
+CustomPaintOpenGL::CustomPaintOpenGL(bb::cascades::Container* parent) : rebuild::ui::component::CustomPaint(parent, new CustomPaintOpenGLPrivate(this))
 {
 }
 
@@ -29,15 +32,30 @@ CustomPaintOpenGL::~CustomPaintOpenGL()
 
 CustomPaintOpenGL::Version CustomPaintOpenGL::openGLversion() const
 {
-	return d_func()->ver;
+	return CONST_GL_D->ver;
 }
 
 void CustomPaintOpenGL::setOpenGLversion(CustomPaintOpenGL::Version version)
 {
-	Q_D(CustomPaintOpenGL);
+	Q_D(CustomPaint);
 
-	if(d->changeVersion(version))
+	if(GL_D->changeVersion(version))
 	{
 		emit openGLversionChanged(version);
 	}
+}
+
+EGLDisplay CustomPaintOpenGL::getEGLDisplay() const
+{
+	return CONST_GL_D->eglDisp;
+}
+
+EGLSurface CustomPaintOpenGL::getEGLSurface() const
+{
+	return CONST_GL_D->eglSurf;
+}
+
+void CustomPaintOpenGL::paint(screen_window_t)
+{
+	//TODO
 }

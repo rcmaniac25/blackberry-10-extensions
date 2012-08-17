@@ -98,6 +98,10 @@ namespace rebuild
 				bool registerCleanup(cleanupPaintWindowCallback cleanupFunc);
 				bool unregisterCleanup(cleanupPaintWindowCallback cleanupFunc);
 
+				/*! @cond PRIVATE */
+				explicit CustomPaint(bb::cascades::Container* parent, CustomPaintPrivate* cpp);
+				/*! @endcond */
+
 			Q_SIGNALS:
 				void windowGroupChanged(const QString& windowGroup);
 				void windowIdChanged(const QString& windowId);
@@ -109,6 +113,8 @@ namespace rebuild
 
 				Q_DECLARE_PRIVATE(CustomPaint)
 				Q_DISABLE_COPY(CustomPaint)
+
+				friend class CustomPaintOpenGL; //Not a good practice...
 				/*! @endcond */
 			};
 		}

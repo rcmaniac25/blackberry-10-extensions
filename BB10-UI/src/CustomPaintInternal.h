@@ -67,12 +67,18 @@ namespace rebuild
 
 				virtual ~CustomPaintPrivate();
 
-				void setupWindow();
+				void setupWindow(int usage);
+				virtual void privateWindowSetup();
 				bool rebuildBuffers(int* size);
 
+				virtual void invokeCleanupCallback();
 				void cleanupWindow();
 
 				void setupSignalsSlots();
+				virtual bool allowScreenUsageToChange();
+
+				virtual void invokePaint(int* rect);
+				virtual void swapBuffers(screen_buffer_t buffer, int* rect);
 
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
@@ -94,6 +100,8 @@ namespace rebuild
 
 				static CustomPaintOpenGLImpl* generate(CustomPaintOpenGL::Version ver);
 
+				virtual int getScreenUsage() = 0;
+
 				//TODO
 			};
 
@@ -101,13 +109,16 @@ namespace rebuild
 			 * CustomPaintOpenGLPrivate
 			 */
 
-			class CustomPaintOpenGLPrivate : public QObject
+			class CustomPaintOpenGLPrivate : public CustomPaintPrivate
 			{
 				Q_OBJECT
 				friend class CustomPaintOpenGL;
 
 			public:
 				CustomPaintOpenGL::Version ver;
+
+				EGLDisplay eglDisp;
+				EGLSurface eglSurf;
 
 				CustomPaintOpenGLImpl* impl;
 				CustomPaintOpenGL* cp;
@@ -117,6 +128,11 @@ namespace rebuild
 				virtual ~CustomPaintOpenGLPrivate();
 
 				bool changeVersion(CustomPaintOpenGL::Version ver);
+
+				bool allowScreenUsageToChange();
+				virtual void privateWindowSetup();
+
+				void swapBuffers(screen_buffer_t buffer, int* rect);
 			};
 		}
 	}

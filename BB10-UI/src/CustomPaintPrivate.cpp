@@ -42,7 +42,7 @@ CustomPaintPrivate::~CustomPaintPrivate()
 {
 }
 
-void CustomPaintPrivate::setupWindow()
+void CustomPaintPrivate::setupWindow(int usage)
 {
 	valid = false;
 	context = NULL;
@@ -78,6 +78,16 @@ void CustomPaintPrivate::setupWindow()
 		return;
 	}
 
+	//Setup the screen usage, if we should (zero is invalid))
+	if(usage != 0)
+	{
+		if (screen_set_window_property_iv(window, SCREEN_PROPERTY_USAGE, &usage) != 0)
+		{
+			cleanupWindow();
+			return;
+		}
+	}
+
 	//Set the ZOrder of the window (negative so it is below everything else)
 	int z = ZDEPTH_DEPTH_MIN;
 	if(screen_set_window_property_iv(window, SCREEN_PROPERTY_ZORDER, &z) != 0)
@@ -110,8 +120,15 @@ void CustomPaintPrivate::setupWindow()
 	valid = true;
 }
 
+void CustomPaintPrivate::privateWindowSetup()
+{
+	setupWindow(0); //Zero is an invalid usage value, so it will be skipped
+}
+
 bool CustomPaintPrivate::rebuildBuffers(int* size)
 {
+	//XXX See http://supportforums.blackberry.com/t5/Native-Development/Changing-SCREEN-PROPERTY-USAGE-and-or-SCREEN-PROPERTY-BUFFER/td-p/1864159
+
 	bool ret = false;
 	if(valid)
 	{
@@ -119,7 +136,7 @@ bool CustomPaintPrivate::rebuildBuffers(int* size)
 		pthread_mutex_lock(&mutex);
 
 		//Destroy the old window buffers
-		if(screen_destroy_window_buffers(window) == 0)
+		//if(screen_destroy_window_buffers(window) == 0) //XXX
 		{
 			if(size != NULL)
 			{
@@ -129,7 +146,7 @@ bool CustomPaintPrivate::rebuildBuffers(int* size)
 			}
 
 			//Create the new buffers
-			if(screen_create_window_buffers(window, 1) == 0)
+			//if(screen_create_window_buffers(window, 1) == 0) //XXX
 			{
 				if(size != NULL)
 				{
@@ -146,6 +163,14 @@ bool CustomPaintPrivate::rebuildBuffers(int* size)
 	return ret;
 }
 
+void CustomPaintPrivate::invokeCleanupCallback()
+{
+	if(cleanupFunc)
+	{
+		cleanupFunc(window);
+	}
+}
+
 void CustomPaintPrivate::cleanupWindow()
 {
 	//Cleanup window
@@ -159,6 +184,11 @@ void CustomPaintPrivate::cleanupWindow()
 	pthread_mutex_destroy(&mutex);
 
 	valid = false;
+}
+
+bool CustomPaintPrivate::allowScreenUsageToChange()
+{
+	return true;
 }
 
 void CustomPaintPrivate::setupSignalsSlots()
@@ -204,10 +234,20 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 	}
 }
 
+void CustomPaintPrivate::invokePaint(int*)
+{
+	cp->paint(window);
+}
+
+void CustomPaintPrivate::swapBuffers(screen_buffer_t buffer, int* rect)
+{
+	screen_post_window(window, buffer, 1, rect, 0);
+}
+
 void CustomPaintPrivate::onCreate()
 {
 	//Setup the window
-	setupWindow();
+	privateWindowSetup();
 
 	if(valid)
 	{

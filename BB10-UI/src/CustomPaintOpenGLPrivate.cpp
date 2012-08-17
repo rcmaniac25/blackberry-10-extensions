@@ -23,9 +23,9 @@
 
 //Private
 
-CustomPaintOpenGLPrivate::CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL) : cp(customPaintGL), ver(CustomPaintOpenGL::V11)
+CustomPaintOpenGLPrivate::CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL) : CustomPaintPrivate(customPaintGL),
+	cp(customPaintGL), ver(CustomPaintOpenGL::V11), impl(CustomPaintOpenGLImpl::generate(CustomPaintOpenGL::V11))
 {
-	impl = CustomPaintOpenGLImpl::generate(CustomPaintOpenGL::V11);
 }
 
 CustomPaintOpenGLPrivate::~CustomPaintOpenGLPrivate()
@@ -53,6 +53,21 @@ bool CustomPaintOpenGLPrivate::changeVersion(CustomPaintOpenGL::Version nVer)
 		ret = true;
 	}
 	return ret;
+}
+
+bool CustomPaintOpenGLPrivate::allowScreenUsageToChange()
+{
+	return false;
+}
+
+void CustomPaintOpenGLPrivate::privateWindowSetup()
+{
+	setupWindow(SCREEN_USAGE_OPENGL_ES1 | SCREEN_USAGE_ROTATION);
+}
+
+void CustomPaintOpenGLPrivate::swapBuffers(screen_buffer_t buffer, int* rect)
+{
+	eglSwapBuffers(eglDisp, eglSurf);
 }
 
 //Impl

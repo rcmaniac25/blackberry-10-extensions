@@ -22,6 +22,8 @@
 
 #include "CustomPaint.h"
 
+#include <EGL/egl.h>
+
 namespace rebuild
 {
 	namespace ui
@@ -52,14 +54,18 @@ namespace rebuild
 
 				void setOpenGLversion(Version version);
 
+			protected:
+				EGLDisplay getEGLDisplay() const;
+				EGLSurface getEGLSurface() const;
+
+				void paint(screen_window_t window);
+				virtual void paint() = 0;
+
 			Q_SIGNALS:
 				void openGLversionChanged(Version usage);
 
 			private:
 				/*! @cond PRIVATE */
-				const QScopedPointer<CustomPaintOpenGLPrivate> d_ptr;
-
-				Q_DECLARE_PRIVATE(CustomPaintOpenGL)
 				Q_DISABLE_COPY(CustomPaintOpenGL)
 				/*! @endcond */
 			};
