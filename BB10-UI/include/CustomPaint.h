@@ -73,6 +73,7 @@ namespace rebuild
 				QString windowId() const;
 				Usage windowUsage() const;
 				bool canChangeWindowUsage() const;
+				bool canRegisterCleanupCallback() const;
 				bool createdSuccessfully() const;
 				int width() const;
 				int height() const;
@@ -81,8 +82,10 @@ namespace rebuild
 				void setWindowId(const QString &windowId);
 				void setWindowUsage(Usage usage);
 
-			protected:
+			protected slots:
 				void invalidate();
+
+			protected:
 				void invalidate(const QRect* size);
 				void invalidate(const QRect& size);
 				void invalidate(const QRectF* size);

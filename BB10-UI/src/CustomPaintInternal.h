@@ -71,11 +71,11 @@ namespace rebuild
 				virtual void privateWindowSetup();
 				bool rebuildBuffers(int* size);
 
-				virtual void invokeCleanupCallback();
-				virtual void cleanupWindow();
+				virtual void cleanupWindow(); //Called from destructor! Need to be careful
 
 				virtual void setupSignalsSlots();
 				virtual bool allowScreenUsageToChange() const;
+				virtual bool allowCleanupCallback() const;
 
 				virtual void invalidate(int x, int y, int width, int height);
 				virtual void invokePaint(int* rect);
@@ -109,6 +109,7 @@ namespace rebuild
 				bool changeVersion(CustomPaintOpenGL::Version ver);
 
 				bool allowScreenUsageToChange() const;
+				bool allowCleanupCallback() const;
 				virtual void privateWindowSetup();
 
 				void cleanupWindow();

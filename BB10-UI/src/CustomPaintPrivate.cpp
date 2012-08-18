@@ -25,7 +25,7 @@ CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new F
 	cleanupFunc = NULL;
 
 	//Setup for creation
-	QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()));
+	QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()), Qt::QueuedConnection);
 
 	//Setup the ForeignWindow
 	ForeignWindow* fw = fwindow.data();
@@ -163,14 +163,6 @@ bool CustomPaintPrivate::rebuildBuffers(int* size)
 	return ret;
 }
 
-void CustomPaintPrivate::invokeCleanupCallback()
-{
-	if(cleanupFunc)
-	{
-		cleanupFunc(window);
-	}
-}
-
 void CustomPaintPrivate::cleanupWindow()
 {
 	//Cleanup window
@@ -187,6 +179,11 @@ void CustomPaintPrivate::cleanupWindow()
 }
 
 bool CustomPaintPrivate::allowScreenUsageToChange() const
+{
+	return true;
+}
+
+bool CustomPaintPrivate::allowCleanupCallback() const
 {
 	return true;
 }
@@ -295,11 +292,11 @@ void CustomPaintPrivate::onCreate()
 		//Setup signals/slots
 		this->setupSignalsSlots();
 
-		//Set the window as root
-		cp->setRoot(fwindow.data());
-
 		//Invalidate the window
 		cp->invalidate();
+
+		//Set the window as root
+		cp->setRoot(fwindow.data());
 	}
 
 	//Invoke creation function

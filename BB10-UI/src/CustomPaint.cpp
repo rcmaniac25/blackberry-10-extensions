@@ -37,13 +37,14 @@ CustomPaint::~CustomPaint()
 {
 	Q_D(CustomPaint);
 
-	//!!!!These are virtual functions, so be careful, though, being a variable, it gets destroyed later!!!!!!
-
 	//Dev-accessible window cleanup
-	d->invokeCleanupCallback();
+	if(d->cleanupFunc)
+	{
+		d->cleanupFunc(d->window);
+	}
 
 	//Cleanup the window
-	d->cleanupWindow();
+	d->cleanupWindow(); //!!!!This is a virtual function, so be careful, though, being a variable, it gets destroyed later!!!!!!
 }
 
 void CustomPaint::setupPaintWindow(screen_window_t)
@@ -58,26 +59,34 @@ bool CustomPaint::registerCleanup(cleanupPaintWindowCallback cleanupFunc)
 {
 	Q_D(CustomPaint);
 
-	if(!d->cleanupFunc)
+	if(d->allowCleanupCallback())
 	{
-		d->cleanupFunc = cleanupFunc;
+		if(!d->cleanupFunc)
+		{
+			d->cleanupFunc = cleanupFunc;
+		}
+		return d->cleanupFunc != NULL;
 	}
-	return d->cleanupFunc != NULL;
+	return false;
 }
 
 bool CustomPaint::unregisterCleanup(cleanupPaintWindowCallback cleanupFunc)
 {
 	Q_D(CustomPaint);
 
-	if(d->cleanupFunc)
+	if(d->allowCleanupCallback())
 	{
-		if(d->cleanupFunc == cleanupFunc)
+		if(d->cleanupFunc)
 		{
-			d->cleanupFunc = NULL;
+			if(d->cleanupFunc == cleanupFunc)
+			{
+				d->cleanupFunc = NULL;
+			}
 		}
-	}
 
-	return d->cleanupFunc == NULL;
+		return d->cleanupFunc == NULL;
+	}
+	return false;
 }
 
 /*
@@ -162,6 +171,11 @@ bool CustomPaint::canChangeWindowUsage() const
 	return d_func()->allowScreenUsageToChange();
 }
 
+bool CustomPaint::canRegisterCleanupCallback() const
+{
+	return d_func()->allowCleanupCallback();
+}
+
 bool CustomPaint::createdSuccessfully() const
 {
 	return d_func()->valid;
@@ -204,7 +218,7 @@ void CustomPaint::setWindowGroup(const QString &windowGroup)
 		d->fwindow->setWindowGroup(windowGroup);
 
 		QByteArray groupArr = windowGroup.toAscii();
-		if(screen_join_window_group(d->window, groupArr.constData()) != 0)
+		if(screen_join_window_group(d->window, groupArr.constData()) == 0)
 		{
 			emit windowGroupChanged(windowGroup);
 		}

@@ -55,6 +55,15 @@ EGLSurface CustomPaintOpenGL::getEGLSurface() const
 	return CONST_GL_D->eglSurf;
 }
 
+void CustomPaintOpenGL::setupPaintWindow(screen_window_t)
+{
+	setupOpenGL();
+}
+
+void CustomPaintOpenGL::setupOpenGL()
+{
+}
+
 void CustomPaintOpenGL::paint(screen_window_t)
 {
 }

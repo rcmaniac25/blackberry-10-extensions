@@ -58,6 +58,8 @@ namespace rebuild
 				EGLDisplay getEGLDisplay() const;
 				EGLSurface getEGLSurface() const;
 
+				void setupPaintWindow(screen_window_t window);
+				virtual void setupOpenGL();
 				void paint(screen_window_t window);
 				virtual void paint() = 0;
 

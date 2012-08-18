@@ -43,6 +43,11 @@ bool CustomPaintOpenGLPrivate::allowScreenUsageToChange() const
 	return false;
 }
 
+bool CustomPaintOpenGLPrivate::allowCleanupCallback() const
+{
+	return false;
+}
+
 void CustomPaintOpenGLPrivate::privateWindowSetup()
 {
 	int usage = 0;
