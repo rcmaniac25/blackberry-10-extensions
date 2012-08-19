@@ -210,3 +210,13 @@ void CustomPaintOpenGLPrivate::swapBuffers(screen_buffer_t, int*)
 {
 	eglSwapBuffers(eglDisp, eglSurf);
 }
+
+void CustomPaintOpenGLPrivate::handleRotation(int angle)
+{
+	if(angle == 0 || angle == 90 || angle == 180 || angle == 270) //Only allow "normal" rotation
+	{
+		//TODO
+
+		screen_set_window_property_iv(window, SCREEN_PROPERTY_ROTATION, &angle);
+	}
+}

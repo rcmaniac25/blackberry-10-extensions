@@ -89,6 +89,12 @@ void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferForma
 			cleanupWindow();
 			return;
 		}
+
+		if(usage & SCREEN_USAGE_ROTATION)
+		{
+			//Usage allows for rotation, make sure it's handled
+			//TODO
+		}
 	}
 
 	//Setup the buffer format, if we should (zero is invalid)
@@ -202,6 +208,9 @@ void CustomPaintPrivate::setupSignalsSlots()
 {
 	//Layout
 	LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)));
+
+	//Orientation
+	QObject::connect(&OrientationSupport::instance(), SIGNAL(uiOrientationChanged(bb::cascades::UiOrientation::Type)), this, SLOT(orientationChanged(bb::cascades::UiOrientation::Type)));
 }
 
 void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
@@ -221,7 +230,7 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 			invalidate = screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0;
 		}
 
-		//Adjust size if we should
+		//Adjust size if we should //XXX Make sure that rotation is taken into account
 		if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0 &&
 				(size[SCREEN_WINDOW_HORZ] != component.width() || size[SCREEN_WINDOW_VERT] != component.height()))
 		{
@@ -236,6 +245,16 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 		{
 			cp->invalidate();
 		}
+	}
+}
+
+void CustomPaintPrivate::orientationChanged(UiOrientation::Type)
+{
+	int usage;
+	if(screen_get_window_property_iv(window, SCREEN_PROPERTY_USAGE, &usage) == 0 && (usage & SCREEN_USAGE_ROTATION))
+	{
+		//If screen usage supports rotation, use it
+		handleRotation(atoi(getenv("ORIENTATION"))); //XXX Might be better to use OrientationSupport to get angle
 	}
 }
 
@@ -287,6 +306,14 @@ void CustomPaintPrivate::invokePaint(int*)
 void CustomPaintPrivate::swapBuffers(screen_buffer_t buffer, int* rect)
 {
 	screen_post_window(window, buffer, 1, rect, 0);
+}
+
+void CustomPaintPrivate::handleRotation(int angle)
+{
+	if(angle == 0 || angle == 90 || angle == 180 || angle == 270) //Only allow "normal" rotation
+	{
+		screen_set_window_property_iv(window, SCREEN_PROPERTY_ROTATION, &angle);
+	}
 }
 
 void CustomPaintPrivate::onCreate()

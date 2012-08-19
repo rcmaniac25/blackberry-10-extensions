@@ -28,6 +28,7 @@
 #include <bb/cascades/core/touchpropagation.h>
 #include <bb/cascades/ForeignWindow>
 #include <bb/cascades/LayoutUpdateHandler>
+#include <bb/cascades/OrientationSupport>
 
 #define SCREEN_WINDOW_HORZ 0
 #define SCREEN_WINDOW_VERT 1
@@ -86,8 +87,11 @@ namespace rebuild
 				virtual void invokePaint(int* rect);
 				virtual void swapBuffers(screen_buffer_t buffer, int* rect);
 
+				virtual void handleRotation(int angle);
+
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
+				void orientationChanged(UiOrientation::Type orientation);
 				void onCreate();
 			};
 
@@ -124,6 +128,8 @@ namespace rebuild
 				void invalidate(int x, int y, int width, int height);
 				void invokePaint(int* rect);
 				void swapBuffers(screen_buffer_t buffer, int* rect);
+
+				void handleRotation(int angle);
 			};
 		}
 	}
