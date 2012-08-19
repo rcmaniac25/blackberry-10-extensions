@@ -82,10 +82,8 @@ namespace rebuild
 				void setWindowId(const QString &windowId);
 				void setWindowUsage(Usage usage);
 
-			protected slots:
-				void invalidate();
-
 			protected:
+				Q_SLOT void invalidate();
 				void invalidate(const QRect* size);
 				void invalidate(const QRect& size);
 				void invalidate(const QRectF* size);

@@ -47,6 +47,11 @@ namespace rebuild
 			 * CustomPaintPrivate
 			 */
 
+#define DEFAULT_SCREEN_USAGE 0
+#define DEFAULT_BUFFER_COUNT 1
+#define DEFAULT_BUFFER_FORMAT 0
+#define SETUP_DEFAULT 0
+
 			class CustomPaintPrivate : public QObject
 			{
 				Q_OBJECT
@@ -67,7 +72,7 @@ namespace rebuild
 
 				virtual ~CustomPaintPrivate();
 
-				void setupWindow(int usage);
+				void setupWindow(int usage = DEFAULT_SCREEN_USAGE, int bufferCount = DEFAULT_BUFFER_COUNT, int bufferFormat = DEFAULT_BUFFER_FORMAT, int setupElements = SETUP_DEFAULT);
 				virtual void privateWindowSetup();
 				bool rebuildBuffers(int* size);
 
@@ -100,9 +105,11 @@ namespace rebuild
 
 				EGLDisplay eglDisp;
 				EGLSurface eglSurf;
-				EGLContext eglCtx;
 
-				CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaint);
+				EGLContext eglCtx;
+				EGLConfig eglConf;
+
+				CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL, CustomPaintOpenGL::Version ver = CustomPaintOpenGL::V11);
 
 				virtual ~CustomPaintOpenGLPrivate();
 

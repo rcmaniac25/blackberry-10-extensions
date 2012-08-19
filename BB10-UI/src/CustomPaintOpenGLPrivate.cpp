@@ -20,11 +20,10 @@
 #include "CustomPaintInternal.h"
 
 #define CP_GL static_cast<CustomPaintOpenGL*>(cp)
+#define OPENGL_BUFFER_COUNT 2
 
-//Private
-
-CustomPaintOpenGLPrivate::CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL) : CustomPaintPrivate(customPaintGL),
-	ver(CustomPaintOpenGL::V11), eglDisp(EGL_NO_DISPLAY), eglSurf(EGL_NO_SURFACE), eglCtx(EGL_NO_CONTEXT)
+CustomPaintOpenGLPrivate::CustomPaintOpenGLPrivate(CustomPaintOpenGL* customPaintGL, CustomPaintOpenGL::Version glVer) : CustomPaintPrivate(static_cast<CustomPaint*>(customPaintGL)),
+		ver(glVer), eglDisp(EGL_NO_DISPLAY), eglSurf(EGL_NO_SURFACE), eglCtx(EGL_NO_CONTEXT), eglConf(NULL)
 {
 }
 
@@ -34,8 +33,16 @@ CustomPaintOpenGLPrivate::~CustomPaintOpenGLPrivate()
 
 bool CustomPaintOpenGLPrivate::changeVersion(CustomPaintOpenGL::Version nVer)
 {
-	//TODO: screen usage changes and EGL context changes
-	return false;
+	if(valid)
+	{
+		//TODO: screen usage changes and EGL context changes
+	}
+	else
+	{
+		//Just change version, nothing has been setup yet
+		ver = nVer;
+	}
+	return true;
 }
 
 bool CustomPaintOpenGLPrivate::allowScreenUsageToChange() const
@@ -50,6 +57,16 @@ bool CustomPaintOpenGLPrivate::allowCleanupCallback() const
 
 void CustomPaintOpenGLPrivate::privateWindowSetup()
 {
+	EGLint interval;
+	EGLint* attributes = NULL;
+
+	EGLint attrib_list[] = {EGL_RED_SIZE,        8,
+							EGL_GREEN_SIZE,      8,
+							EGL_BLUE_SIZE,       8,
+							EGL_SURFACE_TYPE,    EGL_WINDOW_BIT,
+							EGL_RENDERABLE_TYPE, 0,
+							EGL_NONE};
+
 	int usage = 0;
 	switch(ver)
 	{
@@ -58,9 +75,81 @@ void CustomPaintOpenGLPrivate::privateWindowSetup()
 			break;
 		case CustomPaintOpenGL::V20:
 			usage = SCREEN_USAGE_OPENGL_ES2 | SCREEN_USAGE_ROTATION;
+			attributes = (EGLint*)calloc(3, sizeof(EGLint));
+			if(!attributes)
+			{
+				return;
+			}
+			attributes[0] = EGL_CONTEXT_CLIENT_VERSION;
+			attributes[1] = 2;
+			attributes[2] = EGL_NONE;
 			break;
 	}
-	setupWindow(usage);
+
+	//EGL setup
+	eglDisp = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+	if(eglDisp == EGL_NO_DISPLAY)
+	{
+		free(attributes);
+		return;
+	}
+
+	if(eglInitialize(eglDisp, NULL, NULL) != EGL_TRUE)
+	{
+		goto PRE_WINDOW_ERROR;
+	}
+
+	if(eglBindAPI(EGL_OPENGL_ES_API) != EGL_TRUE)
+	{
+		goto PRE_WINDOW_ERROR;
+	}
+
+	EGLint numConfigs;
+	if(!eglChooseConfig(eglDisp, attrib_list, &eglConf, 1, &numConfigs))
+	{
+		goto PRE_WINDOW_ERROR;
+	}
+
+	if((eglCtx = eglCreateContext(eglDisp, eglConf, EGL_NO_CONTEXT, attributes)) == EGL_NO_CONTEXT)
+	{
+		goto PRE_WINDOW_ERROR;
+	}
+	free(attributes);
+	attributes = NULL;
+
+	//Window setup
+	setupWindow(usage, OPENGL_BUFFER_COUNT, SCREEN_FORMAT_RGBX8888);
+
+	if(valid)
+	{
+		//Set the remaining components so OpenGL operations can be performed
+		if((eglSurf = eglCreateWindowSurface(eglDisp, eglConf, window, NULL)) == EGL_NO_SURFACE)
+		{
+			cleanupWindow();
+			return;
+		}
+
+		if(eglMakeCurrent(eglDisp, eglSurf, eglSurf, eglCtx) != EGL_TRUE)
+		{
+			cleanupWindow();
+			return;
+		}
+
+		interval = 1;
+		if(eglSwapInterval(eglDisp, interval) != EGL_TRUE)
+		{
+			cleanupWindow();
+		}
+		return;
+	}
+
+PRE_WINDOW_ERROR:
+	free(attributes);
+	eglTerminate(eglDisp);
+	eglConf = NULL;
+	eglDisp = EGL_NO_DISPLAY;
+	eglCtx = EGL_NO_CONTEXT;
+	eglReleaseThread();
 }
 
 void CustomPaintOpenGLPrivate::cleanupWindow()

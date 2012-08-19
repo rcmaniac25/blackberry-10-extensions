@@ -46,7 +46,7 @@ namespace rebuild
 					V20
 				};
 
-				explicit CustomPaintOpenGL(bb::cascades::Container* parent = NULL);
+				explicit CustomPaintOpenGL(bb::cascades::Container* parent = NULL, Version = V11);
 
 				virtual ~CustomPaintOpenGL();
 
@@ -62,6 +62,7 @@ namespace rebuild
 				virtual void setupOpenGL();
 				void paint(screen_window_t window);
 				virtual void paint() = 0;
+				virtual void layout(int width, int height);
 
 			Q_SIGNALS:
 				void openGLversionChanged(Version usage);

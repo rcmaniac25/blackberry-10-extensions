@@ -22,7 +22,7 @@
 #define CONST_GL_D static_cast<const CustomPaintOpenGLPrivate*>(d_func())
 #define GL_D static_cast<CustomPaintOpenGLPrivate*>(d)
 
-CustomPaintOpenGL::CustomPaintOpenGL(bb::cascades::Container* parent) : rebuild::ui::component::CustomPaint(parent, new CustomPaintOpenGLPrivate(this))
+CustomPaintOpenGL::CustomPaintOpenGL(bb::cascades::Container* parent, CustomPaintOpenGL::Version ver) : rebuild::ui::component::CustomPaint(parent, new CustomPaintOpenGLPrivate(this, ver))
 {
 }
 
@@ -65,5 +65,9 @@ void CustomPaintOpenGL::setupOpenGL()
 }
 
 void CustomPaintOpenGL::paint(screen_window_t)
+{
+}
+
+void CustomPaintOpenGL::layout(int, int)
 {
 }

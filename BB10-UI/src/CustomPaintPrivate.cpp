@@ -42,7 +42,7 @@ CustomPaintPrivate::~CustomPaintPrivate()
 {
 }
 
-void CustomPaintPrivate::setupWindow(int usage)
+void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferFormat, int)
 {
 	valid = false;
 	context = NULL;
@@ -66,6 +66,9 @@ void CustomPaintPrivate::setupWindow(int usage)
 	}
 	fwindow.data()->setWindowHandle((unsigned long)window);
 
+	//Create the mutex
+	pthread_mutex_init(&mutex, NULL);
+
 	//Setup group and ID
 	if(screen_join_window_group(window, groupArr.constData()) != 0)
 	{
@@ -78,10 +81,20 @@ void CustomPaintPrivate::setupWindow(int usage)
 		return;
 	}
 
-	//Setup the screen usage, if we should (zero is invalid))
-	if(usage != 0)
+	//Setup the screen usage, if we should (zero is invalid)
+	if(usage != DEFAULT_SCREEN_USAGE)
 	{
 		if (screen_set_window_property_iv(window, SCREEN_PROPERTY_USAGE, &usage) != 0)
+		{
+			cleanupWindow();
+			return;
+		}
+	}
+
+	//Setup the buffer format, if we should (zero is invalid)
+	if(bufferFormat != DEFAULT_BUFFER_FORMAT)
+	{
+		if (screen_set_window_property_iv(window, SCREEN_PROPERTY_FORMAT, &bufferFormat) != 0)
 		{
 			cleanupWindow();
 			return;
@@ -97,13 +110,10 @@ void CustomPaintPrivate::setupWindow(int usage)
 	}
 
 	//Last we need to do is create the buffer
-	if(screen_create_window_buffers(window, 1) != 0)
+	if(screen_create_window_buffers(window, bufferCount) != 0)
 	{
 		return;
 	}
-
-	//Create the mutex
-	pthread_mutex_init(&mutex, NULL);
 
 	int size[2];
 	if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0)
@@ -122,7 +132,7 @@ void CustomPaintPrivate::setupWindow(int usage)
 
 void CustomPaintPrivate::privateWindowSetup()
 {
-	setupWindow(0); //Zero is an invalid usage value, so it will be skipped
+	setupWindow();
 }
 
 bool CustomPaintPrivate::rebuildBuffers(int* size)
