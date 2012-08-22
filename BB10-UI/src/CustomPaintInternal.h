@@ -28,7 +28,6 @@
 #include <bb/cascades/core/touchpropagation.h>
 #include <bb/cascades/ForeignWindow>
 #include <bb/cascades/LayoutUpdateHandler>
-#include <bb/cascades/OrientationSupport>
 
 #define SCREEN_WINDOW_HORZ 0
 #define SCREEN_WINDOW_VERT 1
@@ -47,11 +46,6 @@ namespace rebuild
 			/*
 			 * CustomPaintPrivate
 			 */
-
-#define DEFAULT_SCREEN_USAGE 0
-#define DEFAULT_BUFFER_COUNT 1
-#define DEFAULT_BUFFER_FORMAT 0
-#define SETUP_DEFAULT 0
 
 			class CustomPaintPrivate : public QObject
 			{
@@ -73,9 +67,14 @@ namespace rebuild
 
 				virtual ~CustomPaintPrivate();
 
+#define DEFAULT_SCREEN_USAGE 0
+#define DEFAULT_BUFFER_COUNT 1
+#define DEFAULT_BUFFER_FORMAT 0
+#define SETUP_DEFAULT 0
+
 				void setupWindow(int usage = DEFAULT_SCREEN_USAGE, int bufferCount = DEFAULT_BUFFER_COUNT, int bufferFormat = DEFAULT_BUFFER_FORMAT, int setupElements = SETUP_DEFAULT);
 				virtual void privateWindowSetup();
-				bool rebuildBuffers(int* size);
+				bool layout(int* size);
 
 				virtual void cleanupWindow(); //Called from destructor! Need to be careful
 
@@ -87,11 +86,8 @@ namespace rebuild
 				virtual void invokePaint(int* rect);
 				virtual void swapBuffers(screen_buffer_t buffer, int* rect);
 
-				virtual void handleRotation(int angle);
-
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
-				void orientationChanged(UiOrientation::Type orientation);
 				void onCreate();
 			};
 
@@ -128,8 +124,6 @@ namespace rebuild
 				void invalidate(int x, int y, int width, int height);
 				void invokePaint(int* rect);
 				void swapBuffers(screen_buffer_t buffer, int* rect);
-
-				void handleRotation(int angle);
 			};
 		}
 	}

@@ -248,7 +248,6 @@ void CustomPaint::setWindowUsage(CustomPaint::Usage usage)
 
 	int sUse = static_cast<int>(usage);
 	int pUse;
-	int* size = NULL;
 
 	//Make sure we aren't doing unneeded buffer recreation
 	if(d->allowScreenUsageToChange() && screen_get_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &pUse) == 0 && pUse != sUse)
@@ -256,28 +255,8 @@ void CustomPaint::setWindowUsage(CustomPaint::Usage usage)
 		//Set the usage property
 		if(screen_set_window_property_iv(d->window, SCREEN_PROPERTY_USAGE, &sUse) == 0)
 		{
-			int angle = 0;
-			if(sUse & SCREEN_USAGE_ROTATION)
-			{
-				//Make sure rotation support is set (default is basically "no rotation"
-				angle = atoi(getenv("ORIENTATION")); //XXX Might be better to use OrientationSupport to get angle
-
-				//XXX Make sure buffers are sized correctly (allocate size if needed)
-			}
-			screen_set_window_property_iv(d->window, SCREEN_PROPERTY_ROTATION, &angle);
-
-			//Rebuild the buffers
-			if(d->rebuildBuffers(size))
-			{
-				//We can signal the change now
-				emit windowUsageChanged(usage);
-
-				//We also want to repaint
-				invalidate();
-			}
-
-			//Cleanup size
-			free(size);
+			//We can signal the change
+			emit windowUsageChanged(usage);
 		}
 	}
 }

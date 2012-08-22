@@ -67,7 +67,13 @@ void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferForma
 	fwindow.data()->setWindowHandle((unsigned long)window);
 
 	//Create the mutex
-	pthread_mutex_init(&mutex, NULL);
+	pthread_mutexattr_t mutexAtt;
+	pthread_mutexattr_init(&mutexAtt);
+	pthread_mutexattr_setrecursive(&mutexAtt, PTHREAD_RECURSIVE_ENABLE);
+
+	pthread_mutex_init(&mutex, &mutexAtt);
+
+	pthread_mutexattr_destroy(&mutexAtt);
 
 	//Setup group and ID
 	if(screen_join_window_group(window, groupArr.constData()) != 0)
@@ -88,12 +94,6 @@ void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferForma
 		{
 			cleanupWindow();
 			return;
-		}
-
-		if(usage & SCREEN_USAGE_ROTATION)
-		{
-			//Usage allows for rotation, make sure it's handled
-			//TODO
 		}
 	}
 
@@ -141,41 +141,28 @@ void CustomPaintPrivate::privateWindowSetup()
 	setupWindow();
 }
 
-bool CustomPaintPrivate::rebuildBuffers(int* size)
+bool CustomPaintPrivate::layout(int* size)
 {
-	//XXX See http://supportforums.blackberry.com/t5/Native-Development/Changing-SCREEN-PROPERTY-USAGE-and-or-SCREEN-PROPERTY-BUFFER/td-p/1864159
-
 	bool ret = false;
-	if(valid)
+	if(valid && size != NULL)
 	{
+		//Simply resize the buffers and invoke the dev-facing layout function
+
 		//Lock a mutex so we don't paint and resize at the same time
 		pthread_mutex_lock(&mutex);
 
-		//Destroy the old window buffers
-		//if(screen_destroy_window_buffers(window) == 0) //XXX
-		{
-			if(size != NULL)
-			{
-				//Resize the buffers
-				screen_set_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size);
-				screen_set_window_property_iv(window, SCREEN_PROPERTY_SOURCE_SIZE, size);
-			}
+		//Resize the buffers
+		screen_set_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size);
+		screen_set_window_property_iv(window, SCREEN_PROPERTY_SOURCE_SIZE, size);
 
-			//Create the new buffers
-			//if(screen_create_window_buffers(window, 1) == 0) //XXX
-			{
-				if(size != NULL)
-				{
-					//Re-layout
-					cp->layout(size[SCREEN_WINDOW_HORZ], size[SCREEN_WINDOW_VERT]);
-				}
-
-				ret = true;
-			}
-		}
+		//Re-layout
+		cp->layout(size[SCREEN_WINDOW_HORZ], size[SCREEN_WINDOW_VERT]);
 
 		pthread_mutex_unlock(&mutex);
+
+		ret = true;
 	}
+
 	return ret;
 }
 
@@ -208,9 +195,6 @@ void CustomPaintPrivate::setupSignalsSlots()
 {
 	//Layout
 	LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)));
-
-	//Orientation
-	QObject::connect(&OrientationSupport::instance(), SIGNAL(uiOrientationChanged(bb::cascades::UiOrientation::Type)), this, SLOT(orientationChanged(bb::cascades::UiOrientation::Type)));
 }
 
 void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
@@ -230,31 +214,21 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 			invalidate = screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0;
 		}
 
-		//Adjust size if we should //XXX Make sure that rotation is taken into account
+		//Adjust size if we should
 		if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0 &&
 				(size[SCREEN_WINDOW_HORZ] != component.width() || size[SCREEN_WINDOW_VERT] != component.height()))
 		{
 			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.width());
 			size[SCREEN_WINDOW_VERT] = (int)floorf(component.height());
 
-			//Rebuild the actual buffers
-			invalidate = rebuildBuffers(size);
+			//Resize/relayout the buffers
+			invalidate = layout(size);
 		}
 
 		if(invalidate)
 		{
 			cp->invalidate();
 		}
-	}
-}
-
-void CustomPaintPrivate::orientationChanged(UiOrientation::Type)
-{
-	int usage;
-	if(screen_get_window_property_iv(window, SCREEN_PROPERTY_USAGE, &usage) == 0 && (usage & SCREEN_USAGE_ROTATION))
-	{
-		//If screen usage supports rotation, use it
-		handleRotation(atoi(getenv("ORIENTATION"))); //XXX Might be better to use OrientationSupport to get angle
 	}
 }
 
@@ -306,14 +280,6 @@ void CustomPaintPrivate::invokePaint(int*)
 void CustomPaintPrivate::swapBuffers(screen_buffer_t buffer, int* rect)
 {
 	screen_post_window(window, buffer, 1, rect, 0);
-}
-
-void CustomPaintPrivate::handleRotation(int angle)
-{
-	if(angle == 0 || angle == 90 || angle == 180 || angle == 270) //Only allow "normal" rotation
-	{
-		screen_set_window_property_iv(window, SCREEN_PROPERTY_ROTATION, &angle);
-	}
 }
 
 void CustomPaintPrivate::onCreate()
