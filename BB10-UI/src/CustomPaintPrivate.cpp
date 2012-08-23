@@ -19,11 +19,10 @@
 
 #include "CustomPaintInternal.h"
 
-CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), cp(customPaint)
+CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), context(NULL), window(NULL),
+	valid(false), alwaysInvalidate(false), cleanupFunc(NULL),
+	cp(customPaint), layoutHandler(NULL)
 {
-	//Explicit setup for ease of mind
-	cleanupFunc = NULL;
-
 	//Setup for creation
 	QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()), Qt::QueuedConnection);
 
@@ -42,11 +41,13 @@ CustomPaintPrivate::~CustomPaintPrivate()
 {
 }
 
-void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferFormat, int)
+void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferFormat, int setupElements)
 {
 	valid = false;
 	context = NULL;
 	window = NULL;
+
+	alwaysInvalidate = setupElements & SETUP_ALWAYS_INVALIDATE;
 
 	QByteArray groupArr = fwindow->windowGroup().toAscii();
 	QByteArray idArr = fwindow->windowId().toAscii();
@@ -141,6 +142,15 @@ void CustomPaintPrivate::privateWindowSetup()
 	setupWindow();
 }
 
+bool CustomPaintPrivate::move(int* pos)
+{
+	if(valid && pos != NULL)
+	{
+		return screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, pos) == 0;
+	}
+	return false;
+}
+
 bool CustomPaintPrivate::layout(int* size)
 {
 	bool ret = false;
@@ -194,24 +204,29 @@ bool CustomPaintPrivate::allowCleanupCallback() const
 void CustomPaintPrivate::setupSignalsSlots()
 {
 	//Layout
-	LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)));
+	layoutHandler = &(*(LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)))));
+
+	//Translation
+	QObject::connect(cp, SIGNAL(translationXChanged(float)), this, SLOT(translationXChanged(float)));
+	QObject::connect(cp, SIGNAL(translationYChanged(float)), this, SLOT(translationYChanged(float)));
 }
 
 void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 {
 	bool invalidate = false;
+	bool paint = false;
 	int size[2];
 
 	if(valid)
 	{
 		//Adjust position if we should
 		if(screen_get_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0 &&
-				(size[SCREEN_WINDOW_HORZ] != component.x() || size[SCREEN_WINDOW_VERT] != component.y()))
+				(size[SCREEN_WINDOW_HORZ] != (component.x() + cp->translationX()) || size[SCREEN_WINDOW_VERT] != (component.y() + cp->translationY())))
 		{
-			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.x());
-			size[SCREEN_WINDOW_VERT] = (int)floorf(component.y());
+			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.x() + cp->translationX());
+			size[SCREEN_WINDOW_VERT] = (int)floorf(component.y() + cp->translationY());
 
-			invalidate = screen_set_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0;
+			invalidate = move(size);
 		}
 
 		//Adjust size if we should
@@ -222,17 +237,50 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 			size[SCREEN_WINDOW_VERT] = (int)floorf(component.height());
 
 			//Resize/relayout the buffers
-			invalidate = layout(size);
+			invalidate |= paint = layout(size);
 		}
 
 		if(invalidate)
 		{
-			cp->invalidate();
+			//We need to invalidate, but we might not have to repaint
+			this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, paint);
 		}
 	}
 }
 
-void CustomPaintPrivate::invalidate(int x, int y, int width, int height)
+void CustomPaintPrivate::translationXChanged(float translationX)
+{
+	int pos[2];
+	const QRectF rect = layoutHandler->layoutFrame();
+	if(!rect.isNull())
+	{
+		pos[SCREEN_WINDOW_HORZ] = (int)floorf(rect.x() + translationX);
+		pos[SCREEN_WINDOW_VERT] = (int)floorf(rect.y() + cp->translationY());
+
+		if(move(pos) && alwaysInvalidate)
+		{
+			this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, false);
+		}
+	}
+}
+
+void CustomPaintPrivate::translationYChanged(float translationY)
+{
+	int pos[2];
+	const QRectF rect = layoutHandler->layoutFrame();
+	if(!rect.isNull())
+	{
+		pos[SCREEN_WINDOW_HORZ] = (int)floorf(rect.x() + cp->translationX());
+		pos[SCREEN_WINDOW_VERT] = (int)floorf(rect.y() + translationY);
+
+		if(move(pos) && alwaysInvalidate)
+		{
+			this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, false);
+		}
+	}
+}
+
+void CustomPaintPrivate::invalidate(int x, int y, int width, int height, bool paint)
 {
 	int rect[4];
 	screen_buffer_t buffers[1];
@@ -259,8 +307,11 @@ void CustomPaintPrivate::invalidate(int x, int y, int width, int height)
 					rect[2] = width + x;
 					rect[3] = height + y;
 
-					//Invoke paint signal
-					this->invokePaint(rect);
+					if(paint)
+					{
+						//Invoke paint signal
+						this->invokePaint(rect);
+					}
 
 					//Invalidate
 					this->swapBuffers(buffers[0], rect);
@@ -294,14 +345,17 @@ void CustomPaintPrivate::onCreate()
 
 		//Setup signals/slots
 		this->setupSignalsSlots();
-
-		//Invalidate the window
-		cp->invalidate();
-
-		//Set the window as root
-		cp->setRoot(fwindow.data());
 	}
 
 	//Invoke creation function
 	cp->controlCreated(valid);
+
+	if(valid)
+	{
+		//Invalidate the window
+		this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, true);
+
+		//Set the window as root
+		cp->setRoot(fwindow.data());
+	}
 }

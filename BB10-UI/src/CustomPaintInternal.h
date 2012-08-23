@@ -59,9 +59,11 @@ namespace rebuild
 				screen_window_t window;
 
 				bool valid;
+				bool alwaysInvalidate;
 				CustomPaint::cleanupPaintWindowCallback cleanupFunc;
 				pthread_mutex_t mutex;
 				CustomPaint* cp;
+				LayoutUpdateHandler* layoutHandler;
 
 				CustomPaintPrivate(CustomPaint* customPaint);
 
@@ -71,9 +73,11 @@ namespace rebuild
 #define DEFAULT_BUFFER_COUNT 1
 #define DEFAULT_BUFFER_FORMAT 0
 #define SETUP_DEFAULT 0
+#define SETUP_ALWAYS_INVALIDATE (1 << 0)
 
 				void setupWindow(int usage = DEFAULT_SCREEN_USAGE, int bufferCount = DEFAULT_BUFFER_COUNT, int bufferFormat = DEFAULT_BUFFER_FORMAT, int setupElements = SETUP_DEFAULT);
 				virtual void privateWindowSetup();
+				bool move(int* pos);
 				bool layout(int* size);
 
 				virtual void cleanupWindow(); //Called from destructor! Need to be careful
@@ -82,12 +86,14 @@ namespace rebuild
 				virtual bool allowScreenUsageToChange() const;
 				virtual bool allowCleanupCallback() const;
 
-				virtual void invalidate(int x, int y, int width, int height);
+				virtual void invalidate(int x, int y, int width, int height, bool paint);
 				virtual void invokePaint(int* rect);
 				virtual void swapBuffers(screen_buffer_t buffer, int* rect);
 
 			public slots:
 				void layoutHandlerChange(const QRectF& component);
+				void translationXChanged(float translationX);
+				void translationYChanged(float translationY);
 				void onCreate();
 			};
 

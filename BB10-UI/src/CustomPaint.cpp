@@ -137,7 +137,7 @@ void CustomPaint::invalidate(int x, int y, int width, int height)
 {
 	Q_D(CustomPaint);
 
-	d->invalidate(x, y, width, height);
+	d->invalidate(x, y, width, height, true);
 }
 
 /*
