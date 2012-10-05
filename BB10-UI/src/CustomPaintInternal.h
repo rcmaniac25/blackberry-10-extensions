@@ -26,7 +26,7 @@
 #include <pthread.h>
 
 #include <bb/cascades/core/touchpropagation.h>
-#include <bb/cascades/ForeignWindow>
+#include <bb/cascades/ForeignWindowControl>
 #include <bb/cascades/LayoutUpdateHandler>
 
 #define SCREEN_WINDOW_HORZ 0
@@ -53,7 +53,7 @@ namespace rebuild
 				friend class CustomPaint;
 
 			public:
-				const QScopedPointer<ForeignWindow> fwindow;
+				const QScopedPointer<ForeignWindowControl> fwindow;
 
 				screen_context_t context;
 				screen_window_t window;
@@ -63,7 +63,6 @@ namespace rebuild
 				CustomPaint::cleanupPaintWindowCallback cleanupFunc;
 				pthread_mutex_t mutex;
 				CustomPaint* cp;
-				LayoutUpdateHandler* layoutHandler;
 
 				CustomPaintPrivate(CustomPaint* customPaint);
 
@@ -91,9 +90,7 @@ namespace rebuild
 				virtual void swapBuffers(screen_buffer_t buffer, int* rect);
 
 			public slots:
-				void layoutHandlerChange(const QRectF& component);
-				void translationXChanged(float translationX);
-				void translationYChanged(float translationY);
+				void controlFrameChanged(const QRectF& frame);
 				void onCreate();
 			};
 

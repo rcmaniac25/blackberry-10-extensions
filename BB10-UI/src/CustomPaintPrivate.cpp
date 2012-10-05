@@ -19,19 +19,23 @@
 
 #include "CustomPaintInternal.h"
 
-CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindow), context(NULL), window(NULL),
+#include <bb/cascades/Application>
+#include <bb/cascades/Window>
+
+CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new ForeignWindowControl), context(NULL), window(NULL),
 	valid(false), alwaysInvalidate(false), cleanupFunc(NULL),
-	cp(customPaint), layoutHandler(NULL)
+	cp(customPaint)
 {
 	//Setup for creation
 	QObject::connect(cp, SIGNAL(creationCompleted()), this, SLOT(onCreate()), Qt::QueuedConnection);
 
 	//Setup the ForeignWindow
-	ForeignWindow* fw = fwindow.data();
+	ForeignWindowControl* fw = fwindow.data();
 
 	//Generic setup
-	fw->setWindowGroup(ForeignWindow::mainWindowGroupId());
+	fw->setWindowGroup(Application::instance()->mainWindow()->Window::groupId());
 	fw->setWindowId("CustomPaintID");
+	fw->setUpdatedProperties(WindowProperty::Position | WindowProperty::Size | WindowProperty::SourceSize | WindowProperty::Visible);
 
 	//The ForeignWindow will never handle anything itself anyway, save the internal system the trouble
 	fw->setTouchPropagationMode(TouchPropagationMode::None);
@@ -65,7 +69,7 @@ void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferForma
 		context = NULL;
 		return;
 	}
-	fwindow.data()->setWindowHandle((unsigned long)window);
+	fwindow.data()->setWindowHandle(window);
 
 	//Create the mutex
 	pthread_mutexattr_t mutexAtt;
@@ -122,6 +126,7 @@ void CustomPaintPrivate::setupWindow(int usage, int bufferCount, int bufferForma
 		return;
 	}
 
+	//TODO: Move this to a handler for
 	int size[2];
 	if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0)
 	{
@@ -204,14 +209,10 @@ bool CustomPaintPrivate::allowCleanupCallback() const
 void CustomPaintPrivate::setupSignalsSlots()
 {
 	//Layout
-	layoutHandler = &(*(LayoutUpdateHandler::create(cp).onLayoutFrameChanged(this, SLOT(layoutHandlerChange(QRectF)))));
-
-	//Translation
-	QObject::connect(cp, SIGNAL(translationXChanged(float)), this, SLOT(translationXChanged(float)));
-	QObject::connect(cp, SIGNAL(translationYChanged(float)), this, SLOT(translationYChanged(float)));
+	QObject::connect(fwindow.data(), SIGNAL(controlFrameChanged(const QRectF&)), this, SLOT(controlFrameChanged(const QRectF&)));
 }
 
-void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
+void CustomPaintPrivate::controlFrameChanged(const QRectF& frame)
 {
 	bool invalidate = false;
 	bool paint = false;
@@ -221,20 +222,20 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 	{
 		//Adjust position if we should
 		if(screen_get_window_property_iv(window, SCREEN_PROPERTY_POSITION, size) == 0 &&
-				(size[SCREEN_WINDOW_HORZ] != (component.x() + cp->translationX()) || size[SCREEN_WINDOW_VERT] != (component.y() + cp->translationY())))
+				(size[SCREEN_WINDOW_HORZ] != frame.x() || size[SCREEN_WINDOW_VERT] != frame.y()))
 		{
-			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.x() + cp->translationX());
-			size[SCREEN_WINDOW_VERT] = (int)floorf(component.y() + cp->translationY());
+			size[SCREEN_WINDOW_HORZ] = (int)floorf(frame.x());
+			size[SCREEN_WINDOW_VERT] = (int)floorf(frame.y());
 
 			invalidate = move(size);
 		}
 
 		//Adjust size if we should
 		if(screen_get_window_property_iv(window, SCREEN_PROPERTY_BUFFER_SIZE, size) == 0 &&
-				(size[SCREEN_WINDOW_HORZ] != component.width() || size[SCREEN_WINDOW_VERT] != component.height()))
+				(size[SCREEN_WINDOW_HORZ] != frame.width() || size[SCREEN_WINDOW_VERT] != frame.height()))
 		{
-			size[SCREEN_WINDOW_HORZ] = (int)floorf(component.width());
-			size[SCREEN_WINDOW_VERT] = (int)floorf(component.height());
+			size[SCREEN_WINDOW_HORZ] = (int)floorf(frame.width());
+			size[SCREEN_WINDOW_VERT] = (int)floorf(frame.height());
 
 			//Resize/relayout the buffers
 			invalidate |= paint = layout(size);
@@ -244,38 +245,6 @@ void CustomPaintPrivate::layoutHandlerChange(const QRectF& component)
 		{
 			//We need to invalidate, but we might not have to repaint
 			this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, paint);
-		}
-	}
-}
-
-void CustomPaintPrivate::translationXChanged(float translationX)
-{
-	int pos[2];
-	const QRectF rect = layoutHandler->layoutFrame();
-	if(!rect.isNull())
-	{
-		pos[SCREEN_WINDOW_HORZ] = (int)floorf(rect.x() + translationX);
-		pos[SCREEN_WINDOW_VERT] = (int)floorf(rect.y() + cp->translationY());
-
-		if(move(pos) && alwaysInvalidate)
-		{
-			this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, false);
-		}
-	}
-}
-
-void CustomPaintPrivate::translationYChanged(float translationY)
-{
-	int pos[2];
-	const QRectF rect = layoutHandler->layoutFrame();
-	if(!rect.isNull())
-	{
-		pos[SCREEN_WINDOW_HORZ] = (int)floorf(rect.x() + cp->translationX());
-		pos[SCREEN_WINDOW_VERT] = (int)floorf(rect.y() + translationY);
-
-		if(move(pos) && alwaysInvalidate)
-		{
-			this->invalidate(0, 0, INVALIDATE_MAX_SIZE, INVALIDATE_MAX_SIZE, false);
 		}
 	}
 }
