@@ -1,6 +1,6 @@
 /*
- * BlackBerry 10 Extension library
- * Copyright (c) 2012-2014 Vincent Simonetti
+ * BlackBerry 10 UI library
+ * Copyright (c) 2012 Vincent Simonetti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation

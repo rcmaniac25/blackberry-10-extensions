@@ -1,6 +1,4 @@
 --TODO:
-Update LargeNumber to use this for multiplication: https://twitter.com/GeneralZer0/status/436565270300475392
-
 Research:
 -Multiline suggestion field (shows possible words of what you might want)
 -Multiline autocomplete (corrects misspellings and special cases such as youre to you're)

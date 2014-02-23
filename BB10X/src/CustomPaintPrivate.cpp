@@ -1,6 +1,6 @@
 /*
- * BlackBerry 10 Extension library
- * Copyright (c) 2012-2014 Vincent Simonetti
+ * BlackBerry 10 UI library
+ * Copyright (c) 2012 Vincent Simonetti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -33,7 +33,7 @@ CustomPaintPrivate::CustomPaintPrivate(CustomPaint* customPaint) : fwindow(new F
 	ForeignWindowControl* fw = fwindow.data();
 
 	//Generic setup
-	fw->setWindowGroup(Application::instance()->mainWindow()->groupId());
+	fw->setWindowGroup(Application::instance()->mainWindow()->Window::groupId());
 	fw->setWindowId("CustomPaintID");
 	fw->setUpdatedProperties(WindowProperty::Position | WindowProperty::Size | WindowProperty::SourceSize | WindowProperty::Visible);
 
