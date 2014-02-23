@@ -1,6 +1,6 @@
 /*
- * BlackBerry 10 UI library
- * Copyright (c) 2012 Vincent Simonetti
+ * BlackBerry 10 Extension library
+ * Copyright (c) 2012-2014 Vincent Simonetti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -72,9 +72,11 @@ void CustomPaintOpenGLPrivate::privateWindowSetup()
 	{
 		case CustomPaintOpenGL::V11:
 			usage = SCREEN_USAGE_OPENGL_ES1 | SCREEN_USAGE_ROTATION;
+			attrib_list[9] = EGL_OPENGL_ES_BIT;
 			break;
 		case CustomPaintOpenGL::V20:
 			usage = SCREEN_USAGE_OPENGL_ES2 | SCREEN_USAGE_ROTATION;
+			attrib_list[9] = EGL_OPENGL_ES2_BIT;
 			attributes = (EGLint*)calloc(3, sizeof(EGLint));
 			if(!attributes)
 			{
