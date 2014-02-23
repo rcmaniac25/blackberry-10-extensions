@@ -2,7 +2,7 @@ TEMPLATE = lib
 
 CONFIG += qt warn_on cascades_library
 CONFIG += hardening
-LIBS += -lscreen -lEGL
+LIBS += -lscreen -lEGL -lbbdata
 
 include(config.pri)
 

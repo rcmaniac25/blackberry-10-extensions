@@ -5,7 +5,7 @@ cascades_library {
 	CONFIG += separate_debug_symbols shared
 	
 	LIBS           += -lbbcascades
-	QT             += declarative
+	QT             += declarative network
 	QT             -= gui
 	
 	QMAKE_CFLAGS   += -Wno-psabi

@@ -12,5 +12,7 @@ bin
 deliverables
 doc
 copy.bat
+copy-all.bat
 x86
 arm
+config.pri
