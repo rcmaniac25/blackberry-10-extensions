@@ -69,10 +69,10 @@ Plugins:
 //Pusdo code
 public static Plugin[] getPlugin(final String pluginPath)
 {
-Class clazz = Class.forName(pluginPath + ".rebuild.plugin.Master");
-rebuild.plugin.Master master = (rebuild.plugin.Master)clazz.newInstance();
-Plugin[] pluginComponents = master.getComponents();
-for(int i = 0; i < master.componentCount(); i++)
+Class clazz = Class.forName(pluginPath + ".rebuild.plugin.Definition");
+rebuild.plugin.Definition definition = (rebuild.plugin.Definition)clazz.newInstance();
+Plugin[] pluginComponents = definition.getComponents();
+for(int i = 0; i < definition.componentCount(); i++)
 {
 pluginComponents[i].initialize(**stuff**);
 }
